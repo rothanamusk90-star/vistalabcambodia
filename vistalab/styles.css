@@ -128,7 +128,7 @@ body,
 }
 
 .site-map-friendly {
-  background-color: var(--site-cream);
+  background-color: #f0f9ff;
 }
 
 .site-map-friendly .text-white,
@@ -153,6 +153,12 @@ body,
 
 .site-map-friendly [class~="hover:bg-slate-700"]:hover {
   background-color: var(--site-sage);
+}
+
+.site-map-friendly .site-map-hub-selected {
+  background-color: #0369a1;
+  border-color: #0369a1;
+  color: #ffffff;
 }
 
 .site-contact-friendly {

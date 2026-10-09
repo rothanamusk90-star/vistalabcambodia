@@ -550,29 +550,29 @@ export default function App() {
             </section>
 
             {/* INTERACTIVE CAMBODIA DISTRIBUTION NETWORK MAP */}
-            <section className="site-map-friendly bg-green-50 text-slate-800 py-10 sm:py-16 px-4 sm:px-8 relative overflow-hidden">
+            <section className="site-map-friendly bg-sky-50 text-slate-800 py-10 sm:py-16 px-4 sm:px-8 relative overflow-hidden">
               <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-12 items-center">
                 <div className="lg:col-span-5 space-y-4 sm:space-y-6">
-                  <span className="text-xs font-bold text-green-400 uppercase tracking-widest">{tx('LOGISTICS & NETWORK', 'ភស្តុភារ និងបណ្តាញចែកចាយ')}</span>
+                  <span className="text-xs font-bold text-sky-700 uppercase tracking-widest">{tx('LOGISTICS & NETWORK', 'ភស្តុភារ និងបណ្តាញចែកចាយ')}</span>
                   <h2 className="text-2xl sm:text-4xl font-black">{t.distribNetworkTitle}</h2>
                   <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
                     {t.distribNetworkSub}
                   </p>
 
                   <div className="space-y-3 pt-2">
-                    <div className="bg-white/10 p-3.5 rounded-xl border border-white/10 flex items-center justify-between">
+                    <div className="bg-white p-3.5 rounded-xl border border-sky-100 flex items-center justify-between shadow-sm">
                       <span className="text-sm font-semibold">{tx('Central Warehousing', 'ឃ្លាំងកណ្តាល')}</span>
-                      <span className="text-xs bg-green-400 text-slate-950 font-bold px-2 py-0.5 rounded">ភ្នំពេញ</span>
+                      <span className="text-xs bg-sky-100 text-sky-800 font-bold px-2 py-0.5 rounded">ភ្នំពេញ</span>
                     </div>
-                    <div className="bg-white/10 p-3.5 rounded-xl border border-white/10 flex items-center justify-between">
+                    <div className="bg-white p-3.5 rounded-xl border border-sky-100 flex items-center justify-between shadow-sm">
                       <span className="text-sm font-semibold">{tx('Provincial Hubs', 'មជ្ឈមណ្ឌលតាមខេត្ត')}</span>
-                      <span className="text-xs bg-green-400 text-slate-950 font-bold px-2 py-0.5 rounded">សៀមរាប បាត់ដំបង និងកំពត</span>
+                      <span className="text-xs bg-sky-100 text-sky-800 font-bold px-2 py-0.5 rounded">សៀមរាប បាត់ដំបង និងកំពត</span>
                     </div>
                   </div>
 
                   <button
                     onClick={() => setCurrentView('about')}
-                    className="mt-4 bg-green-500 hover:bg-green-600 text-slate-950 font-extrabold px-6 py-3 rounded-xl text-sm shadow-md transition-all flex items-center space-x-2"
+                    className="mt-4 bg-sky-700 hover:bg-sky-800 text-white font-extrabold px-6 py-3 rounded-xl text-sm shadow-md transition-all flex items-center space-x-2"
                   >
                     <span>{tx('Explore Supply Chain Channel', 'ស្វែងយល់អំពីខ្សែសង្វាក់ផ្គត់ផ្គង់')}</span>
                     <ChevronRight className="w-4 h-4" />
@@ -580,13 +580,13 @@ export default function App() {
                 </div>
 
                 {/* Google Maps hub locations */}
-                <div className="lg:col-span-7 bg-slate-900/80 p-6 sm:p-8 rounded-3xl border border-slate-800 shadow-2xl relative min-h-[380px] flex flex-col justify-between">
-                  <div className="flex justify-between items-center text-xs text-slate-400 border-b border-slate-800 pb-3">
-                    <span className="font-bold text-green-400">{tx('Google Maps - Cambodia Hub Locations', 'ផែនទី Google - ទីតាំងមជ្ឈមណ្ឌលនៅកម្ពុជា')}</span>
+                <div className="lg:col-span-7 bg-white p-6 sm:p-8 rounded-3xl border border-sky-200 shadow-lg shadow-slate-200/70 relative min-h-[380px] flex flex-col justify-between">
+                  <div className="flex justify-between items-center text-xs text-slate-600 border-b border-sky-100 pb-3">
+                    <span className="font-bold text-sky-800">{tx('Google Maps - Cambodia Hub Locations', 'ផែនទី Google - ទីតាំងមជ្ឈមណ្ឌលនៅកម្ពុជា')}</span>
                     <span>{tx('Select a hub below', 'ជ្រើសរើសមជ្ឈមណ្ឌលខាងក្រោម')}</span>
                   </div>
 
-                  <div className="relative w-full h-64 sm:h-80 rounded-2xl overflow-hidden border border-slate-700 my-4 bg-slate-800">
+                  <div className="relative w-full h-64 sm:h-80 rounded-2xl overflow-hidden border border-sky-200 my-4 bg-slate-100">
                     <iframe
                       title={`Google Map showing ${selectedHub.locationQuery}`}
                       src={`https://maps.google.com/maps?q=${encodeURIComponent(selectedHub.locationQuery)}&z=8&output=embed`}
@@ -597,27 +597,27 @@ export default function App() {
                     />
                   </div>
 
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-[11px] text-slate-300">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-[11px] text-slate-700">
                     {distributionHubs.map((hub) => (
                       <button
                         key={hub.id}
                         type="button"
                         onClick={() => setSelectedHubId(hub.id)}
                         aria-pressed={selectedHub.id === hub.id}
-                        className={`flex min-w-0 items-center gap-1.5 rounded-lg p-2 text-left transition-colors ${selectedHub.id === hub.id ? 'bg-green-400 text-slate-950' : 'bg-slate-800/70 hover:bg-slate-700'}`}
+                        className={`flex min-w-0 items-center gap-1.5 rounded-lg border p-2 text-left transition-colors ${selectedHub.id === hub.id ? 'site-map-hub-selected border-sky-700 bg-sky-700 text-white' : 'border-slate-200 bg-white text-slate-700 hover:bg-sky-50 hover:border-sky-200'}`}
                       >
                         <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
                         <span className="truncate">{lang === 'KH' ? ({ h1: 'ការិយាល័យកណ្តាលភ្នំពេញ', h2: 'មជ្ឈមណ្ឌលតំបន់សៀមរាប', h3: 'មជ្ឈមណ្ឌលភាគខាងលិចបាត់ដំបង', h4: 'មជ្ឈមណ្ឌលកំពត និងព្រះសីហនុ', h5: 'មជ្ឈមណ្ឌលត្បូងឃ្មុំ និងកំពង់ចាម' }[hub.id] ?? hub.name) : hub.name}</span>
                       </button>
                     ))}
                   </div>
-                  <div className="mt-3 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-300">
+                  <div className="mt-3 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-600">
                     <span>{lang === 'KH' ? ({ 'Main Warehouse & Hub': 'ឃ្លាំងកណ្តាល និងមជ្ឈមណ្ឌល', 'Distribution Hub': 'មជ្ឈមណ្ឌលចែកចាយ', 'Southern Hub': 'មជ្ឈមណ្ឌលភាគខាងត្បូង', 'Eastern Hub': 'មជ្ឈមណ្ឌលភាគខាងកើត' }[selectedHub.type] ?? selectedHub.type) : selectedHub.type} | {lang === 'KH' ? selectedHub.count.replace(' Outlets', ' ហាង') : selectedHub.count} | {tx('City-level location', 'ទីតាំងក្នុងក្រុង')}</span>
                     <a
                       href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(selectedHub.locationQuery)}`}
                       target="_blank"
                       rel="noreferrer"
-                      className="font-semibold text-green-300 underline underline-offset-2 hover:text-green-200"
+                      className="font-semibold text-sky-700 underline underline-offset-2 hover:text-sky-900"
                     >
                       {tx('Open in Google Maps', 'បើកក្នុង Google Maps')}
                     </a>
