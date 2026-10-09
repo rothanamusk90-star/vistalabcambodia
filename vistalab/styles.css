@@ -9,17 +9,17 @@ html {
 body {
   margin: 0;
   min-width: 320px;
-  background: #f8fafc;
-  color: #1e293b;
+  background: #ffffff;
+  color: #1e3a5f;
 }
 
-/* Color Hunt sample palette: cream, sage, aqua, and muted blue. */
+/* White and blue theme with clear text contrast. */
 :root {
-  --site-cream: #fff7dd;
-  --site-sage: #b4debd;
-  --site-aqua: #91c4c3;
-  --site-blue: #80a1ba;
-  --site-ink: #273b49;
+  --site-cream: #ffffff;
+  --site-sage: #eff6ff;
+  --site-aqua: #dbeafe;
+  --site-blue: #3b82f6;
+  --site-ink: #1e3a5f;
 }
 
 body,
@@ -34,9 +34,9 @@ body,
   color: var(--site-ink);
 }
 
-.site-topbar-friendly [class~="text-amber-300"],
-.site-topbar-friendly [class~="text-amber-400"] {
-  color: #205781;
+.site-topbar-friendly [class~="text-blue-300"],
+.site-topbar-friendly [class~="text-blue-400"] {
+  color: #1d4ed8;
 }
 
 .site-hero-friendly {
@@ -44,22 +44,22 @@ body,
   color: var(--site-ink);
 }
 
-.site-hero-friendly [class~="bg-amber-100"] {
+.site-hero-friendly [class~="bg-blue-100"] {
   background-color: var(--site-sage);
 }
 
-.site-hero-friendly [class~="bg-emerald-100"] {
-  background-color: #e5f1e5;
+.site-hero-friendly [class~="bg-blue-100"] {
+  background-color: #eff6ff;
 }
 
 .site-hero-friendly > [aria-hidden="true"]:nth-child(2) {
-  background-image: linear-gradient(90deg, rgb(255 247 221 / 97%), rgb(255 247 221 / 91%) 58%, rgb(180 222 189 / 76%)) !important;
+  background-image: linear-gradient(90deg, rgb(255 255 255 / 97%), rgb(255 255 255 / 93%) 58%, rgb(239 246 255 / 88%)) !important;
 }
 
 .site-hero-friendly [class~="bg-white/10"],
 .site-hero-friendly [class~="bg-white/15"],
 .site-hero-friendly [class~="bg-slate-900/60"] {
-  background-color: #fffdf6;
+  background-color: #ffffff;
 }
 
 .site-hero-friendly [class~="border-white/10"],
@@ -68,16 +68,17 @@ body,
   border-color: var(--site-aqua);
 }
 
-.site-hero-friendly [class~="text-amber-300"],
-.site-hero-friendly [class~="text-amber-400"],
-.site-hero-friendly [class~="text-amber-700"],
-.site-hero-friendly [class~="text-amber-800"] {
-  color: #205781;
+.site-hero-friendly [class~="text-blue-300"],
+.site-hero-friendly [class~="text-blue-400"],
+.site-hero-friendly [class~="text-blue-700"],
+.site-hero-friendly [class~="text-blue-800"] {
+  color: #1d4ed8;
 }
 
-.site-hero-friendly [class*="from-amber-500"][class*="to-amber-600"] {
+.site-hero-friendly [class*="from-blue-500"][class*="to-blue-600"] {
   background-image: none;
-  background-color: var(--site-aqua);
+  background-color: var(--site-blue);
+  color: #ffffff;
 }
 
 .site-map-friendly {
@@ -90,20 +91,20 @@ body,
 
 .site-map-friendly [class~="bg-slate-800"],
 .site-map-friendly [class~="bg-slate-800/70"] {
-  background-color: #fffdf6;
+  background-color: #ffffff;
 }
 
-.site-map-friendly [class~="text-amber-300"] {
-  color: #205781;
+.site-map-friendly [class~="text-blue-300"] {
+  color: #1d4ed8;
 }
 
 .site-contact-friendly {
-  background-color: #e5f1e5;
+  background-color: var(--site-sage);
   border-color: var(--site-aqua);
 }
 
-.site-contact-friendly [class~="text-amber-400"] {
-  color: #205781;
+.site-contact-friendly [class~="text-blue-400"] {
+  color: #1d4ed8;
 }
 
 .site-footer-friendly {
@@ -111,12 +112,12 @@ body,
   border-color: var(--site-aqua);
 }
 
-.site-footer-friendly [class~="text-amber-400"] {
-  color: #205781;
+.site-footer-friendly [class~="text-blue-400"] {
+  color: #1d4ed8;
 }
 
 .site-footer-friendly > div:last-child {
-  background-color: #dcebe0;
+  background-color: var(--site-aqua);
   border-color: var(--site-aqua);
 }
 
