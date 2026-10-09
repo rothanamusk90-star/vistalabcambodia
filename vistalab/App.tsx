@@ -199,7 +199,7 @@ export default function App() {
   return (
     <div
       lang={lang === 'KH' ? 'km' : 'en'}
-      className="min-h-screen bg-slate-50 text-slate-800 font-sans flex flex-col selection:bg-green-900 selection:text-white"
+      className="min-h-screen w-full min-w-0 bg-slate-50 text-slate-800 font-sans flex flex-col selection:bg-green-900 selection:text-white"
       style={lang === 'KH' ? { fontFamily: "'Kantumruy Pro', 'Noto Sans Khmer', sans-serif", fontSynthesis: 'none' } : undefined}
     >
       {}
@@ -250,7 +250,7 @@ export default function App() {
         </div>
 
         {/* Main Navbar */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-8 py-3 flex items-center justify-between">
+        <div className="w-full min-w-0 max-w-7xl mx-auto px-4 sm:px-8 py-3 flex items-center justify-between">
           {/* Logo */}
           <div 
             onClick={() => setCurrentView('home')} 
@@ -387,25 +387,25 @@ export default function App() {
           <div className="space-y-10 sm:space-y-16 sm:space-y-24 pb-16">
             {/* HERO POSTER */}
             <section className="site-hero-friendly overflow-hidden px-4 py-4 sm:px-8 sm:py-8">
-              <div className="relative mx-auto min-h-[540px] max-w-7xl overflow-hidden rounded-[2rem] bg-green-50 shadow-xl sm:min-h-[460px]">
+              <div style={{ width: 'min(100%, calc(100vw - 2rem))', minWidth: 0 }} className="relative mx-auto min-h-0 w-full min-w-0 max-w-7xl overflow-hidden rounded-[2rem] bg-green-50 shadow-xl sm:min-h-[460px]">
                 <img
                   src={settings.heroImage || `${import.meta.env.BASE_URL}images/hero-warehouse-banner.jpg`}
                   alt="VistaLab Cambodia distribution warehouse"
-                  className="poster-image absolute inset-x-0 top-0 h-[260px] w-full object-cover sm:inset-y-0 sm:left-auto sm:right-0 sm:h-full sm:w-[62%]"
+                  className="poster-image absolute inset-x-0 top-0 h-[220px] w-full object-cover sm:inset-y-0 sm:left-auto sm:right-0 sm:h-full sm:w-[62%]"
                 />
-                <div aria-hidden="true" className="absolute inset-x-0 top-[150px] h-[130px] bg-gradient-to-b from-transparent to-green-50 sm:inset-y-0 sm:left-1/3 sm:right-0 sm:top-0 sm:h-auto sm:bg-gradient-to-r sm:from-green-50 sm:via-green-50/80 sm:to-transparent" />
-                <div className="poster-copy relative z-10 flex min-h-[540px] max-w-2xl flex-col justify-end px-5 pb-7 pt-[275px] sm:min-h-[460px] sm:justify-center sm:px-10 sm:py-12 lg:px-14">
-                  <div className="mb-3 inline-flex w-fit items-center gap-2 rounded-full border border-green-200 bg-white/90 px-3 py-1.5 text-xs font-bold text-green-800 shadow-sm sm:text-sm">
+                <div aria-hidden="true" className="absolute inset-x-0 top-[125px] h-[110px] bg-gradient-to-b from-transparent to-green-50 sm:inset-y-0 sm:left-1/3 sm:right-0 sm:top-0 sm:h-auto sm:bg-gradient-to-r sm:from-green-50 sm:via-green-50/80 sm:to-transparent" />
+                <div style={{ width: '100%', minWidth: 0 }} className="poster-copy relative z-10 flex min-h-0 w-full min-w-0 max-w-2xl flex-col justify-end px-4 pb-6 pt-[232px] sm:min-h-[460px] sm:justify-center sm:px-10 sm:py-12 lg:px-14">
+                  <div className="mb-3 inline-flex w-fit max-w-full items-center gap-2 whitespace-normal rounded-full border border-green-200 bg-white/90 px-3 py-1.5 text-xs font-bold text-green-800 shadow-sm sm:text-sm">
                     <Sparkles className="h-4 w-4 text-green-600" />
                     {lang === 'KH' ? settings.heroSubtitle_kh : settings.heroSubtitle_en}
                   </div>
-                  <h1 className="max-w-xl text-3xl font-black leading-tight tracking-tight text-slate-950 sm:text-5xl lg:text-6xl">{lang === 'KH' ? settings.heroTitle_kh : settings.heroTitle_en}</h1>
-                  <p className="mt-3 max-w-lg text-sm leading-relaxed text-slate-700 sm:text-base">{lang === 'KH' ? settings.heroDescription_kh : settings.heroDescription_en}</p>
+                  <h1 style={{ width: '100%', overflowWrap: 'anywhere' }} className="max-w-full break-words text-3xl font-black leading-tight tracking-tight text-slate-950 sm:max-w-xl sm:text-5xl lg:text-6xl">{lang === 'KH' ? settings.heroTitle_kh : settings.heroTitle_en}</h1>
+                  <p style={{ width: '100%', overflowWrap: 'anywhere' }} className="mt-3 max-w-full break-words text-sm leading-relaxed text-slate-700 sm:max-w-lg sm:text-base">{lang === 'KH' ? settings.heroDescription_kh : settings.heroDescription_en}</p>
                   <div className="mt-5 flex flex-wrap gap-3">
-                    <button onClick={() => setCurrentView('brands')} className="inline-flex items-center justify-center gap-2 rounded-xl bg-green-700 px-5 py-3 font-bold text-white shadow-md transition hover:bg-green-800">
+                    <button onClick={() => setCurrentView('brands')} className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-green-700 px-5 py-3 font-bold text-white shadow-md transition hover:bg-green-800 sm:w-auto">
                       {t.exploreBrands}<ArrowRight className="h-5 w-5" />
                     </button>
-                    <button onClick={() => setCurrentView('partner')} className="rounded-xl border border-green-200 bg-white px-5 py-3 font-bold text-slate-800 transition hover:bg-green-50">{t.partnerWithUs}</button>
+                    <button onClick={() => setCurrentView('partner')} className="w-full rounded-xl border border-green-200 bg-white px-5 py-3 font-bold text-slate-800 transition hover:bg-green-50 sm:w-auto">{t.partnerWithUs}</button>
                   </div>
                   <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-xs font-semibold text-slate-700 sm:text-sm">
                     <span>✓ {tx('12+ Active Brands', 'ម៉ាកផលិតផលជាង ១២')}</span>
@@ -413,7 +413,7 @@ export default function App() {
                     <span>✓ {tx('Nationwide Distribution', 'ចែកចាយទូទាំងប្រទេស')}</span>
                   </div>
                 </div>
-                <div className="poster-trust-badge absolute right-5 top-[190px] rounded-2xl border border-white/70 bg-white/90 px-4 py-3 text-center shadow-lg sm:right-8 sm:top-8">
+                <div className="poster-trust-badge absolute right-3 top-[154px] max-w-[calc(100%-1.5rem)] rounded-2xl border border-white/70 bg-white/90 px-3 py-2 text-center shadow-lg sm:right-8 sm:top-8 sm:px-4 sm:py-3">
                   <div className="text-2xl font-black leading-none text-green-800">{settings.heroTrustedBrands}</div>
                   <div className="mt-1 text-[10px] font-bold uppercase tracking-wide text-slate-600">{tx('Trusted Brands', 'ម៉ាកដែលទុកចិត្ត')}</div>
                 </div>
@@ -1652,12 +1652,12 @@ export default function App() {
       )}
 
       {}
-      <div className="fixed bottom-6 left-6 z-40 flex flex-col space-y-2">
+      <div className="fixed bottom-4 right-4 z-40 flex flex-col space-y-2 sm:bottom-6 sm:left-6 sm:right-auto">
         <a
           href={`https://t.me/${settings.telegram.replace('@','')}`}
           target="_blank"
           rel="noreferrer"
-          className="bg-green-500 hover:bg-green-600 text-white p-3.5 rounded-full shadow-lg flex items-center justify-center transition-transform hover:scale-110"
+          className="h-11 w-11 rounded-full bg-green-500 p-0 text-white shadow-lg flex items-center justify-center transition-transform hover:scale-110 sm:h-auto sm:w-auto sm:p-3.5"
           title="Contact via Telegram"
         >
           <MessageCircle className="w-6 h-6" />
@@ -1666,7 +1666,7 @@ export default function App() {
           href={settings.facebook}
           target="_blank"
           rel="noreferrer"
-          className="bg-green-600 hover:bg-green-700 text-white p-3.5 rounded-full shadow-lg flex items-center justify-center transition-transform hover:scale-110"
+          className="hidden rounded-full bg-green-600 p-3.5 text-white shadow-lg items-center justify-center transition-transform hover:scale-110 sm:flex"
           title="Visit VistaLab on Facebook"
           aria-label="Visit VistaLab on Facebook"
         >
