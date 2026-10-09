@@ -261,7 +261,11 @@ export default function App() {
             </div>
             <div className="min-w-0">
               <div className="flex items-center truncate text-base font-extrabold tracking-tight text-[#202124] sm:text-xl">
-                VISTALAB <span className="ml-1.5 rounded bg-green-50 px-1.5 py-0.5 text-[9px] font-bold text-green-600 sm:text-xs">{tx('CAMBODIA', 'កម្ពុជា')}</span>
+                VISTALAB <svg className="ml-1.5 inline-block h-[13px] w-[20px] rounded-[2px] align-[1px] shadow-sm ring-1 ring-black/10" viewBox="0 0 30 20" role="img" aria-label={tx('Cambodia flag', 'ទង់ជាតិកម្ពុជា')}>
+                  <rect width="30" height="20" fill="#032EA1" />
+                  <rect y="5" width="30" height="10" fill="#E00025" />
+                  <path fill="#fff" d="M8 13.5h14v-1h-1v-3h-1V8h-1V7h-1V6h-1V5h-2v1h-1v1h-1v1h-1v1h-1v3H8zm4-1v-3h1v3zm3 0V9h1v3.5zm3 0v-3h1v3z" />
+                </svg>
               </div>
               <div className="text-[10px] sm:text-xs text-slate-500 font-medium tracking-wide max-[360px]:hidden">
                 {tx('FMCG IMPORTER & DISTRIBUTOR', 'អ្នកនាំចូល និងចែកចាយផលិតផល FMCG')}
