@@ -1,0 +1,82 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+}
+
+/* Keep body copy comfortable to read across every page and language. */
+main .text-xs {
+  font-size: 0.875rem;
+  line-height: 1.45;
+}
+
+main .text-sm {
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+main [class~="text-[8px]"],
+main [class~="text-[9px]"],
+main [class~="text-[10px]"] {
+  font-size: 0.8125rem;
+  line-height: 1.4;
+}
+
+main [class~="text-[11px]"] {
+  font-size: 0.875rem;
+  line-height: 1.45;
+}
+
+@media (max-width: 639px) {
+  main .text-xs {
+    font-size: 0.8125rem;
+    line-height: 1.45;
+  }
+
+  main .text-sm {
+    font-size: 0.9375rem;
+    line-height: 1.5;
+  }
+
+  main [class~="text-[8px]"],
+  main [class~="text-[9px]"],
+  main [class~="text-[10px]"],
+  main [class~="text-[11px]"] {
+    font-size: 0.75rem;
+    line-height: 1.4;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 180ms ease-out;
+}
+
+.hero-background-image {
+  transform: scale(1.08);
+  animation: hero-background-drift 36s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+@keyframes hero-background-drift {
+  from { transform: scale(1.08) translateX(0); }
+  to { transform: scale(1.12) translateX(-1.5%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-background-image {
+    animation: none;
+    transform: scale(1.08);
+  }
+}

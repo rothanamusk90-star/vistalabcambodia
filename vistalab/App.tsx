@@ -1,0 +1,1771 @@
+import React, { useState, useEffect } from 'react';
+import { 
+  Building2, Globe, Truck, Package, ShieldCheck, Phone, Mail, Send, Home, Info, Tags, Store, Newspaper, Handshake,
+  MapPin, Search, Menu, X, ChevronRight, ChevronDown, CheckCircle, 
+  Users, Layers, ExternalLink, Plus, Edit, Trash2, Filter, Eye, 
+  ArrowRight, Sparkles, MessageCircle, BarChart3, FileText, Settings,
+  Upload, Tag, Award, Briefcase, RefreshCw, AlertCircle, Check
+} from 'lucide-react';
+import {
+  distributionHubs,
+  initialBrands,
+  initialInquiries,
+  initialNews,
+  initialProducts,
+  productCategories,
+  type Brand,
+  type Inquiry,
+  type NewsArticle,
+  type Product
+} from './data/siteData';
+import { Modal } from './components/Modal';
+
+import { ImageUpload } from './components/ImageUpload';
+import { CountryFlag } from './components/CountryFlag';
+import { loadStoredArray } from './utils/storage';
+import { translations, brandDescriptionsKh, productSpecsKh, productBadgesKh } from './data/translations';
+
+export default function App() {
+  const [lang, setLang] = useState<'EN' | 'KH'>('EN');
+  const [currentView, setCurrentView] = useState('home'); // home, about, brands, products, distribution, partner, seller, news, contact, admin
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [activeCategory, setActiveCategory] = useState('All');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedHubId, setSelectedHubId] = useState(distributionHubs[0].id);
+  const selectedHub = distributionHubs.find((hub) => hub.id === selectedHubId) ?? distributionHubs[0];
+  
+  // Data States
+  const [brands, setBrands] = useState<Brand[]>(() => loadStoredArray('vistalab.brands', initialBrands));
+  const [products, setProducts] = useState<Product[]>(() => loadStoredArray('vistalab.products', initialProducts));
+  const [news, setNews] = useState<NewsArticle[]>(() => loadStoredArray('vistalab.news', initialNews));
+  const [inquiries, setInquiries] = useState<Inquiry[]>(() => loadStoredArray('vistalab.inquiries', initialInquiries));
+  const [editingBrand, setEditingBrand] = useState<Brand | null>(null);
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [editingNews, setEditingNews] = useState<NewsArticle | null>(null);
+  const [newProductImage, setNewProductImage] = useState('');
+  
+  // Modals & Drawers
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [selectedBrand, setSelectedBrand] = useState<Brand | null>(null);
+  const [selectedArticle, setSelectedArticle] = useState<NewsArticle | null>(null);
+  const [inquiryModalOpen, setInquiryModalOpen] = useState(false);
+  const [inquiryPrefill, setInquiryPrefill] = useState({ product: '', brand: '', type: 'Product Inquiry' });
+  
+  // Toast notifications
+  const [toastMessage, setToastMessage] = useState('');
+  
+  // Contact & Settings state
+  const [settings, setSettings] = useState(() => {
+    const defaults = {
+      phone1: "+855 10 957 858", phone2: "+855 12 957 858", phone3: "+855 93 957 858",
+      email: "vistalab.cambodia@gmail.com", telegram: "@VISTALAB_Cambodia",
+      facebook: "https://www.facebook.com/vistalab/", address_en: "Phnom Penh, Kingdom of Cambodia",
+      address_kh: "ážšáž¶áž‡áž’áž¶áž“áž¸áž—áŸ’áž“áŸ†áž–áŸáž‰ áž–áŸ’ážšáŸ‡ážšáž¶áž‡áž¶ážŽáž¶áž…áž€áŸ’ážšáž€áž˜áŸ’áž–áž»áž‡áž¶",
+      business_hours: "Monday â€“ Saturday (8:00 AM â€“ 5:00 PM)",
+      business_hours_kh: "áž…áž“áŸ’áž‘â€“ážŸáŸ…ážšáŸ (áŸ¨:áŸ áŸ  áž–áŸ’ážšáž¹áž€â€“áŸ¥:áŸ áŸ  áž›áŸ’áž„áž¶áž…)",
+      distributionHeroImage: '',
+      distributionHeroAnimated: true,
+      aboutHeroImage: '',
+      aboutHeroAnimated: true,
+      aboutTitle_en: 'Your Trusted FMCG Import & Distribution Partner',
+      aboutTitle_kh: 'ážŠáŸƒáž‚áž¼ážŠáŸ‚áž›áž¢áŸ’áž“áž€áž¢áž¶áž…áž‘áž»áž€áž…áž·ážáŸ’ážáž”áž¶áž“ ážŸáž˜áŸ’ážšáž¶áž”áŸ‹áž€áž¶ážšáž“áž¶áŸ†áž…áž¼áž› áž“áž·áž„áž…áŸ‚áž€áž…áž¶áž™áž•áž›áž·ážáž•áž› FMCG',
+      aboutDescription_en: 'VistaLab Cambodia Co., Ltd. was established to bridge high-quality international fast-moving consumer goods (FMCG) with the growing market demand in Cambodia.',
+      aboutDescription_kh: 'áž€áŸ’ážšáž»áž˜áž áŸŠáž»áž“ VistaLab Cambodia Co., Ltd. ážáŸ’ážšáž¼ážœáž”áž¶áž“áž”áž„áŸ’áž€áž¾ážáž¡áž¾áž„ážŠáž¾áž˜áŸ’áž”áž¸áž“áž¶áŸ†áž™áž€áž•áž›áž·ážáž•áž›áž”áŸ’ážšáž¾áž”áŸ’ážšáž¶ážŸáŸ‹áž”áŸ’ážšáž…áž¶áŸ†ážáŸ’áž„áŸƒážŠáŸ‚áž›áž˜áž¶áž“áž‚áž»ážŽáž—áž¶áž–ážáŸ’áž–ážŸáŸ‹áž–áž¸áž¢áž“áŸ’ážážšáž‡áž¶ážáž· áž˜áž€áž”áŸ†áž–áŸáž‰ážáž˜áŸ’ážšáž¼ážœáž€áž¶ážšáž‘áž¸áž•áŸ’ážŸáž¶ážšážŠáŸ‚áž›áž€áŸ†áž–áž»áž„ážšáž¸áž€áž…áž˜áŸ’ážšáž¾áž“áž“áŸ…áž€áž˜áŸ’áž–áž»áž‡áž¶áŸ”'    };
+    try {
+      const stored = window.localStorage.getItem('vistalab.settings');
+      if (!stored) return defaults;
+      const saved = JSON.parse(stored);
+      return {
+        ...defaults,
+        ...saved,
+        address_kh: typeof saved.address_kh === 'string' && !saved.address_kh.includes('?') ? saved.address_kh : defaults.address_kh
+      };
+    } catch { return defaults; }
+  });
+
+  const t = translations[lang];
+  const tx = (english: string, khmer: string) => lang === 'KH' ? khmer : english;
+  const categoryLabels: Record<typeof productCategories[number], string> = {
+    All: t.allCategories,
+    'Personal Care': t.catPersonal,
+    'Baby Care': t.catBaby,
+    'Beauty & Body Care': t.catBeauty,
+    'Household Care': t.catHousehold,
+    'Food & Confectionery': t.catFood
+  };
+  const localizedCategory = (category: string) => categoryLabels[category as typeof productCategories[number]] ?? category;
+  const localizedProductName = (product: Product) => lang === 'KH'
+    ? product.name_kh && product.name_kh !== product.name_en ? product.name_kh : 'áž˜áž·áž“áž‘áž¶áž“áŸ‹áž˜áž¶áž“ážˆáŸ’áž˜áŸ„áŸ‡áž•áž›áž·ážáž•áž›áž‡áž¶áž—áž¶ážŸáž¶ážáŸ’áž˜áŸ‚ážšáŸ”'
+    : product.name_en;
+  const localizedProductSpecs = (product: Product) => lang === 'KH'
+    ? product.specs_kh || productSpecsKh[product.id] || 'áž˜áž·áž“áž‘áž¶áž“áŸ‹áž˜áž¶áž“áž€áž¶ážšáž–áž·áž–ážŽáŸŒáž“áž¶áž¢áŸ†áž–áž¸áž•áž›áž·ážáž•áž›áž‡áž¶áž—áž¶ážŸáž¶ážáŸ’áž˜áŸ‚ážšáŸ”'
+    : product.specs;
+  const localizedProductBadge = (product: Product) => lang === 'KH'
+    ? productBadgesKh[product.id] || 'áž•áž›áž·ážáž•áž›'
+    : product.imageBadge;
+  const localizedBrandDescription = (brand: Brand) => lang === 'KH'
+    ? brand.description_kh || brandDescriptionsKh[brand.id] || 'áž˜áž·áž“áž‘áž¶áž“áŸ‹áž˜áž¶áž“áž€áž¶ážšáž–áž·áž–ážŽáŸŒáž“áž¶áž¢áŸ†áž–áž¸áž˜áŸ‰áž¶áž€áž‡áž¶áž—áž¶ážŸáž¶ážáŸ’áž˜áŸ‚ážšáŸ”'
+    : brand.description;
+  const localizedArticleTitle = (article: NewsArticle) => lang === 'KH'
+    ? article.title_kh || 'áž˜áž·áž“áž‘áž¶áž“áŸ‹áž˜áž¶áž“áž…áŸ†ážŽáž„áž‡áž¾áž„áž‡áž¶áž—áž¶ážŸáž¶ážáŸ’áž˜áŸ‚ážšáŸ”'
+    : article.title_en;
+  const localizedArticleExcerpt = (article: NewsArticle) => lang === 'KH'
+    ? article.excerpt_kh || 'áž˜áž·áž“áž‘áž¶áž“áŸ‹áž˜áž¶áž“ážŸáŸáž…áž€áŸ’ážáž¸ážŸáž„áŸ’ážáŸáž”áž‡áž¶áž—áž¶ážŸáž¶ážáŸ’áž˜áŸ‚ážšáŸ”'
+    : article.excerpt_en;
+  const localizedInquiryType = (value: string) => lang === 'KH'
+    ? ({ Seller: 'áž¢áŸ’áž“áž€áž›áž€áŸ‹', Partner: 'ážŠáŸƒáž‚áž¼áž¢áž¶áž‡áž¸ážœáž€áž˜áŸ’áž˜', 'Product Inquiry': 'ážŸáŸ†ážŽáž½ážšáž¢áŸ†áž–áž¸áž•áž›áž·ážáž•áž›', 'General Contact': 'áž‘áŸ†áž“áž¶áž€áŸ‹áž‘áŸ†áž“áž„áž‘áž¼áž‘áŸ…' }[value] ?? value)
+    : value;
+  const localizedInquiryStatus = (value: string) => lang === 'KH'
+    ? ({ New: 'ážáŸ’áž˜áž¸', 'In Progress': 'áž€áŸ†áž–áž»áž„ážŠáŸ†ážŽáž¾ážšáž€áž¶ážš', Contacted: 'áž”áž¶áž“áž‘áž¶áž€áŸ‹áž‘áž„' }[value] ?? value)
+    : value;
+  const localizedProvince = (value: string) => lang === 'KH'
+    ? ({ 'Phnom Penh': 'áž—áŸ’áž“áŸ†áž–áŸáž‰', 'Siem Reap': 'ážŸáŸ€áž˜ážšáž¶áž”', Battambang: 'áž”áž¶ážáŸ‹ážŠáŸ†áž”áž„', Kampot: 'áž€áŸ†áž–áž', Sihanoukville: 'áž–áŸ’ážšáŸ‡ážŸáž¸áž áž“áž»', 'Other Province': 'ážáŸážáŸ’ážáž•áŸ’ážŸáŸáž„áž‘áŸ€áž' }[value] ?? value)
+    : value;
+
+  // Helper for Toast Trigger
+  const triggerToast = (msg: string) => {
+    setToastMessage(msg);
+  };
+
+  // Open Inquiry with Prefill
+  const openInquiry = (productName = '', brandName = '', type = 'Product Inquiry') => {
+    setInquiryPrefill({ product: productName, brand: brandName, type });
+    setInquiryModalOpen(true);
+    if (selectedProduct) setSelectedProduct(null);
+  };
+
+  // Handle Form Submission
+  const handleInquirySubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const newInq = {
+      id: `inq-${Date.now()}`,
+      type: String(formData.get('type') || inquiryPrefill.type || 'General'),
+      name: String(formData.get('name') || 'Anonymous'),
+      business: String(formData.get('business') || 'N/A'),
+      phone: String(formData.get('phone') || 'N/A'),
+      telegram: String(formData.get('telegram') || 'N/A'),
+      province: String(formData.get('province') || 'Phnom Penh'),
+      status: 'New',
+      date: new Date().toISOString().split('T')[0],
+      details: String(formData.get('message') || `Inquiry regarding ${inquiryPrefill.product || 'products'}`)
+    };
+    
+    setInquiries((currentInquiries) => [newInq, ...currentInquiries]);
+    setInquiryModalOpen(false);
+    triggerToast(lang === 'EN' ? "Inquiry submitted successfully! Our team will contact you soon." : "áž€áž¶ážšážŸáž¶áž€ážŸáž½ážšážáŸ’ážšáž¼ážœáž”áž¶áž“áž•áŸ’áž‰áž¾ážšáž½áž…ážšáž¶áž›áŸ‹! áž€áŸ’ážšáž»áž˜áž€áž¶ážšáž„áž¶ážšáž“áž¹áž„áž‘áž¶áž€áŸ‹áž‘áž„áž‘áŸ…áž›áŸ„áž€áž¢áŸ’áž“áž€áŸ”");
+  };
+
+  // Scroll to top on navigation switch
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setMobileMenuOpen(false);
+  }, [currentView]);
+
+  useEffect(() => {
+    try { window.localStorage.setItem('vistalab.brands', JSON.stringify(brands)); } catch { /* Browser storage may be unavailable or full. */ }
+  }, [brands]);
+
+  useEffect(() => {
+    try { window.localStorage.setItem('vistalab.products', JSON.stringify(products)); } catch { /* Storage may be unavailable or full. */ }
+  }, [products]);
+
+  useEffect(() => {
+    try { window.localStorage.setItem('vistalab.news', JSON.stringify(news)); } catch { /* Storage may be unavailable or full. */ }
+  }, [news]);
+
+  useEffect(() => {
+    try { window.localStorage.setItem('vistalab.inquiries', JSON.stringify(inquiries)); } catch { /* Storage may be unavailable or full. */ }
+  }, [inquiries]);
+
+  useEffect(() => {
+    try { window.localStorage.setItem('vistalab.settings', JSON.stringify(settings)); } catch { /* Storage may be unavailable or full. */ }
+  }, [settings]);
+
+  useEffect(() => {
+    if (!toastMessage) return;
+    const timeoutId = window.setTimeout(() => setToastMessage(''), 4000);
+    return () => window.clearTimeout(timeoutId);
+  }, [toastMessage]);
+
+  return (
+    <div
+      lang={lang === 'KH' ? 'km' : 'en'}
+      className="min-h-screen bg-slate-50 text-slate-800 font-sans flex flex-col selection:bg-blue-900 selection:text-white"
+      style={lang === 'KH' ? { fontFamily: "'Kantumruy Pro', 'Noto Sans Khmer', sans-serif", fontSynthesis: 'none' } : undefined}
+    >
+      {}
+      {toastMessage && (
+        <div className="fixed bottom-4 left-4 right-4 sm:bottom-6 sm:left-auto sm:right-6 z-50 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center space-x-3 border border-slate-700">
+          <CheckCircle className="w-5 h-5 text-emerald-400" />
+          <span className="text-sm font-medium">{toastMessage}</span>
+        </div>
+      )}
+
+      {}
+      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm transition-all duration-200">
+        {/* Top utility bar */}
+        <div className="bg-[#0B2545] text-slate-300 text-xs py-1.5 px-4 sm:px-8">
+          <div className="max-w-7xl mx-auto flex justify-between items-center">
+            <div className="flex items-center space-x-4">
+              <span className="flex items-center space-x-1.5">
+                <Phone className="w-3.5 h-3.5 text-amber-400" />
+                <span className="hidden sm:inline">{settings.phone1}</span>
+                <span className="sm:hidden">{settings.phone1}</span>
+              </span>
+              <span className="hidden md:flex items-center space-x-1.5">
+                <Mail className="w-3.5 h-3.5 text-amber-400" />
+                <span>{settings.email}</span>
+              </span>
+            </div>
+            <div className="flex items-center space-x-4">
+              <span className="hidden sm:inline-block text-amber-300 font-medium">
+                {lang === 'EN' ? "Connecting Brands to Cambodia" : "áž—áŸ’áž‡áž¶áž”áŸ‹áž‘áŸ†áž“áž¶áž€áŸ‹áž‘áŸ†áž“áž„áž˜áŸ‰áž¶áž€áž•áž›áž·ážáž•áž›áž˜áž€áž€áž¶áž“áŸ‹áž€áž˜áŸ’áž–áž»áž‡áž¶"}
+              </span>
+              {/* Language Switcher */}
+              <div className="flex items-center bg-slate-800 rounded-lg p-0.5 border border-slate-700">
+                <button
+                  onClick={() => setLang('KH')}
+                  className={`px-2 py-0.5 text-xs rounded font-bold transition-colors ${lang === 'KH' ? 'bg-amber-500 text-slate-950' : 'text-slate-400 hover:text-white'}`}
+                >
+                  KH
+                </button>
+                <button
+                  onClick={() => setLang('EN')}
+                  className={`px-2 py-0.5 text-xs rounded font-bold transition-colors ${lang === 'EN' ? 'bg-amber-500 text-slate-950' : 'text-slate-400 hover:text-white'}`}
+                >
+                  EN
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Main Navbar */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 py-3 flex items-center justify-between">
+          {/* Logo */}
+          <div 
+            onClick={() => setCurrentView('home')} 
+            className="cursor-pointer flex min-w-0 flex-1 items-center space-x-3 group"
+          >
+            <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-[#0B2545] to-[#134074] text-amber-400 flex items-center justify-center font-black text-xl shadow-md border border-amber-500/30 group-hover:scale-105 transition-transform">
+              VL
+            </div>
+            <div className="min-w-0">
+              <div className="flex items-center truncate text-base font-extrabold tracking-tight text-[#0B2545] sm:text-xl">
+                VISTALAB <span className="ml-1.5 rounded bg-amber-50 px-1.5 py-0.5 text-[9px] font-bold text-amber-600 sm:text-xs">{tx('CAMBODIA', 'áž€áž˜áŸ’áž–áž»áž‡áž¶')}</span>
+              </div>
+              <div className="text-[10px] sm:text-xs text-slate-500 font-medium tracking-wide max-[360px]:hidden">
+                {tx('FMCG IMPORTER & DISTRIBUTOR', 'áž¢áŸ’áž“áž€áž“áž¶áŸ†áž…áž¼áž› áž“áž·áž„áž…áŸ‚áž€áž…áž¶áž™áž•áž›áž·ážáž•áž› FMCG')}
+              </div>
+            </div>
+          </div>
+
+          {/* Desktop Links */}
+          <nav className="hidden lg:flex items-center space-x-1 xl:space-x-2 text-sm font-semibold text-slate-700">
+            {[
+              { id: 'home', label: t.navHome, icon: Home },
+              { id: 'about', label: tx('About & Distribution', 'áž¢áŸ†áž–áž¸áž™áž¾áž„ áž“áž·áž„áž”ážŽáŸ’ážáž¶áž‰áž…áŸ‚áž€áž…áž¶áž™'), icon: Info },
+              { id: 'brands', label: t.navBrands, icon: Tags },
+              { id: 'products', label: t.navProducts, icon: Package },
+              { id: 'partner', label: t.navPartner, icon: Handshake },
+              { id: 'seller', label: t.navSeller, icon: Store },
+              { id: 'news', label: t.navNews, icon: Newspaper },
+              { id: 'contact', label: t.navContact, icon: Phone }
+            ].map((link) => (
+              <button
+                key={link.id}
+                onClick={() => setCurrentView(link.id)}
+                className={`px-3 py-2 rounded-lg transition-all ${currentView === link.id ? 'bg-blue-50 text-[#0B2545] font-bold' : 'hover:bg-slate-100 text-slate-600'}`}
+              >
+                {link.label}
+              </button>
+            ))}
+          </nav>
+
+          {/* Action CTAs */}
+          <div className="hidden lg:flex items-center space-x-3">
+            <button
+              onClick={() => setCurrentView('admin')}
+              className={`p-2 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors ${currentView === 'admin' ? 'bg-amber-100 text-amber-900 font-bold' : ''}`}
+              title={t.navAdmin}
+            >
+              <Settings className="w-5 h-5" />
+            </button>
+            <button
+              onClick={() => openInquiry('', '', 'General')}
+              className="bg-[#0B2545] hover:bg-[#134074] text-white px-4 py-2 rounded-xl font-semibold text-sm shadow-md hover:shadow-lg transition-all flex items-center space-x-1.5 border border-amber-500/20"
+            >
+              <span>{t.contactUs}</span>
+              <ChevronRight className="w-4 h-4 text-amber-400" />
+            </button>
+          </div>
+
+          {/* Mobile menu trigger */}
+          <div className="ml-2 flex shrink-0 items-center space-x-1 lg:hidden sm:space-x-2">
+            <button
+              onClick={() => setCurrentView('admin')}
+              className="p-2 text-slate-700 hover:bg-slate-100 rounded-lg"
+              title={t.navAdmin}
+            >
+              <Settings className="w-5 h-5" />
+            </button>
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="p-2 text-slate-700 hover:bg-slate-100 rounded-lg focus:outline-none"
+              aria-label={mobileMenuOpen ? tx('Close navigation menu', 'áž”áž·áž‘áž˜áŸ‰ážºáž“áž»áž™') : tx('Open navigation menu', 'áž”áž¾áž€áž˜áŸ‰ážºáž“áž»áž™')}
+              aria-expanded={mobileMenuOpen}
+              aria-controls="mobile-navigation"
+            >
+              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Navigation Drawer */}
+        {mobileMenuOpen && (
+          <div
+            id="mobile-navigation"
+            className="lg:hidden bg-white border-b border-slate-200 px-3 sm:px-4 pt-2 pb-4 sm:pb-6 space-y-2 shadow-xl animate-fadeIn max-h-[calc(100vh-7rem)] overflow-y-auto overscroll-contain"
+          >
+            <div className="grid grid-cols-2 gap-2 pb-3 border-b border-slate-100">
+              {[
+                { id: 'home', label: t.navHome, icon: Home },
+                { id: 'about', label: tx('About & Distribution', 'áž¢áŸ†áž–áž¸áž™áž¾áž„ áž“áž·áž„áž”ážŽáŸ’ážáž¶áž‰áž…áŸ‚áž€áž…áž¶áž™'), icon: Info },
+                { id: 'brands', label: t.navBrands, icon: Tags },
+                { id: 'products', label: t.navProducts, icon: Package },
+                { id: 'partner', label: t.navPartner, icon: Handshake },
+                { id: 'seller', label: t.navSeller, icon: Store },
+                { id: 'news', label: t.navNews, icon: Newspaper },
+                { id: 'contact', label: t.navContact, icon: Phone },
+                { id: 'admin', label: t.navAdmin, icon: Settings }
+              ].map((link) => (
+                <button
+                  key={link.id}
+                  onClick={() => setCurrentView(link.id)}
+                  className={`flex min-h-11 min-w-0 items-center gap-2 text-left px-3 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-colors ${currentView === link.id ? 'bg-blue-50 text-[#0B2545]' : 'text-slate-700 hover:bg-slate-50'}`}
+                >
+                  <link.icon className={`h-4 w-4 shrink-0 ${currentView === link.id ? 'text-amber-500' : 'text-slate-400'}`} aria-hidden="true" />
+                  <span className="min-w-0 leading-snug">{link.label}</span>
+                </button>
+              ))}
+            </div>
+            <div className="pt-2 flex flex-col space-y-2">
+              <button
+                onClick={() => openInquiry('', '', 'General')}
+                className="w-full bg-[#0B2545] text-white py-3 rounded-xl font-bold text-center text-sm shadow-md"
+              >
+                {t.contactUs}
+              </button>
+              <div className="flex items-center justify-around pt-2 text-xs font-semibold text-slate-600">
+                <a href={`tel:${settings.phone1}`} className="flex items-center space-x-1 text-blue-900">
+                  <Phone className="w-4 h-4 text-amber-500" />
+                  <span>{tx('Call Us', 'áž áŸ…áž‘áž¼ážšážŸáž–áŸ’áž‘áž˜áž€áž™áž¾áž„')}</span>
+                </a>
+                <a href={`https://t.me/${settings.telegram.replace('@','')}`} target="_blank" rel="noreferrer" className="flex items-center space-x-1 text-sky-600">
+                  <MessageCircle className="w-4 h-4" />
+                  <span>Telegram</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        )}
+      </header>
+
+      {}
+      <main className="flex-grow">
+        {/* VIEW: HOMEPAGE */}
+        {currentView === 'home' && (
+          <div className="space-y-10 sm:space-y-16 sm:space-y-24 pb-16">
+            {/* HERO SECTION */}
+            <section className="relative bg-[#0B2545] text-white overflow-hidden py-10 sm:py-16 sm:py-24 px-4 sm:px-8">
+              <div
+                aria-hidden="true"
+                className="hero-background-image absolute inset-0 bg-cover bg-center bg-no-repeat"
+                style={{ backgroundImage: "url(`${import.meta.env.BASE_URL}images/hero-warehouse-banner.jpg`)" }}
+              />
+              <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-r from-[#0B2545]/95 via-[#0B2545]/85 to-[#001529]/75" />
+              {/* Background graphic elements */}
+              <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
+              <div className="absolute top-0 right-0 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+
+              <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-12 items-center relative z-10">
+                <div className="lg:col-span-7 space-y-4 sm:space-y-6 text-center lg:text-left">
+                  <div className="inline-flex items-center space-x-2 bg-amber-500/10 border border-amber-500/30 text-amber-300 px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-semibold backdrop-blur-sm">
+                    <Sparkles className="w-4 h-4 text-amber-400" />
+                    <span>{t.heroSub}</span>
+                  </div>
+                  <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight">
+                    {lang === 'EN' ? (
+                      <>Connecting <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-amber-100">International Brands</span> with the Cambodian Market</>
+                    ) : (
+                      t.heroTitle
+                    )}
+                  </h1>
+                  <p className="text-slate-300 text-base sm:text-lg max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+                    {t.heroDesc}
+                  </p>
+                  
+                  <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start space-y-3 sm:space-y-0 sm:space-x-4 pt-4">
+                    <button
+                      onClick={() => setCurrentView('brands')}
+                      className="w-full sm:w-auto bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-extrabold px-7 py-3.5 rounded-xl shadow-lg hover:shadow-amber-500/20 transition-all flex items-center justify-center space-x-2"
+                    >
+                      <span>{t.exploreBrands}</span>
+                      <ArrowRight className="w-5 h-5" />
+                    </button>
+                    <button
+                      onClick={() => setCurrentView('partner')}
+                      className="w-full sm:w-auto bg-white/10 hover:bg-white/20 text-white font-bold px-7 py-3.5 rounded-xl border border-white/20 backdrop-blur-sm transition-all"
+                    >
+                      {t.partnerWithUs}
+                    </button>
+                  </div>
+
+                  {/* Trust Highlights */}
+                  <div className="pt-8 border-t border-white/10 grid grid-cols-3 gap-4 text-center lg:text-left">
+                    <div>
+                      <div className="text-2xl sm:text-3xl font-black text-amber-400">12+</div>
+                      <div className="text-xs text-slate-300 font-medium">{tx('Active Brands', 'áž˜áŸ‰áž¶áž€ážŠáŸ‚áž›áž€áŸ†áž–áž»áž„áž…áŸ‚áž€áž…áž¶áž™')}</div>
+                    </div>
+                    <div>
+                      <div className="text-2xl sm:text-3xl font-black text-amber-400">100%</div>
+                      <div className="text-xs text-slate-300 font-medium">{tx('Quality Imported', 'áž•áž›áž·ážáž•áž›áž“áž¶áŸ†áž…áž¼áž›áž˜áž¶áž“áž‚áž»ážŽáž—áž¶áž–')}</div>
+                    </div>
+                    <div>
+                      <div className="text-2xl sm:text-3xl font-black text-amber-400">{tx('Nationwide', 'áž‘áž¼áž‘áž¶áŸ†áž„áž”áŸ’ážšáž‘áŸážŸ')}</div>
+                      <div className="text-xs text-slate-300 font-medium">{tx('Distribution Network', 'áž”ážŽáŸ’ážáž¶áž‰áž…áŸ‚áž€áž…áž¶áž™')}</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Hero Showcase Collage Card */}
+                <div className="lg:col-span-5 relative">
+                  <div className="bg-gradient-to-br from-white/10 to-white/5 border border-white/20 p-6 sm:p-8 rounded-3xl backdrop-blur-md shadow-2xl space-y-4 sm:space-y-6">
+                    <div className="flex justify-between items-center pb-4 border-b border-white/10">
+                      <span className="text-xs font-bold uppercase tracking-wider text-amber-300">{tx('Featured Brands Showcase', 'áž˜áŸ‰áž¶áž€áž•áž›áž·ážáž•áž›ážŠáŸ‚áž›áž”áž¶áž“áž‡áŸ’ážšáž¾ážŸážšáž¾ážŸ')}</span>
+                      <span className="text-xs bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded font-medium">{tx('Malaysia Sourced', 'áž“áž¶áŸ†áž…áž¼áž›áž–áž¸áž˜áŸ‰áž¶áž¡áŸážŸáŸŠáž¸')}</span>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                      {brands.slice(0, 4).map((b) => (
+                        <div key={b.id} className="group flex min-h-28 items-center gap-3 rounded-xl border border-white/15 bg-white/10 p-3 transition-all hover:border-amber-300/60 hover:bg-white/15">
+                          <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-white p-2 shadow-sm">
+                            {b.image ? <img src={b.image} alt={`${b.name} logo`} className="h-full w-full object-contain" /> : <span className="text-center text-sm font-black leading-tight text-[#0B2545]">{b.logoText || b.name}</span>}
+                          </div>
+                          <div className="min-w-0 text-left">
+                            <p className="line-clamp-2 text-sm font-extrabold leading-tight text-white">{b.name}</p>
+                            <p className="mt-1 text-[11px] leading-snug text-slate-300">{localizedCategory(b.category)}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="bg-slate-900/60 p-4 rounded-2xl border border-amber-500/30 flex items-center space-x-3">
+                      <div className="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-400 flex-shrink-0">
+                        <Truck className="w-5 h-5" />
+                      </div>
+                      <div className="text-xs">
+                        <p className="font-bold text-white">{tx('Direct Supply Chain Connection', 'ážáŸ’ážŸáŸ‚ážŸáž„áŸ’ážœáž¶áž€áŸ‹áž•áŸ’áž‚ážáŸ‹áž•áŸ’áž‚áž„áŸ‹ážŠáŸ„áž™áž•áŸ’áž‘áž¶áž›áŸ‹')}</p>
+                        <p className="text-slate-400">{tx('Malaysia Warehouses â†’ Phnom Penh Central â†’ Retailers', 'ážƒáŸ’áž›áž¶áŸ†áž„áž“áŸ…áž˜áŸ‰áž¶áž¡áŸážŸáŸŠáž¸ â†’ áž˜áž‡áŸ’ážˆáž˜ážŽáŸ’ážŒáž›áž—áŸ’áž“áŸ†áž–áŸáž‰ â†’ áž¢áŸ’áž“áž€áž›áž€áŸ‹ážšáž¶áž™')}</p>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* TRUST / COMPANY INTRO CARDS */}
+            <section className="max-w-7xl mx-auto px-4 sm:px-8 space-y-12">
+              <div className="text-center max-w-3xl mx-auto space-y-3">
+                <h2 className="text-2xl sm:text-4xl font-extrabold text-[#0B2545]">{t.trustTitle}</h2>
+                <p className="text-slate-600 text-sm sm:text-base">{t.trustDesc}</p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+                {[
+                  { icon: ShieldCheck, title: t.importTitle, desc: t.importDesc, color: "text-blue-600 bg-blue-50" },
+                  { icon: Truck, title: t.distribTitle, desc: t.distribDesc, color: "text-amber-600 bg-amber-50" },
+                  { icon: Award, title: t.brandDevTitle, desc: t.brandDevDesc, color: "text-emerald-600 bg-emerald-50" },
+                  { icon: Users, title: t.partnershipTitle, desc: t.partnershipDesc, color: "text-indigo-600 bg-indigo-50" }
+                ].map((item, idx) => (
+                  <div key={idx} className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow space-y-4">
+                    <div className={`w-12 h-12 rounded-xl ${item.color} flex items-center justify-center`}>
+                      <item.icon className="w-6 h-6" />
+                    </div>
+                    <h3 className="text-lg font-bold text-slate-900">{item.title}</h3>
+                    <p className="text-slate-600 text-sm leading-relaxed">{item.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            {/* PRODUCT CATEGORIES FILTER */}
+            <section className="bg-slate-100 py-10 sm:py-16 px-4 sm:px-8 border-y border-slate-200">
+              <div className="max-w-7xl mx-auto space-y-5 sm:space-y-8">
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                  <div>
+                    <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0B2545]">{t.catTitle}</h2>
+                    <p className="text-slate-600 text-sm mt-1">{t.catSub}</p>
+                  </div>
+                  <button 
+                    onClick={() => setCurrentView('products')}
+                    className="text-blue-900 hover:text-amber-600 font-bold text-sm flex items-center space-x-1"
+                  >
+                    <span>{t.viewAllProducts}</span>
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                </div>
+
+                <div className="flex flex-wrap gap-2 pb-2">
+                  {productCategories.map((cat) => (
+                    <button
+                      key={cat}
+                      onClick={() => setActiveCategory(cat)}
+                      className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${activeCategory === cat ? 'bg-[#0B2545] text-white shadow-md' : 'bg-white text-slate-700 hover:bg-slate-200 border border-slate-200'}`}
+                    >
+                      {categoryLabels[cat]}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Filtered Product Grid preview */}
+              <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
+                  {products
+                    .filter(p => activeCategory === 'All' || p.category === activeCategory)
+                    .slice(0, 4)
+                    .map((prod) => (
+                      <div key={prod.id} className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-lg transition-all flex flex-col justify-between group">
+                        <div className={`h-48 ${prod.imageBg} relative p-6 flex flex-col items-center justify-center text-center`}>
+                          {prod.image && <img src={prod.image} alt={prod.name_en} className="absolute inset-0 h-full w-full object-cover" />}
+                          <span className="absolute top-3 left-3 bg-white/80 backdrop-blur-sm text-slate-800 text-xs font-extrabold px-2.5 py-1 rounded-md border border-slate-200">
+                            {prod.brand}
+                          </span>
+                          <span title={prod.origin} className="absolute right-3 top-3 flex h-9 min-w-14 items-center justify-center rounded-lg border border-slate-200 bg-white/95 px-1.5 shadow-sm">
+                            <CountryFlag country={prod.origin} image={brands.find((brand) => brand.name === prod.brand)?.flagImage} />
+                          </span>
+                          {!prod.image && <span className="text-2xl font-black text-slate-700/60 uppercase tracking-widest">
+                            {localizedProductBadge(prod)}
+                          </span>}
+                          {!prod.image && <span className="text-xs font-semibold text-slate-500 mt-2">{tx('Imported from', 'áž“áž¶áŸ†áž…áž¼áž›áž–áž¸')} {prod.origin === 'Malaysia' && lang === 'KH' ? 'áž˜áŸ‰áž¶áž¡áŸážŸáŸŠáž¸' : prod.origin}</span>}
+                        </div>
+                        <div className="p-5 flex-grow flex flex-col justify-between space-y-4">
+                          <div>
+                            <span className="text-[11px] font-bold text-amber-600 uppercase tracking-wide">{localizedCategory(prod.category)}</span>
+                            <h4 className="text-base font-bold text-slate-900 group-hover:text-blue-900 transition-colors line-clamp-2 mt-1">
+                              {localizedProductName(prod)}
+                            </h4>
+                            <p className="text-xs text-slate-500 mt-2">{localizedProductSpecs(prod)}</p>
+                          </div>
+                          <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
+                            <button
+                              onClick={() => setSelectedProduct(prod)}
+                              className="text-xs font-bold text-slate-700 hover:text-blue-900"
+                            >
+                              {t.viewDetails}
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                </div>
+              </div>
+            </section>
+
+            {/* FEATURED BRANDS GRID */}
+            <section className="max-w-7xl mx-auto px-4 sm:px-8 space-y-10">
+              <div className="text-center max-w-2xl mx-auto space-y-2">
+                <h2 className="text-2xl sm:text-4xl font-extrabold text-[#0B2545]">{t.brandsTitle}</h2>
+                <p className="text-slate-600 text-sm">{t.brandsSub}</p>
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+                {brands.slice(0, 12).map((b) => (
+                  <div
+                    key={b.id}
+                    onClick={() => { setSelectedBrand(b); }}
+                    className="min-h-44 bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-amber-400 cursor-pointer transition-all text-center flex flex-col items-center justify-center space-y-3 group"
+                  >
+                    <div className="flex h-24 w-full items-center justify-center overflow-hidden rounded-xl border border-slate-100 bg-gradient-to-br from-slate-50 to-blue-50 text-[#0B2545] font-black text-2xl group-hover:border-amber-200 sm:h-28">
+                      {b.image ? <img src={b.image} alt={`${b.name} logo`} className="h-full w-full p-2 object-contain" /> : <span className="max-w-full truncate px-2">{b.logoText || b.name}</span>}
+                    </div>
+                    <span className="font-extrabold text-slate-900 text-sm leading-tight group-hover:text-blue-900">{b.name}</span>
+                    <span className="text-[10px] text-slate-500 font-medium leading-tight">{localizedCategory(b.category)}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="text-center">
+                <button
+                  onClick={() => setCurrentView('brands')}
+                  className="bg-white hover:bg-slate-100 text-[#0B2545] font-extrabold px-6 py-3 rounded-xl border border-slate-300 shadow-sm text-sm"
+                >
+                  {t.viewAllBrands}
+                </button>
+              </div>
+            </section>
+
+            {/* INTERACTIVE CAMBODIA DISTRIBUTION NETWORK MAP */}
+            <section className="bg-[#0B2545] text-white py-10 sm:py-16 px-4 sm:px-8 relative overflow-hidden">
+              <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-12 items-center">
+                <div className="lg:col-span-5 space-y-4 sm:space-y-6">
+                  <span className="text-xs font-bold text-amber-400 uppercase tracking-widest">{tx('LOGISTICS & NETWORK', 'áž—ážŸáŸ’ážáž»áž—áž¶ážš áž“áž·áž„áž”ážŽáŸ’ážáž¶áž‰áž…áŸ‚áž€áž…áž¶áž™')}</span>
+                  <h2 className="text-2xl sm:text-4xl font-black">{t.distribNetworkTitle}</h2>
+                  <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
+                    {t.distribNetworkSub}
+                  </p>
+
+                  <div className="space-y-3 pt-2">
+                    <div className="bg-white/10 p-3.5 rounded-xl border border-white/10 flex items-center justify-between">
+                      <span className="text-sm font-semibold">{tx('Central Warehousing', 'ážƒáŸ’áž›áž¶áŸ†áž„áž€ážŽáŸ’ážáž¶áž›')}</span>
+                      <span className="text-xs bg-amber-400 text-slate-950 font-bold px-2 py-0.5 rounded">áž—áŸ’áž“áŸ†áž–áŸáž‰</span>
+                    </div>
+                    <div className="bg-white/10 p-3.5 rounded-xl border border-white/10 flex items-center justify-between">
+                      <span className="text-sm font-semibold">{tx('Provincial Hubs', 'áž˜áž‡áŸ’ážˆáž˜ážŽáŸ’ážŒáž›ážáž¶áž˜ážáŸážáŸ’áž')}</span>
+                      <span className="text-xs bg-amber-400 text-slate-950 font-bold px-2 py-0.5 rounded">ážŸáŸ€áž˜ážšáž¶áž” áž”áž¶ážáŸ‹ážŠáŸ†áž”áž„ áž“áž·áž„áž€áŸ†áž–áž</span>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => setCurrentView('about')}
+                    className="mt-4 bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold px-6 py-3 rounded-xl text-sm shadow-md transition-all flex items-center space-x-2"
+                  >
+                    <span>{tx('Explore Supply Chain Channel', 'ážŸáŸ’ážœáŸ‚áž„áž™áž›áŸ‹áž¢áŸ†áž–áž¸ážáŸ’ážŸáŸ‚ážŸáž„áŸ’ážœáž¶áž€áŸ‹áž•áŸ’áž‚ážáŸ‹áž•áŸ’áž‚áž„áŸ‹')}</span>
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                </div>
+
+                {/* Google Maps hub locations */}
+                <div className="lg:col-span-7 bg-slate-900/80 p-6 sm:p-8 rounded-3xl border border-slate-800 shadow-2xl relative min-h-[380px] flex flex-col justify-between">
+                  <div className="flex justify-between items-center text-xs text-slate-400 border-b border-slate-800 pb-3">
+                    <span className="font-bold text-amber-400">{tx('Google Maps - Cambodia Hub Locations', 'áž•áŸ‚áž“áž‘áž¸ Google - áž‘áž¸ážáž¶áŸ†áž„áž˜áž‡áŸ’ážˆáž˜ážŽáŸ’ážŒáž›áž“áŸ…áž€áž˜áŸ’áž–áž»áž‡áž¶')}</span>
+                    <span>{tx('Select a hub below', 'áž‡áŸ’ážšáž¾ážŸážšáž¾ážŸáž˜áž‡áŸ’ážˆáž˜ážŽáŸ’ážŒáž›ážáž¶áž„áž€áŸ’ážšáŸ„áž˜')}</span>
+                  </div>
+
+                  <div className="relative w-full h-64 sm:h-80 rounded-2xl overflow-hidden border border-slate-700 my-4 bg-slate-800">
+                    <iframe
+                      title={`Google Map showing ${selectedHub.locationQuery}`}
+                      src={`https://maps.google.com/maps?q=${encodeURIComponent(selectedHub.locationQuery)}&z=8&output=embed`}
+                      className="h-full w-full border-0"
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                      allowFullScreen
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-[11px] text-slate-300">
+                    {distributionHubs.map((hub) => (
+                      <button
+                        key={hub.id}
+                        type="button"
+                        onClick={() => setSelectedHubId(hub.id)}
+                        aria-pressed={selectedHub.id === hub.id}
+                        className={`flex min-w-0 items-center gap-1.5 rounded-lg p-2 text-left transition-colors ${selectedHub.id === hub.id ? 'bg-amber-400 text-slate-950' : 'bg-slate-800/70 hover:bg-slate-700'}`}
+                      >
+                        <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
+                        <span className="truncate">{lang === 'KH' ? ({ h1: 'áž€áž¶ážšáž·áž™áž¶áž›áŸáž™áž€ážŽáŸ’ážáž¶áž›áž—áŸ’áž“áŸ†áž–áŸáž‰', h2: 'áž˜áž‡áŸ’ážˆáž˜ážŽáŸ’ážŒáž›ážáŸ†áž”áž“áŸ‹ážŸáŸ€áž˜ážšáž¶áž”', h3: 'áž˜áž‡áŸ’ážˆáž˜ážŽáŸ’ážŒáž›áž—áž¶áž‚ážáž¶áž„áž›áž·áž…áž”áž¶ážáŸ‹ážŠáŸ†áž”áž„', h4: 'áž˜áž‡áŸ’ážˆáž˜ážŽáŸ’ážŒáž›áž€áŸ†áž–áž áž“áž·áž„áž–áŸ’ážšáŸ‡ážŸáž¸áž áž“áž»', h5: 'áž˜áž‡áŸ’ážˆáž˜ážŽáŸ’ážŒáž›ážáŸ’áž”áž¼áž„ážƒáŸ’áž˜áž»áŸ† áž“áž·áž„áž€áŸ†áž–áž„áŸ‹áž…áž¶áž˜' }[hub.id] ?? hub.name) : hub.name}</span>
+                      </button>
+                    ))}
+                  </div>
+                  <div className="mt-3 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-300">
+                    <span>{lang === 'KH' ? ({ 'Main Warehouse & Hub': 'ážƒáŸ’áž›áž¶áŸ†áž„áž€ážŽáŸ’ážáž¶áž› áž“áž·áž„áž˜áž‡áŸ’ážˆáž˜ážŽáŸ’ážŒáž›', 'Distribution Hub': 'áž˜áž‡áŸ’ážˆáž˜ážŽáŸ’ážŒáž›áž…áŸ‚áž€áž…áž¶áž™', 'Southern Hub': 'áž˜áž‡áŸ’ážˆáž˜ážŽáŸ’ážŒáž›áž—áž¶áž‚ážáž¶áž„ážáŸ’áž”áž¼áž„', 'Eastern Hub': 'áž˜áž‡áŸ’ážˆáž˜ážŽáŸ’ážŒáž›áž—áž¶áž‚ážáž¶áž„áž€áž¾áž' }[selectedHub.type] ?? selectedHub.type) : selectedHub.type} | {lang === 'KH' ? selectedHub.count.replace(' Outlets', ' áž áž¶áž„') : selectedHub.count} | {tx('City-level location', 'áž‘áž¸ážáž¶áŸ†áž„áž€áŸ’áž“áž»áž„áž€áŸ’ážšáž»áž„')}</span>
+                    <a
+                      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(selectedHub.locationQuery)}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="font-semibold text-amber-300 underline underline-offset-2 hover:text-amber-200"
+                    >
+                      {tx('Open in Google Maps', 'áž”áž¾áž€áž€áŸ’áž“áž»áž„ Google Maps')}
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* WHY PARTNER WITH VISTALAB */}
+            <section className="max-w-7xl mx-auto px-4 sm:px-8 space-y-12">
+              <div className="text-center max-w-2xl mx-auto space-y-2">
+                <h2 className="text-2xl sm:text-4xl font-extrabold text-[#0B2545]">{t.whyTitle}</h2>
+              <p className="text-slate-600 text-sm">{tx('Empowering brands through operational excellence and dedicated retail partnerships.', 'áž‡áž½áž™áž¢áž—áž·ážœážŒáŸ’ážáž˜áŸ‰áž¶áž€áž•áž›áž·ážáž•áž›ážáž¶áž˜ážšáž™áŸˆáž”áŸ’ážšážáž·áž”ážáŸ’ážáž·áž€áž¶ážšáž”áŸ’ážšáž€áž”ážŠáŸ„áž™áž”áŸ’ážšážŸáž·áž‘áŸ’áž’áž—áž¶áž– áž“áž·áž„áž—áž¶áž–áž‡áž¶ážŠáŸƒáž‚áž¼áž‡áž¶áž˜áž½áž™áž¢áŸ’áž“áž€áž›áž€áŸ‹ážšáž¶áž™áŸ”')}</p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                {[
+                  { title: t.why1Title, desc: t.why1Desc, icon: Building2 },
+                  { title: t.why2Title, desc: t.why2Desc, icon: ShieldCheck },
+                  { title: t.why3Title, desc: t.why3Desc, icon: Layers },
+                  { title: t.why4Title, desc: t.why4Desc, icon: Sparkles },
+                  { title: t.why5Title, desc: t.why5Desc, icon: MessageCircle },
+                  { title: t.why6Title, desc: t.why6Desc, icon: BarChart3 }
+                ].map((item, idx) => (
+                  <div key={idx} className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+                    <div className="w-10 h-10 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center">
+                      <item.icon className="w-5 h-5" />
+                    </div>
+                    <h3 className="text-base font-bold text-slate-900">{item.title}</h3>
+                    <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">{item.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            {/* PARTNER CTA & SOCIAL HUB */}
+            <section className="max-w-7xl mx-auto px-4 sm:px-8">
+              <div className="bg-gradient-to-r from-[#0B2545] to-[#134074] rounded-3xl p-5 sm:p-8 sm:p-12 text-white shadow-xl grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-8 items-center border border-amber-500/20">
+                <div className="lg:col-span-8 space-y-4">
+                  <h2 className="text-2xl sm:text-4xl font-black">{t.ctaTitle}</h2>
+                  <p className="text-slate-300 text-sm sm:text-base">{t.ctaDesc}</p>
+                </div>
+                <div className="lg:col-span-4 flex flex-col sm:flex-row lg:flex-col gap-3 justify-end">
+                  <button
+                    onClick={() => setCurrentView('partner')}
+                    className="bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold px-6 py-3.5 rounded-xl shadow-md transition-all text-center text-sm"
+                  >
+                    {t.partnerWithUs}
+                  </button>
+                  <button
+                    onClick={() => setCurrentView('seller')}
+                    className="bg-white/10 hover:bg-white/20 text-white border border-white/20 font-bold px-6 py-3.5 rounded-xl transition-all text-center text-sm"
+                  >
+                    {t.becomeSeller}
+                  </button>
+                </div>
+              </div>
+            </section>
+          </div>
+        )}
+
+        {}
+        {currentView === 'about' && (
+          <div className="max-w-7xl mx-auto px-4 sm:px-8 py-7 sm:py-12 space-y-10 sm:space-y-16">
+            {/* Header */}
+            <section className="grid min-h-[440px] overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-xl shadow-slate-200/60 md:grid-cols-2">
+              <div className="flex flex-col justify-center p-6 sm:p-10 lg:p-12">
+                <span className="text-xs font-extrabold uppercase tracking-widest text-amber-600">{tx('ABOUT VISTALAB CAMBODIA', 'áž¢áŸ†áž–áž¸ VistaLab Cambodia')}</span>
+                <h1 className="mt-3 text-3xl font-black leading-tight text-[#0B2545] sm:text-4xl lg:text-5xl">{lang === 'KH' ? settings.aboutTitle_kh : settings.aboutTitle_en}</h1>
+                <p className="mt-4 max-w-xl text-base leading-7 text-slate-700">{lang === 'KH' ? settings.aboutDescription_kh : settings.aboutDescription_en}</p>
+                <div className="mt-6 grid max-w-md grid-cols-2 gap-3">
+                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4"><span className="block text-2xl font-black text-[#0B2545]">12+</span><span className="mt-1 block text-xs font-semibold text-slate-600">{tx('Consumer brands', 'áž˜áŸ‰áž¶áž€áž•áž›áž·ážáž•áž›')}</span></div>
+                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4"><span className="block text-2xl font-black text-[#0B2545]">2016</span><span className="mt-1 block text-xs font-semibold text-slate-600">{tx('Serving Cambodia', 'áž”áž˜áŸ’ážšáž¾áž‘áž¸áž•áŸ’ážŸáž¶ážšáž€áž˜áŸ’áž–áž»áž‡áž¶')}</span></div>
+                </div>
+              </div>
+              <div className="relative min-h-[320px] overflow-hidden bg-slate-100 sm:min-h-[400px] md:min-h-full">
+                <img src={settings.aboutHeroImage || `${import.meta.env.BASE_URL}images/hero-warehouse-banner.jpg`} alt="VistaLab warehouse and distribution operations" className={`absolute inset-0 h-full w-full object-cover ${settings.aboutHeroAnimated ? 'hero-background-image' : ''}`} />
+                <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[#0B2545]/30 via-transparent to-white/10" />
+                <div className="absolute inset-x-4 bottom-4 flex items-end justify-between gap-3 rounded-2xl border border-white/40 bg-[#0B2545]/85 p-4 text-white shadow-lg backdrop-blur-sm sm:inset-x-6 sm:bottom-6"><div><span className="text-[10px] font-bold uppercase tracking-widest text-amber-300">{tx('Our operations', 'áž”áŸ’ážšážáž·áž”ážáŸ’ážáž·áž€áž¶ážšážšáž”ážŸáŸ‹áž™áž¾áž„')}</span><p className="mt-1 text-sm font-extrabold sm:text-base">{tx('Import. Store. Deliver.', 'áž“áž¶áŸ†áž…áž¼áž› ážšáž€áŸ’ážŸáž¶áž‘áž»áž€ áž“áž·áž„áž…áŸ‚áž€áž…áž¶áž™')}</p></div><Truck className="h-7 w-7 shrink-0 text-amber-400" aria-hidden="true" /></div>
+              </div>
+            </section>
+            {/* Corporate Timeline */}
+            <div className="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-lg shadow-slate-200/50 space-y-5 sm:p-8 sm:space-y-8 lg:p-10">
+              <div className="flex flex-col justify-between gap-3 border-b border-slate-100 pb-5 sm:flex-row sm:items-end">
+  <div><span className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-amber-600">{tx('COMPANY MILESTONES', 'ážŠáŸ†ážŽáž¶áž€áŸ‹áž€áž¶áž›ážŸáŸ†ážáž¶áž“áŸ‹áŸ—')}</span><h2 className="mt-1 text-2xl font-black text-[#0B2545]">{tx('Our Journey & Development', 'ážŠáŸ†ážŽáž¾ážšážšáž¸áž€áž…áž˜áŸ’ážšáž¾áž“ážšáž”ážŸáŸ‹áž™áž¾áž„')}</h2></div>
+  <p className="max-w-md text-sm leading-relaxed text-slate-600">{tx('Growing our portfolio and distribution network to serve more Cambodian families.', 'áž–áž„áŸ’ážšáž¸áž€áž˜áŸ‰áž¶áž€áž•áž›áž·ážáž•áž› áž“áž·áž„áž”ážŽáŸ’ážáž¶áž‰áž…áŸ‚áž€áž…áž¶áž™ ážŠáž¾áž˜áŸ’áž”áž¸áž”áž˜áŸ’ážšáž¾áž‚áŸ’ážšáž½ážŸáž¶ážšáž€áž˜áŸ’áž–áž»áž‡áž¶áž€áž¶áž“áŸ‹ážáŸ‚áž…áŸ’ážšáž¾áž“áŸ”')}</p>
+</div>
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 sm:gap-6 relative">
+                {[
+                  { year: "2016-2017", title: tx("Establishment & Initial Imports", "áž€áž¶ážšáž”áž„áŸ’áž€áž¾ážáž€áŸ’ážšáž»áž˜áž áŸŠáž»áž“ áž“áž·áž„áž€áž¶ážšáž“áž¶áŸ†áž…áž¼áž›ážŠáŸ†áž”áž¼áž„"), desc: tx("Initiated company operations, establishing key imported product channels from Malaysia.", "áž…áž¶áž”áŸ‹áž•áŸ’ážáž¾áž˜áž”áŸ’ážšážáž·áž”ážáŸ’ážáž·áž€áž¶ážšáž€áŸ’ážšáž»áž˜áž áŸŠáž»áž“ áž“áž·áž„áž”áž„áŸ’áž€áž¾ážáž”ážŽáŸ’ážáž¶áž‰áž“áž¶áŸ†áž…áž¼áž›áž•áž›áž·ážáž•áž›ážŸáŸ†ážáž¶áž“áŸ‹áŸ—áž–áž¸áž”áŸ’ážšáž‘áŸážŸáž˜áŸ‰áž¶áž¡áŸážŸáŸŠáž¸áŸ”") },
+                  { year: "2019-2021", title: tx("Brand Portfolio Expansion", "áž€áž¶ážšáž–áž„áŸ’ážšáž¸áž€áž˜áŸ‰áž¶áž€áž•áž›áž·ážáž•áž›"), desc: tx("Secured key portfolio brands including L'affair, Elizzer, Be Love, and BIKA.", "áž”áž¶áž“áž“áž¶áŸ†áž…áž¼áž› áž“áž·áž„áž…áŸ‚áž€áž…áž¶áž™áž˜áŸ‰áž¶áž€ážŸáŸ†ážáž¶áž“áŸ‹áŸ— ážšáž½áž˜áž˜áž¶áž“ L'affair, Elizzer, Be Love áž“áž·áž„ BIKAáŸ”") },
+                  { year: "2022-2024", title: tx("Provincial Distribution Growth", "áž€áž¶ážšáž–áž„áŸ’ážšáž¸áž€áž€áž¶ážšáž…áŸ‚áž€áž…áž¶áž™ážáž¶áž˜ážáŸážáŸ’áž"), desc: tx("Expanded sales channels outside Phnom Penh into major regional provinces.", "áž–áž„áŸ’ážšáž¸áž€áž”ážŽáŸ’ážáž¶áž‰áž›áž€áŸ‹áž–áž¸ážšáž¶áž‡áž’áž¶áž“áž¸áž—áŸ’áž“áŸ†áž–áŸáž‰áž‘áŸ…áž€áž¶áž“áŸ‹ážáŸážáŸ’ážážŸáŸ†ážáž¶áž“áŸ‹áŸ—áŸ”") },
+                  { year: "2026+", title: tx("Digital Transformation & B2B", "áž€áž¶ážšáž•áŸ’áž›áž¶ážŸáŸ‹áž”áŸ’ážáž¼ážšážŒáž¸áž‡áž¸ážáž› áž“áž·áž„áž¢áž¶áž‡áž¸ážœáž€áž˜áŸ’áž˜ B2B"), desc: tx("Launching updated digital presence and streamlining commercial partner order workflows.", "áž€áŸ‚áž›áž˜áŸ’áž¢ážœážáŸ’ážáž˜áž¶áž“ážŒáž¸áž‡áž¸ážáž› áž“áž·áž„ážŸáž˜áŸ’ážšáž½áž›ážŠáŸ†ážŽáž¾ážšáž€áž¶ážšáž”áž‰áŸ’áž‡áž¶áž‘áž·áž‰ážŸáž˜áŸ’ážšáž¶áž”áŸ‹ážŠáŸƒáž‚áž¼áž¢áž¶áž‡áž¸ážœáž€áž˜áŸ’áž˜áŸ”") }
+                ].map((step, idx) => (
+                  <div key={idx} className="relative rounded-2xl border border-slate-200 border-t-4 border-t-amber-400 bg-gradient-to-b from-amber-50/60 to-white p-5 shadow-sm transition-transform duration-200 hover:-translate-y-1 hover:shadow-md sm:p-6">
+                    <span className="mb-4 flex h-9 w-9 items-center justify-center rounded-xl bg-[#0B2545] text-sm font-black text-amber-400">0{idx + 1}</span>
+                    <span className="inline-flex rounded-full bg-amber-100 px-3 py-1 text-xs font-black text-amber-900">{step.year}</span>
+                    <h3 className="text-base font-bold text-slate-900 pt-1">{step.title}</h3>
+                    <p className="text-sm text-slate-700 leading-relaxed">{step.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Vision & Mission Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-8">
+              <div className="bg-gradient-to-br from-[#0B2545] to-[#134074] text-white p-5 sm:p-8 rounded-3xl space-y-4 shadow-md">
+                <div className="w-12 h-12 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center">
+                  <Award className="w-6 h-6" />
+                </div>
+                <h3 className="text-2xl font-bold">{tx('Our Vision', 'áž…áž€áŸ’ážáž»ážœáž·ážŸáŸáž™ážšáž”ážŸáŸ‹áž™áž¾áž„')}</h3>
+                <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
+                  {tx('â€œTo become the most trusted FMCG distribution partner in Cambodia and the preferred local partner for leading international consumer brands.â€', 'â€œáž€áŸ’áž›áž¶áž™áž‡áž¶ážŠáŸƒáž‚áž¼áž…áŸ‚áž€áž…áž¶áž™áž•áž›áž·ážáž•áž› FMCG ážŠáŸ‚áž›áž‚áž½ážšáž±áŸ’áž™áž‘áž»áž€áž…áž·ážáŸ’ážáž”áŸ†áž•áž»ážáž“áŸ…áž€áž˜áŸ’áž–áž»áž‡áž¶ áž“áž·áž„áž‡áž¶ážŠáŸƒáž‚áž¼áž€áŸ’áž“áž»áž„ážŸáŸ’ážšáž»áž€ážŠáŸ‚áž›áž˜áŸ‰áž¶áž€áž•áž›áž·ážáž•áž›áž¢áž“áŸ’ážážšáž‡áž¶ážáž·ážˆáž¶áž“áž˜áž»ážáž‡áŸ’ážšáž¾ážŸážšáž¾ážŸáŸ”â€')}
+                </p>
+              </div>
+
+              <div className="bg-white p-5 sm:p-8 rounded-3xl border border-slate-200 space-y-4 shadow-sm">
+                <div className="w-12 h-12 rounded-xl bg-blue-100 text-blue-900 flex items-center justify-center">
+                  <Briefcase className="w-6 h-6" />
+                </div>
+                <h3 className="text-2xl font-bold text-[#0B2545]">{tx('Our Mission', 'áž”áŸážŸáž€áž€áž˜áŸ’áž˜ážšáž”ážŸáŸ‹áž™áž¾áž„')}</h3>
+                <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
+                  {tx('â€œTo bring genuine, high-quality products to Cambodian families, develop strong local brand equity, and create sustainable economic value for our retail partners and international suppliers.â€', 'â€œáž“áž¶áŸ†áž™áž€áž•áž›áž·ážáž•áž›áž–áž·áž áž“áž·áž„áž˜áž¶áž“áž‚áž»ážŽáž—áž¶áž–ážáŸ’áž–ážŸáŸ‹áž‡áž¼áž“áž‚áŸ’ážšáž½ážŸáž¶ážšáž€áž˜áŸ’áž–áž»áž‡áž¶ áž¢áž—áž·ážœážŒáŸ’ážáž˜áŸ‰áž¶áž€áž•áž›áž·ážáž•áž›áž€áŸ’áž“áž»áž„ážŸáŸ’ážšáž»áž€áž±áŸ’áž™ážšáž¹áž„áž˜áž¶áŸ† áž“áž·áž„áž”áž„áŸ’áž€áž¾ážážáž˜áŸ’áž›áŸƒážŸáŸážŠáŸ’áž‹áž€áž·áž…áŸ’áž…áž”áŸ’ážšáž€áž”ážŠáŸ„áž™áž…áž¸ážšáž—áž¶áž–ážŸáž˜áŸ’ážšáž¶áž”áŸ‹ážŠáŸƒáž‚áž¼áž›áž€áŸ‹ážšáž¶áž™ áž“áž·áž„áž¢áŸ’áž“áž€áž•áŸ’áž‚ážáŸ‹áž•áŸ’áž‚áž„áŸ‹áž¢áž“áŸ’ážážšáž‡áž¶ážáž·áŸ”â€')}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {}
+        {currentView === 'brands' && (
+          <div className="max-w-7xl mx-auto px-4 sm:px-8 py-7 sm:py-12 space-y-12">
+            <div className="text-center max-w-3xl mx-auto space-y-3">
+                      <span className="text-xs font-bold text-amber-600 uppercase tracking-widest">{tx('BRAND PORTFOLIO', 'áž•áž›áž”áŸážáŸ’ážšáž˜áŸ‰áž¶áž€áž•áž›áž·ážáž•áž›')}</span>
+              <h1 className="text-3xl sm:text-5xl font-black text-[#0B2545]">{t.brandsTitle}</h1>
+              <p className="text-slate-600 text-base">{t.brandsSub}</p>
+            </div>
+
+            {/* Brand Directory Grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
+              {brands.map((b) => (
+                <div key={b.id} className="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg flex flex-col justify-between">
+                  <div className="space-y-5 p-5 sm:p-6">
+                    <div className="relative flex h-36 items-center justify-center overflow-hidden rounded-xl border border-slate-100 bg-gradient-to-br from-slate-50 via-white to-blue-50 p-5 sm:h-40">
+                      {b.image ? (
+                        <img src={b.image} alt={`${b.name} logo`} className="h-full w-full object-contain" />
+                      ) : (
+                        <span className="max-w-full truncate text-center text-3xl font-black tracking-tight text-[#0B2545] sm:text-4xl">{b.logoText || b.name}</span>
+                      )}
+                      <span title={b.origin} className="absolute right-2 top-2 flex h-9 min-w-14 items-center justify-center rounded-lg border border-slate-200 bg-white/95 px-1.5 shadow-sm">
+                        <CountryFlag country={b.origin} image={b.flagImage} />
+                      </span>
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-extrabold text-slate-900 group-hover:text-blue-900">{b.name}</h3>
+                      <p className="text-xs font-bold text-blue-900 mt-0.5">{localizedCategory(b.category)}</p>
+                    </div>
+                    <p className="text-xs text-slate-600 leading-relaxed">{localizedBrandDescription(b)}</p>
+                  </div>
+
+                  <div className="mx-5 mb-5 flex items-center border-t border-slate-100 pt-4 sm:mx-6 sm:mb-6">
+                    <button
+                      onClick={() => setSelectedBrand(b)}
+                      className="text-xs font-bold text-slate-700 hover:text-blue-900 flex items-center space-x-1"
+                    >
+                      <span>{t.viewBrand}</span>
+                      <ChevronRight className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {}
+        {currentView === 'products' && (
+          <div className="max-w-7xl mx-auto px-4 sm:px-8 py-6 sm:py-12 space-y-5 sm:space-y-8">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 sm:gap-4 border-b border-slate-200 pb-4 sm:pb-6">
+              <div>
+                <h1 className="text-2xl sm:text-3xl font-black text-[#0B2545]">{t.catTitle}</h1>
+                <p className="text-slate-600 text-xs sm:text-sm mt-1">{t.featuredProdSub}</p>
+              </div>
+
+              {/* Search Bar */}
+              <div className="relative w-full min-w-0 md:w-80">
+                <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                <input
+                  type="text"
+                  placeholder={tx('Search products or brands...', 'ážŸáŸ’ážœáŸ‚áž„ážšáž€áž•áž›áž·ážáž•áž› áž¬áž˜áŸ‰áž¶áž€áž•áž›áž·ážáž•áž›...')}
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full bg-white border border-slate-300 rounded-xl pl-10 pr-4 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-900"
+                />
+              </div>
+            </div>
+
+            {/* Filter Pills */}
+            <div className="flex gap-2 overflow-x-auto pb-1 sm:flex-wrap sm:overflow-visible">
+              {productCategories.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setActiveCategory(cat)}
+                  className={`shrink-0 px-3 py-1.5 sm:px-3.5 rounded-xl text-[11px] sm:text-xs font-bold ${activeCategory === cat ? 'bg-[#0B2545] text-white' : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100'}`}
+                >
+                  {categoryLabels[cat]}
+                </button>
+              ))}
+            </div>
+
+            {/* Product Grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5 lg:gap-6">
+              {products
+                .filter(p => (activeCategory === 'All' || p.category === activeCategory))
+                .filter((p) => {
+                  const query = searchQuery.trim().toLowerCase();
+                  return !query
+                    || p.name_en.toLowerCase().includes(query)
+                    || p.name_kh.toLowerCase().includes(query)
+                    || p.brand.toLowerCase().includes(query);
+                })
+                .map((prod) => (
+                  <div key={prod.id} className="min-w-0 bg-white rounded-xl sm:rounded-2xl border border-slate-200 overflow-hidden shadow-sm flex flex-col">
+                    <div className={`h-28 sm:h-36 lg:h-44 ${prod.imageBg} relative p-2 sm:p-4 flex flex-col items-center justify-center text-center`}>
+                      {prod.image && <img src={prod.image} alt={prod.name_en} className="absolute inset-0 h-full w-full object-cover" />}
+                      <span className="absolute top-2 left-2 max-w-[calc(100%-4.5rem)] truncate bg-white/90 text-slate-900 text-[9px] sm:text-[10px] font-black px-1.5 sm:px-2 py-0.5 rounded">
+                        {prod.brand}
+                      </span>
+                      <span title={prod.origin} className="absolute right-2 top-2 flex h-7 sm:h-9 min-w-11 sm:min-w-14 items-center justify-center rounded-md sm:rounded-lg border border-slate-200 bg-white/95 px-1 shadow-sm">
+                        <CountryFlag country={prod.origin} image={brands.find((brand) => brand.name === prod.brand)?.flagImage} />
+                      </span>
+                      {!prod.image && <span className="text-2xl font-black text-slate-600/50 uppercase">{localizedProductBadge(prod)}</span>}
+                    </div>
+                    <div className="min-w-0 p-3 sm:p-5 flex-grow flex flex-col justify-between gap-3 sm:gap-4">
+                      <div>
+                        <span className="text-[8px] sm:text-[10px] font-extrabold text-amber-600 uppercase line-clamp-1">{localizedCategory(prod.category)}</span>
+                        <h3 className="text-xs sm:text-sm font-bold text-slate-900 mt-1 line-clamp-2 break-words">
+                          {localizedProductName(prod)}
+                        </h3>
+                        <p className="text-[10px] sm:text-xs text-slate-500 mt-1.5 sm:mt-2 line-clamp-3 break-words">{localizedProductSpecs(prod)}</p>
+                      </div>
+                      <div className="pt-2 sm:pt-3 border-t border-slate-100 flex items-center">
+                        <button
+                          onClick={() => setSelectedProduct(prod)}
+                          className="text-[10px] sm:text-xs font-bold text-slate-700 hover:text-blue-900"
+                        >
+                          {t.viewDetails}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+            </div>
+          </div>
+        )}
+
+        {}
+        {currentView === 'about' && (
+          <div className="max-w-7xl mx-auto px-4 sm:px-8 py-7 sm:py-12 space-y-10 sm:space-y-16">
+            <section className="grid min-h-[440px] overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-xl shadow-slate-200/60 md:grid-cols-2">
+              <div className="flex flex-col justify-center p-6 sm:p-10 lg:p-12">
+                <span className="text-xs font-extrabold uppercase tracking-widest text-amber-600">{tx('LOGISTICS & CHANNELS', 'áž—ážŸáŸ’ážáž»áž—áž¶ážš áž“áž·áž„áž”ážŽáŸ’ážáž¶áž‰áž…áŸ‚áž€áž…áž¶áž™')}</span>
+                <h1 className="mt-3 text-3xl font-black leading-tight text-[#0B2545] sm:text-4xl lg:text-5xl">{t.distribNetworkTitle}</h1>
+                <p className="mt-4 max-w-xl text-base leading-7 text-slate-700">{tx('Comprehensive import and supply chain distribution across traditional trade, modern trade, and wholesale channels in Cambodia.', 'áž”áŸ’ážšáž–áŸáž“áŸ’áž’áž“áž¶áŸ†áž…áž¼áž› áž“áž·áž„áž…áŸ‚áž€áž…áž¶áž™áž•áž›áž·ážáž•áž›ážáž¶áž˜áž”ážŽáŸ’ážáž¶áž‰áž›áž€áŸ‹ážšáž¶áž™ áž›áž€áŸ‹ážŠáž»áŸ† áž“áž·áž„áž–áž¶ážŽáž·áž‡áŸ’áž‡áž€áž˜áŸ’áž˜áž‘áŸ†áž“áž¾áž”áž“áŸ…áž‘áž¼áž‘áž¶áŸ†áž„áž”áŸ’ážšáž‘áŸážŸáž€áž˜áŸ’áž–áž»áž‡áž¶áŸ”')}</p>
+                <div className="mt-6 grid max-w-md grid-cols-2 gap-3">
+                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4"><span className="block text-2xl font-black text-[#0B2545]">5</span><span className="mt-1 block text-xs font-semibold text-slate-600">{tx('Regional hubs', 'áž˜áž‡áŸ’ážˆáž˜ážŽáŸ’ážŒáž›ážáž¶áž˜ážáŸ†áž”áž“áŸ‹')}</span></div>
+                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4"><span className="block text-2xl font-black text-[#0B2545]">1</span><span className="mt-1 block text-xs font-semibold text-slate-600">{tx('Connected network', 'áž€áž¶ážšáž…áŸ‚áž€áž…áž¶áž™áž€áŸ’áž“áž»áž„ážŸáŸ’ážšáž»áž€')}</span></div>
+                </div>
+              </div>
+              <div className="relative min-h-[320px] overflow-hidden bg-slate-100 sm:min-h-[400px] md:min-h-full">
+                <img src={settings.distributionHeroImage || `${import.meta.env.BASE_URL}images/hero-warehouse-banner.jpg`} alt="VistaLab warehouse and distribution operations in Cambodia" className={`absolute inset-0 h-full w-full object-cover ${settings.distributionHeroAnimated ? 'hero-background-image' : ''}`} />
+                <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[#0B2545]/30 via-transparent to-white/10" />
+                <div className="absolute inset-x-4 bottom-4 flex items-end justify-between gap-3 rounded-2xl border border-white/40 bg-[#0B2545]/85 p-4 text-white shadow-lg backdrop-blur-sm sm:inset-x-6 sm:bottom-6"><div><span className="text-[10px] font-bold uppercase tracking-widest text-amber-300">{tx('Nationwide reach', 'áž”ážŽáŸ’ážáž¶áž‰áž‘áž¼áž‘áž¶áŸ†áž„áž”áŸ’ážšáž‘áŸážŸ')}</span><p className="mt-1 text-sm font-extrabold sm:text-base">{tx('From warehouse to retailer', 'áž–áž¸ážƒáŸ’áž›áž¶áŸ†áž„áž‘áŸ…áž€áž¶áž“áŸ‹áž¢áŸ’áž“áž€áž›áž€áŸ‹ážšáž¶áž™')}</p></div><MapPin className="h-7 w-7 shrink-0 text-amber-400" aria-hidden="true" /></div>
+              </div>
+            </section>
+            {/* Supply Chain Flow Visualization */}
+            <div className="bg-white p-5 sm:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-4 sm:space-y-6">
+              <h2 className="text-xl font-bold text-slate-900">{tx('End-to-End FMCG Supply Chain Flow', 'ážŠáŸ†ážŽáž¾ážšáž€áž¶ážšážáŸ’ážŸáŸ‚ážŸáž„áŸ’ážœáž¶áž€áŸ‹áž•áŸ’áž‚ážáŸ‹áž•áŸ’áž‚áž„áŸ‹áž•áž›áž·ážáž•áž› FMCG')}</h2>
+              <div className="relative grid grid-cols-2 gap-3 text-center md:grid-cols-3 lg:grid-cols-6">
+                {[
+                  { step: tx("1. SUPPLIER", "áŸ¡. áž¢áŸ’áž“áž€áž•áŸ’áž‚ážáŸ‹áž•áŸ’áž‚áž„áŸ‹"), detail: tx("Malaysia / Global Brands", "áž˜áŸ‰áž¶áž¡áŸážŸáŸŠáž¸ áž“áž·áž„áž˜áŸ‰áž¶áž€áž¢áž“áŸ’ážážšáž‡áž¶ážáž·") },
+                  { step: tx("2. IMPORT", "áŸ¢. áž€áž¶ážšáž“áž¶áŸ†áž…áž¼áž›"), detail: tx("Customs & Compliance", "áž‚áž™ áž“áž·áž„áž€áž¶ážšáž¢áž“áž»áž›áŸ„áž˜ážáž¶áž˜áž”áž‘áž”áŸ’áž”áž‰áŸ’áž‰ážáŸ’ážáž·") },
+                  { step: tx("3. WAREHOUSE", "áŸ£. ážƒáŸ’áž›áž¶áŸ†áž„"), detail: tx("Phnom Penh Central Hub", "áž˜áž‡áŸ’ážˆáž˜ážŽáŸ’ážŒáž›áž€ážŽáŸ’ážáž¶áž›áž“áŸ…áž—áŸ’áž“áŸ†áž–áŸáž‰") },
+                  { step: tx("4. SALES TEAM", "áŸ¤. áž€áŸ’ážšáž»áž˜áž›áž€áŸ‹"), detail: tx("Field & Telegram Communication", "áž€áŸ’ážšáž»áž˜áž€áž¶ážšáž„áž¶ážšáž›áž€áŸ‹ áž“áž·áž„áž‘áŸ†áž“áž¶áž€áŸ‹áž‘áŸ†áž“áž„ážáž¶áž˜ Telegram") },
+                  { step: tx("5. CHANNELS", "áŸ¥. áž”ážŽáŸ’ážáž¶áž‰áž›áž€áŸ‹"), detail: tx("Supermarkets & Wholesalers", "áž•áŸ’ážŸáž¶ážšáž‘áŸ†áž“áž¾áž” áž“áž·áž„áž¢áŸ’áž“áž€áž›áž€áŸ‹ážŠáž»áŸ†") },
+                  { step: tx("6. CONSUMER", "áŸ¦. áž¢áŸ’áž“áž€áž”áŸ’ážšáž¾áž”áŸ’ážšáž¶ážŸáŸ‹"), detail: tx("Cambodian Households", "áž‚áŸ’ážšáž½ážŸáž¶ážšáž“áŸ…áž€áž˜áŸ’áž–áž»áž‡áž¶") }
+                ].map((s, idx) => (
+                  <div key={idx} className="group rounded-2xl border border-slate-200 bg-gradient-to-b from-white to-slate-50 p-4 shadow-sm transition-all hover:-translate-y-1 hover:border-amber-300 hover:shadow-md flex flex-col justify-center space-y-2">
+                    <span className="mx-auto flex h-8 min-w-8 items-center justify-center rounded-full bg-amber-100 px-2 text-xs font-black text-amber-900">{idx + 1}</span>
+                    <span className="text-xs font-black text-[#0B2545]">{s.step}</span>
+                    <span className="text-sm font-semibold leading-snug text-slate-800">{s.detail}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Distribution Channels Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+              {[
+                { title: tx("Traditional & General Trade", "áž–áž¶ážŽáž·áž‡áŸ’áž‡áž€áž˜áŸ’áž˜áž‘áž¼áž‘áŸ…"), desc: tx("Direct distribution into local neighborhood grocery stores, mom-and-pop shops, and wet market vendors across Phnom Penh and provinces.", "áž…áŸ‚áž€áž…áž¶áž™ážŠáŸ„áž™áž•áŸ’áž‘áž¶áž›áŸ‹áž‘áŸ…áž€áž¶áž“áŸ‹áž áž¶áž„áž›áž€áŸ‹áž‘áŸ†áž“áž·áž‰áž€áŸ’áž“áž»áž„ážŸáž áž‚áž˜áž“áŸ ážáž¼áž”áž›áž€áŸ‹ážšáž¶áž™ áž“áž·áž„áž¢áŸ’áž“áž€áž›áž€áŸ‹áž“áŸ…áž•áŸ’ážŸáž¶ážšáž‘áž¼áž‘áž¶áŸ†áž„áž—áŸ’áž“áŸ†áž–áŸáž‰ áž“áž·áž„ážáž¶áž˜ážáŸážáŸ’ážáŸ”") },
+                { title: tx("Modern Trade & Supermarkets", "áž‘áž¸áž•áŸ’ážŸáž¶ážšáž‘áŸ†áž“áž¾áž” áž“áž·áž„áž•áŸ’ážŸáž¶ážšáž‘áŸ†áž“áž¾áž”"), desc: tx("Supplying key modern retail outlets, mini-marts, and chain convenience stores with structured merchandising support.", "áž•áŸ’áž‚ážáŸ‹áž•áŸ’áž‚áž„áŸ‹áž‘áŸ…áž€áž¶áž“áŸ‹áž áž¶áž„áž›áž€áŸ‹ážšáž¶áž™áž‘áŸ†áž“áž¾áž” áž˜áž¸áž“áž¸áž˜áŸ‰áž¶áž áž“áž·áž„áž áž¶áž„áž›áž€áŸ‹áž‘áŸ†áž“áž·áž‰áž‡áž¶áž”ážŽáŸ’ážáž¶áž‰ áž–áŸ’ážšáž˜áž‘áž¶áŸ†áž„áž•áŸ’ážáž›áŸ‹áž€áž¶ážšáž‚áž¶áŸ†áž‘áŸ’ážšáž•áŸ’áž“áŸ‚áž€ážšáŸ€áž”áž…áŸ†áž‘áŸ†áž“áž·áž‰áŸ”") },
+                { title: tx("Wholesale & Regional Agents", "áž›áž€áŸ‹ážŠáž»áŸ† áž“áž·áž„áž—áŸ’áž“áž¶áž€áŸ‹áž„áž¶ážšážáž¶áž˜ážáŸ†áž”áž“áŸ‹"), desc: tx("Partnering with major provincial wholesalers in Siem Reap, Battambang, and Kampot to ensure deep market coverage.", "ážŸáž áž€áž¶ážšáž‡áž¶áž˜áž½áž™áž¢áŸ’áž“áž€áž›áž€áŸ‹ážŠáž»áŸ†ážŸáŸ†ážáž¶áž“áŸ‹áŸ—áž“áŸ…ážŸáŸ€áž˜ážšáž¶áž” áž”áž¶ážáŸ‹ážŠáŸ†áž”áž„ áž“áž·áž„áž€áŸ†áž–áž ážŠáž¾áž˜áŸ’áž”áž¸áž–áž„áŸ’ážšáž¸áž€áž€áž¶ážšáž…áŸ‚áž€áž…áž¶áž™áž±áŸ’áž™áž”áž¶áž“áž‘áž¼áž›áŸ†áž‘áž¼áž›áž¶áž™áŸ”") }
+              ].map((c, idx) => (
+                <div key={idx} className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+                  <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-900 flex items-center justify-center font-black">
+                    0{idx+1}
+                  </div>
+                  <h3 className="text-lg font-bold text-slate-900">{c.title}</h3>
+                  <p className="text-sm text-slate-700 leading-relaxed">{c.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {}
+        {currentView === 'partner' && (
+          <div className="max-w-4xl mx-auto px-4 sm:px-8 py-7 sm:py-12 space-y-5 sm:space-y-8">
+            <div className="text-center space-y-3">
+              <span className="text-xs font-bold text-amber-600 uppercase tracking-widest">{tx('FOR INTERNATIONAL SUPPLIERS', 'ážŸáž˜áŸ’ážšáž¶áž”áŸ‹áž¢áŸ’áž“áž€áž•áŸ’áž‚ážáŸ‹áž•áŸ’áž‚áž„áŸ‹áž¢áž“áŸ’ážážšáž‡áž¶ážáž·')}</span>
+              <h1 className="text-3xl sm:text-4xl font-black text-[#0B2545]">{tx('Partner With VistaLab Cambodia', 'ážŸáž áž€áž¶ážšáž‡áž¶áž˜áž½áž™ VistaLab Cambodia')}</h1>
+              <p className="text-slate-600 text-sm">{tx('Expand your FMCG brands into the growing Cambodian consumer market with an established local partner.', 'áž–áž„áŸ’ážšáž¸áž€áž˜áŸ‰áž¶áž€áž•áž›áž·ážáž•áž› FMCG ážšáž”ážŸáŸ‹áž¢áŸ’áž“áž€áž‘áŸ…áž€áž¶áž“áŸ‹áž‘áž¸áž•áŸ’ážŸáž¶ážšáž€áž˜áŸ’áž–áž»áž‡áž¶ážŠáŸ‚áž›áž€áŸ†áž–áž»áž„ážšáž¸áž€áž…áž˜áŸ’ážšáž¾áž“ ážŠáŸ„áž™ážŸáž áž€áž¶ážšáž‡áž¶áž˜áž½áž™ážŠáŸƒáž‚áž¼áž€áŸ’áž“áž»áž„ážŸáŸ’ážšáž»áž€ážŠáŸ‚áž›áž˜áž¶áž“áž”áž‘áž–áž·ážŸáŸ„áž’áž“áŸáŸ”')}</p>
+            </div>
+
+            <form onSubmit={handleInquirySubmit} className="bg-white p-5 sm:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-4 sm:space-y-6">
+              <input type="hidden" name="type" value="Partner" />
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">{tx('Company / Brand Name *', 'ážˆáŸ’áž˜áŸ„áŸ‡áž€áŸ’ážšáž»áž˜áž áŸŠáž»áž“ / áž˜áŸ‰áž¶áž€áž•áž›áž·ážáž•áž› *')}</label>
+                  <input required name="business" type="text" placeholder={tx('e.g. Asia FMCG Corp', 'áž§. áž€áŸ’ážšáž»áž˜áž áŸŠáž»áž“ Asia FMCG')} className="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-900" />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">{tx('Contact Person Name *', 'ážˆáŸ’áž˜áŸ„áŸ‡áž¢áŸ’áž“áž€áž‘áŸ†áž“áž¶áž€áŸ‹áž‘áŸ†áž“áž„ *')}</label>
+                  <input required name="name" type="text" placeholder={tx('Full name', 'ážˆáŸ’áž˜áŸ„áŸ‡áž–áŸáž‰')} className="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-900" />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">{tx('Country of Origin *', 'áž”áŸ’ážšáž‘áŸážŸážŠáž¾áž˜ *')}</label>
+                  <input required name="province" type="text" placeholder={tx('e.g. Malaysia, Thailand, Singapore', 'áž§. áž˜áŸ‰áž¶áž¡áŸážŸáŸŠáž¸ ážáŸƒ ážŸáž·áž„áŸ’áž áž”áž»ážšáž¸')} className="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-900" />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">{tx('Phone Number / WhatsApp *', 'áž›áŸážáž‘áž¼ážšážŸáž–áŸ’áž‘ / WhatsApp *')}</label>
+                  <input required name="phone" type="text" placeholder="+60 12 345 6789" aria-label={tx('Phone number', 'áž›áŸážáž‘áž¼ážšážŸáž–áŸ’áž‘')} className="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-900" />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">{tx('Telegram Handle / Email', 'áž‚ážŽáž“áž¸ Telegram / áž¢áŸŠáž¸áž˜áŸ‚áž›')}</label>
+                <input name="telegram" type="text" placeholder={tx('@handle or email', '@ážˆáŸ’áž˜áŸ„áŸ‡áž¢áŸ’áž“áž€áž”áŸ’ážšáž¾ áž¬áž¢áŸŠáž¸áž˜áŸ‚áž›')} className="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-900" />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">{tx('Partnership Proposal / Product Message', 'ážŸáŸ†ážŽáž¾ážŸáž áž€áž¶ážš / áž–áŸážáŸŒáž˜áž¶áž“áž¢áŸ†áž–áž¸áž•áž›áž·ážáž•áž›')}</label>
+                <textarea required name="message" rows={4} placeholder={tx('Describe your product portfolio and potential distribution goals in Cambodia...', 'ážŸáž¼áž˜áž–áž·áž–ážŽáŸŒáž“áž¶áž¢áŸ†áž–áž¸áž•áž›áž·ážáž•áž› áž“áž·áž„áž‚áŸ„áž›ážŠáŸ…áž…áŸ‚áž€áž…áž¶áž™ážšáž”ážŸáŸ‹áž¢áŸ’áž“áž€áž“áŸ…áž€áž˜áŸ’áž–áž»áž‡áž¶...')} className="w-full border border-slate-300 rounded-xl p-4 text-sm focus:outline-none focus:ring-2 focus:ring-blue-900" />
+              </div>
+
+              <div className="p-4 bg-slate-50 border border-dashed border-slate-300 rounded-2xl flex items-center justify-between text-xs text-slate-500">
+                <span className="flex items-center space-x-2">
+                  <Upload className="w-4 h-4 text-slate-400" />
+                  <span>{tx('Attach Brand Deck / Catalog (Optional Simulation)', 'áž—áŸ’áž‡áž¶áž”áŸ‹áž”áž‘áž”áž„áŸ’áž áž¶áž‰áž˜áŸ‰áž¶áž€ / áž€áž¶ážáž¶áž¡áž»áž€ (áž˜áž»ážáž„áž¶ážšážŸáž¶áž€áž›áŸ’áž”áž„)')}</span>
+                </span>
+                <span className="font-bold text-blue-900 cursor-pointer">{tx('Browse File', 'áž‡áŸ’ážšáž¾ážŸážšáž¾ážŸáž¯áž€ážŸáž¶ážš')}</span>
+              </div>
+
+              <button
+                type="submit"
+                className="w-full bg-[#0B2545] hover:bg-[#134074] text-white py-3.5 rounded-xl font-bold text-sm shadow-md transition-all"
+              >
+                {tx('Submit Partnership Inquiry', 'áž•áŸ’áž‰áž¾ážŸáŸ†ážŽáž¾ážŸáž áž€áž¶ážš')}
+              </button>
+            </form>
+          </div>
+        )}
+
+        {}
+        {currentView === 'seller' && (
+          <div className="max-w-4xl mx-auto px-4 sm:px-8 py-7 sm:py-12 space-y-5 sm:space-y-8">
+            <div className="text-center space-y-3">
+              <span className="text-xs font-bold text-amber-600 uppercase tracking-widest">{tx('FOR LOCAL STORES & WHOLESALERS', 'ážŸáž˜áŸ’ážšáž¶áž”áŸ‹áž áž¶áž„áž€áŸ’áž“áž»áž„ážŸáŸ’ážšáž»áž€ áž“áž·áž„áž¢áŸ’áž“áž€áž›áž€áŸ‹ážŠáž»áŸ†')}</span>
+              <h1 className="text-3xl sm:text-4xl font-black text-[#0B2545]">{t.becomeSeller}</h1>
+              <p className="text-slate-600 text-sm">{tx('Register your retail shop or wholesale business to order imported consumer goods directly from VistaLab Cambodia.', 'áž…áž»áŸ‡ážˆáŸ’áž˜áŸ„áŸ‡áž áž¶áž„áž›áž€áŸ‹ážšáž¶áž™ áž¬áž¢áž¶áž‡áž¸ážœáž€áž˜áŸ’áž˜áž›áž€áŸ‹ážŠáž»áŸ†ážšáž”ážŸáŸ‹áž¢áŸ’áž“áž€ ážŠáž¾áž˜áŸ’áž”áž¸áž”áž‰áŸ’áž‡áž¶áž‘áž·áž‰áž•áž›áž·ážáž•áž›áž“áž¶áŸ†áž…áž¼áž›ážŠáŸ„áž™áž•áŸ’áž‘áž¶áž›áŸ‹áž–áž¸ VistaLab CambodiaáŸ”')}</p>
+            </div>
+
+            <form onSubmit={handleInquirySubmit} className="bg-white p-5 sm:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-4 sm:space-y-6">
+              <input type="hidden" name="type" value="Seller" />
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">{tx('Store / Business Name *', 'ážˆáŸ’áž˜áŸ„áŸ‡áž áž¶áž„ / áž¢áž¶áž‡áž¸ážœáž€áž˜áŸ’áž˜ *')}</label>
+                  <input required name="business" type="text" placeholder={tx('e.g. Sokha Mart', 'áž§. áž áž¶áž„ážŸáž»ážáž¶')} className="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-900" />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">{tx('Contact Name *', 'ážˆáŸ’áž˜áŸ„áŸ‡áž¢áŸ’áž“áž€áž‘áŸ†áž“áž¶áž€áŸ‹áž‘áŸ†áž“áž„ *')}</label>
+                  <input required name="name" type="text" placeholder={tx('Your name', 'ážˆáŸ’áž˜áŸ„áŸ‡ážšáž”ážŸáŸ‹áž¢áŸ’áž“áž€')} className="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-900" />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">{tx('Phone Number *', 'áž›áŸážáž‘áž¼ážšážŸáž–áŸ’áž‘ *')}</label>
+                  <input required name="phone" type="text" placeholder="+855 12 345 678" aria-label={tx('Phone number', 'áž›áŸážáž‘áž¼ážšážŸáž–áŸ’áž‘')} className="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-900" />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">{tx('Telegram Username', 'ážˆáŸ’áž˜áŸ„áŸ‡áž¢áŸ’áž“áž€áž”áŸ’ážšáž¾ Telegram')}</label>
+                  <input name="telegram" type="text" placeholder={tx('@username', '@ážˆáŸ’áž˜áŸ„áŸ‡áž¢áŸ’áž“áž€áž”áŸ’ážšáž¾')} className="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-900" />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">{tx('Province / City *', 'ážáŸážáŸ’áž / áž€áŸ’ážšáž»áž„ *')}</label>
+                <select name="province" className="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-900 bg-white">
+                  <option value="Phnom Penh">áž—áŸ’áž“áŸ†áž–áŸáž‰</option>
+                  <option value="Siem Reap">ážŸáŸ€áž˜ážšáž¶áž”</option>
+                  <option value="Battambang">áž”áž¶ážáŸ‹ážŠáŸ†áž”áž„</option>
+                  <option value="Kampot">áž€áŸ†áž–áž</option>
+                  <option value="Sihanoukville">áž–áŸ’ážšáŸ‡ážŸáž¸áž áž“áž»</option>
+                  <option value="Other Province">ážáŸážáŸ’ážáž•áŸ’ážŸáŸáž„áž‘áŸ€áž</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">{tx('Products Interested In *', 'áž•áž›áž·ážáž•áž›ážŠáŸ‚áž›áž…áž¶áž”áŸ‹áž¢áž¶ážšáž˜áŸ’áž˜ážŽáŸ *')}</label>
+                <textarea required name="message" rows={3} placeholder={tx("e.g. L'affair shower cream, Be Love baby wipes, BIKA snacks...", 'áž§. áž€áŸ’ážšáŸ‚áž˜áž„áž¼ážáž‘áž¹áž€ Lâ€™affair áž€áž“áŸ’ážŸáŸ‚áž„ážŸáž¾áž˜ Be Love áž¬áž“áŸ† BIKA...')} className="w-full border border-slate-300 rounded-xl p-4 text-sm focus:outline-none focus:ring-2 focus:ring-blue-900" />
+              </div>
+
+              <button
+                type="submit"
+                className="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 py-3.5 rounded-xl font-extrabold text-sm shadow-md transition-all"
+              >
+                {tx('Apply to Become an Official Seller', 'ážŠáž¶áž€áŸ‹áž–áž¶áž€áŸ’áž™áž…áž»áŸ‡ážˆáŸ’áž˜áŸ„áŸ‡áž‡áž¶áž¢áŸ’áž“áž€áž›áž€áŸ‹áž•áŸ’áž›áž¼ážœáž€áž¶ážš')}
+              </button>
+            </form>
+          </div>
+        )}
+
+        {}
+        {currentView === 'news' && (
+          <div className="max-w-7xl mx-auto px-4 sm:px-8 py-7 sm:py-12 space-y-5 sm:space-y-8">
+            <div className="text-center max-w-2xl mx-auto space-y-2">
+              <span className="text-xs font-bold text-amber-600 uppercase tracking-widest">{tx('MEDIA & UPDATES', 'áž–áŸážáŸŒáž˜áž¶áž“ áž“áž·áž„áž”áž…áŸ’áž…áž»áž”áŸ’áž”áž“áŸ’áž“áž—áž¶áž–')}</span>
+              <h1 className="text-3xl font-black text-[#0B2545]">{t.navNews}</h1>
+              <p className="text-slate-600 text-sm">{tx('Stay informed with company announcements, brand launches, and FMCG developments.', 'áž‘áž‘áž½áž›áž”áž¶áž“áž–áŸážáŸŒáž˜áž¶áž“áž¢áŸ†áž–áž¸ážŸáŸáž…áž€áŸ’ážáž¸áž”áŸ’ážšáž€áž¶ážŸážšáž”ážŸáŸ‹áž€áŸ’ážšáž»áž˜áž áŸŠáž»áž“ áž€áž¶ážšážŠáž¶áž€áŸ‹áž”áž„áŸ’áž áž¶áž‰áž˜áŸ‰áž¶áž€ážáŸ’áž˜áž¸ áž“áž·áž„áž€áž¶ážšážœáž·ážœážáŸ’ážáž€áŸ’áž“áž»áž„ážœáž·ážŸáŸáž™ FMCGáŸ”')}</p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+              {news.map((item) => (
+                <div key={item.id} className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm flex flex-col justify-between">
+                  <div className={`relative h-32 sm:h-40 ${item.imageBg} text-white p-6 flex flex-col justify-between overflow-hidden`}>
+                    {item.image && <img src={item.image} alt="" className="absolute inset-0 h-full w-full object-cover" />}
+                    {item.image && <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-black/20" />}
+                    <span className="relative z-10 text-[10px] font-bold uppercase bg-amber-500 text-slate-950 px-2 py-0.5 rounded w-max">
+                      {tx(item.category, item.category === 'Company' ? 'áž€áŸ’ážšáž»áž˜áž áŸŠáž»áž“' : item.category === 'Products' ? 'áž•áž›áž·ážáž•áž›' : item.category === 'Events' ? 'áž–áŸ’ážšáž¹ážáŸ’ážáž·áž€áž¶ážšážŽáŸ' : item.category)}
+                    </span>
+                    <span className="relative z-10 text-xs opacity-90">{item.date}</span>
+                  </div>
+                  <div className="p-6 space-y-3 flex-grow flex flex-col justify-between">
+                    <div>
+                      <h3 className="text-base font-bold text-slate-900 line-clamp-2">
+                        {localizedArticleTitle(item)}
+                      </h3>
+                      <p className="text-xs text-slate-600 mt-2 line-clamp-3">
+                        {localizedArticleExcerpt(item)}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => setSelectedArticle(item)}
+                      className="text-xs font-bold text-blue-900 hover:text-amber-600 flex items-center space-x-1 pt-2"
+                    >
+                      <span>{tx('Read Full Article', 'áž¢áž¶áž“áž¢ážáŸ’ážáž”áž‘áž–áŸáž‰')}</span>
+                      <ChevronRight className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {}
+        {currentView === 'contact' && (
+          <div className="max-w-7xl mx-auto px-4 sm:px-8 py-7 sm:py-12 space-y-12">
+            <div className="text-center max-w-2xl mx-auto space-y-2">
+              <h1 className="text-3xl sm:text-4xl font-black text-[#0B2545]">{t.navContact}</h1>
+              <p className="text-slate-600 text-sm">{tx('Get in touch with our sales, logistics, or commercial partnership teams.', 'áž‘áž¶áž€áŸ‹áž‘áž„áž€áŸ’ážšáž»áž˜áž€áž¶ážšáž„áž¶ážšáž•áŸ’áž“áŸ‚áž€áž›áž€áŸ‹ áž—ážŸáŸ’ážáž»áž—áž¶ážš áž¬áž€áž·áž…áŸ’áž…ážŸáž áž€áž¶ážšáž¢áž¶áž‡áž¸ážœáž€áž˜áŸ’áž˜ážšáž”ážŸáŸ‹áž™áž¾áž„áŸ”')}</p>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-8">
+              {/* Contact Information Panel */}
+              <div className="lg:col-span-5 bg-[#0B2545] text-white p-5 sm:p-8 rounded-3xl space-y-4 sm:space-y-6 shadow-xl">
+                <h3 className="text-xl font-bold text-amber-400">{tx('Official Contact Details', 'áž–áŸážáŸŒáž˜áž¶áž“áž‘áŸ†áž“áž¶áž€áŸ‹áž‘áŸ†áž“áž„áž•áŸ’áž›áž¼ážœáž€áž¶ážš')}</h3>
+                
+                <div className="space-y-4 text-sm">
+                  <div className="flex items-start space-x-3">
+                    <Phone className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="font-bold text-white">{tx('Phone Hotlines:', 'áž›áŸážáž‘áž¼ážšážŸáž–áŸ’áž‘áž‘áŸ†áž“áž¶áž€áŸ‹áž‘áŸ†áž“áž„áŸ–')}</p>
+                      <p className="text-slate-300">{settings.phone1}</p>
+                      <p className="text-slate-300">{settings.phone2}</p>
+                      <p className="text-slate-300">{settings.phone3}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start space-x-3">
+                    <Mail className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="font-bold text-white">{tx('Email Inquiry:', 'áž¢áŸŠáž¸áž˜áŸ‚áž›áŸ–')}</p>
+                      <p className="text-slate-300">{settings.email}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start space-x-3">
+                    <MessageCircle className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="font-bold text-white">{tx('Telegram Channel:', 'áž‚ážŽáž“áž¸ TelegramáŸ–')}</p>
+                      <p className="text-slate-300">{settings.telegram}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start space-x-3">
+                    <span aria-hidden="true" className="w-5 h-5 flex-shrink-0 text-center text-lg font-black leading-5 text-amber-400">f</span>
+                    <div>
+                      <p className="font-bold text-white">FacebookáŸ–</p>
+                      <a href={settings.facebook} target="_blank" rel="noreferrer" className="text-slate-300 underline underline-offset-2 hover:text-white">
+                        facebook.com/vistalab
+                      </a>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start space-x-3">
+                    <MapPin className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="font-bold text-white">{tx('Location HQ:', 'áž‘áž¸ážáž¶áŸ†áž„áž€áž¶ážšáž·áž™áž¶áž›áŸáž™áž€ážŽáŸ’ážáž¶áž›áŸ–')}</p>
+                      <p className="text-slate-300">{lang === 'KH' ? settings.address_kh : settings.address_en}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="pt-4 border-t border-white/10 text-xs text-slate-400">
+                  {tx('Business Hours:', 'áž˜áŸ‰áŸ„áž„áž’áŸ’ážœáž¾áž€áž¶ážšáŸ–')} {lang === 'KH' ? settings.business_hours_kh : settings.business_hours}
+                </div>
+              </div>
+
+              {/* Direct Message Form */}
+              <div className="lg:col-span-7 bg-white p-5 sm:p-8 rounded-3xl border border-slate-200 shadow-sm">
+                <form onSubmit={handleInquirySubmit} className="space-y-4">
+                  <input type="hidden" name="type" value="General Contact" />
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">{tx('Your Name *', 'ážˆáŸ’áž˜áŸ„áŸ‡ážšáž”ážŸáŸ‹áž¢áŸ’áž“áž€ *')}</label>
+                    <input required name="name" type="text" className="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-900" />
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 mb-1">{tx('Phone Number *', 'áž›áŸážáž‘áž¼ážšážŸáž–áŸ’áž‘ *')}</label>
+                      <input required name="phone" type="text" className="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-900" />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 mb-1">{tx('Telegram Handle', 'ážˆáŸ’áž˜áŸ„áŸ‡áž¢áŸ’áž“áž€áž”áŸ’ážšáž¾ Telegram')}</label>
+                      <input name="telegram" type="text" className="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-900" />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">{tx('Message / Inquiry *', 'ážŸáž¶ážš / ážŸáŸ†ážŽáž½ážš *')}</label>
+                    <textarea required name="message" rows={4} className="w-full border border-slate-300 rounded-xl p-4 text-sm focus:outline-none focus:ring-2 focus:ring-blue-900" />
+                  </div>
+                  <button type="submit" className="w-full bg-[#0B2545] hover:bg-[#134074] text-white py-3 rounded-xl font-bold text-sm shadow">
+                    {tx('Send Direct Message', 'áž•áŸ’áž‰áž¾ážŸáž¶ážš')}
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {}
+        {currentView === 'admin' && (
+          <div className="max-w-7xl mx-auto px-4 sm:px-8 py-10 space-y-5 sm:space-y-8">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#0B2545] text-white p-6 rounded-3xl shadow-lg">
+              <div>
+                <span className="text-xs text-amber-400 font-extrabold uppercase tracking-widest">{tx('Internal Control Panel', 'áž•áŸ’áž‘áž¶áŸ†áž„áž‚áŸ’ážšáž”áŸ‹áž‚áŸ’ážšáž„áž•áŸ’áž‘áŸƒáž€áŸ’áž“áž»áž„')}</span>
+                <h1 className="flex items-center gap-3 text-2xl font-black"><Settings className="h-5 w-5 shrink-0 text-amber-500" aria-hidden="true" />{tx('VistaLab Website Content Manager (CMS)', 'áž”áŸ’ážšáž–áŸáž“áŸ’áž’áž‚áŸ’ážšáž”áŸ‹áž‚áŸ’ážšáž„áž˜áž¶ážáž·áž€áž¶áž‚áŸáž áž‘áŸ†áž–áŸážš VistaLab')}</h1>
+              </div>
+              <div className="flex items-center space-x-2">
+                <button
+                  onClick={() => triggerToast(tx('Contact information and site content are saved in this browser.', 'áž–áŸážáŸŒáž˜áž¶áž“áž‘áŸ†áž“áž¶áž€áŸ‹áž‘áŸ†áž“áž„ áž“áž·áž„áž˜áž¶ážáž·áž€áž¶áž‚áŸáž áž‘áŸ†áž–áŸážšážáŸ’ážšáž¼ážœáž”áž¶áž“ážšáž€áŸ’ážŸáž¶áž‘áž»áž€áž€áŸ’áž“áž»áž„áž€áž˜áŸ’áž˜ážœáž·áž’áž¸ážšáž»áž€ážšáž€áž“áŸáŸ‡áŸ”'))}
+                  className="bg-amber-500 text-slate-950 hover:bg-amber-600 px-4 py-2 rounded-xl text-xs font-extrabold shadow"
+                >
+                  {tx('Save Settings', 'ážšáž€áŸ’ážŸáž¶áž‘áž»áž€áž€áž¶ážšáž€áŸ†ážŽážáŸ‹')}
+                </button>
+              </div>
+            </div>
+
+            {/* CMS Stats Cards */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                <div className="flex items-center gap-2 text-xs font-bold text-slate-500 uppercase"><Package className="h-4 w-4 shrink-0 text-amber-500" aria-hidden="true" /><span>{tx('Total Products', 'áž•áž›áž·ážáž•áž›ážŸážšáž»áž”')}</span></div>
+                <p className="text-2xl font-black text-[#0B2545] mt-1">{products.length}</p>
+              </div>
+              <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                <div className="flex items-center gap-2 text-xs font-bold text-slate-500 uppercase"><Tags className="h-4 w-4 shrink-0 text-amber-500" aria-hidden="true" /><span>{tx('Brands Listed', 'áž˜áŸ‰áž¶áž€áž•áž›áž·ážáž•áž›')}</span></div>
+                <p className="text-2xl font-black text-amber-600 mt-1">{brands.length}</p>
+              </div>
+              <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                <div className="flex items-center gap-2 text-xs font-bold text-slate-500 uppercase"><MessageCircle className="h-4 w-4 shrink-0 text-amber-500" aria-hidden="true" /><span>{tx('Pending Inquiries', 'ážŸáŸ†ážŽáž½ážšážŠáŸ‚áž›áž˜áž·áž“áž‘áž¶áž“áŸ‹áž†áŸ’áž›áž¾áž™ážáž”')}</span></div>
+                <p className="text-2xl font-black text-blue-900 mt-1">{inquiries.filter(i=>i.status==='New').length}</p>
+              </div>
+              <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                <div className="flex items-center gap-2 text-xs font-bold text-slate-500 uppercase"><Newspaper className="h-4 w-4 shrink-0 text-amber-500" aria-hidden="true" /><span>{tx('News Articles', 'áž¢ážáŸ’ážáž”áž‘áž–áŸážáŸŒáž˜áž¶áž“')}</span></div>
+                <p className="text-2xl font-black text-emerald-600 mt-1">{news.length}</p>
+              </div>
+            </div>
+
+            <p className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs text-amber-900">
+              {tx('Demo CMS: products and inquiries are stored only in this browser. This page has no sign-in or server-side storage, so do not use it for private customer data.', 'CMS ážŸáž¶áž€áž›áŸ’áž”áž„áŸ– áž•áž›áž·ážáž•áž› áž“áž·áž„ážŸáŸ†ážŽáž½ážšážšáž€áŸ’ážŸáž¶áž‘áž»áž€ážáŸ‚áž€áŸ’áž“áž»áž„áž€áž˜áŸ’áž˜ážœáž·áž’áž¸ážšáž»áž€ážšáž€áž“áŸáŸ‡áž”áŸ‰áž»ážŽáŸ’ážŽáŸ„áŸ‡áŸ” áž”áŸ’ážšáž–áŸáž“áŸ’áž’áž“áŸáŸ‡áž˜áž·áž“áž˜áž¶áž“áž€áž¶ážšáž…áž¼áž›áž‚ážŽáž“áž¸ áž¬áž€áž¶ážšážšáž€áŸ’ážŸáž¶áž‘áž»áž€áž›áž¾áž˜áŸ‰áž¶ážŸáŸŠáž¸áž“áž˜áŸáž‘áŸáŸ”')}
+            </p>
+
+            <form onSubmit={(event) => { event.preventDefault(); triggerToast(tx('Contact details saved.', 'áž”áž¶áž“ážšáž€áŸ’ážŸáž¶áž‘áž»áž€áž–áŸážáŸŒáž˜áž¶áž“áž‘áŸ†áž“áž¶áž€áŸ‹áž‘áŸ†áž“áž„áŸ”')); }} className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm space-y-4">
+              <div>
+                <h2 className="flex items-center gap-2 text-lg font-extrabold text-[#0B2545]"><Phone className="h-5 w-5 shrink-0 text-amber-500" aria-hidden="true" />{tx('Edit Contact Page Information', 'áž€áŸ‚ážŸáž˜áŸ’ážšáž½áž›áž–áŸážáŸŒáž˜áž¶áž“áž‘áŸ†áž“áž¶áž€áŸ‹áž‘áŸ†áž“áž„')}</h2>
+                <p className="text-xs text-slate-500">{tx('These details are shown on the Contact page, site header, and footer.', 'áž–áŸážáŸŒáž˜áž¶áž“áž‘áž¶áŸ†áž„áž“áŸáŸ‡áž”áž„áŸ’áž áž¶áž‰áž“áŸ…áž›áž¾áž‘áŸ†áž–áŸážšáž‘áŸ†áž“áž¶áž€áŸ‹áž‘áŸ†áž“áž„ áž€áŸ’áž”áž¶áž›áž‘áŸ†áž–áŸážš áž“áž·áž„áž”áž¶ážáž‘áŸ†áž–áŸážšáŸ”')}</p>
+              </div>
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {(['phone1', 'phone2', 'phone3'] as const).map((key, index) => <label key={key} className="text-xs font-bold text-slate-700">{tx(`Phone hotline ${index + 1}`, `áž›áŸážáž‘áž¼ážšážŸáž–áŸ’áž‘ ${index + 1}`)}<input value={settings[key]} onChange={(event) => setSettings({ ...settings, [key]: event.target.value })} className="mt-1 w-full rounded-xl border border-slate-300 p-2.5 text-xs font-normal" /></label>)}
+                <label className="text-xs font-bold text-slate-700">{tx('Email', 'áž¢áŸŠáž¸áž˜áŸ‚áž›')}<input type="email" value={settings.email} onChange={(event) => setSettings({ ...settings, email: event.target.value })} className="mt-1 w-full rounded-xl border border-slate-300 p-2.5 text-xs font-normal" /></label>
+                <label className="text-xs font-bold text-slate-700">{tx('Telegram handle', 'ážˆáŸ’áž˜áŸ„áŸ‡áž¢áŸ’áž“áž€áž”áŸ’ážšáž¾ Telegram')}<input value={settings.telegram} onChange={(event) => setSettings({ ...settings, telegram: event.target.value })} className="mt-1 w-full rounded-xl border border-slate-300 p-2.5 text-xs font-normal" /></label>
+                <label className="text-xs font-bold text-slate-700">{tx('Facebook URL', 'ážáŸ†ážŽ Facebook')}<input type="url" value={settings.facebook} onChange={(event) => setSettings({ ...settings, facebook: event.target.value })} className="mt-1 w-full rounded-xl border border-slate-300 p-2.5 text-xs font-normal" /></label>
+                <label className="text-xs font-bold text-slate-700 sm:col-span-2">{tx('Address (English)', 'áž¢áž¶ážŸáž™ážŠáŸ’áž‹áž¶áž“ (áž¢áž„áŸ‹áž‚áŸ’áž›áŸážŸ)')}<input value={settings.address_en} onChange={(event) => setSettings({ ...settings, address_en: event.target.value })} className="mt-1 w-full rounded-xl border border-slate-300 p-2.5 text-xs font-normal" /></label>
+                <label className="text-xs font-bold text-slate-700 sm:col-span-2">{tx('Address (Khmer)', 'áž¢áž¶ážŸáž™ážŠáŸ’áž‹áž¶áž“ (ážáŸ’áž˜áŸ‚ážš)')}<input value={settings.address_kh} onChange={(event) => setSettings({ ...settings, address_kh: event.target.value })} className="mt-1 w-full rounded-xl border border-slate-300 p-2.5 text-xs font-normal" /></label>
+                <label className="text-xs font-bold text-slate-700 sm:col-span-2 lg:col-span-3">{tx('Business hours', 'áž˜áŸ‰áŸ„áž„áž’áŸ’ážœáž¾áž€áž¶ážš')}<input value={settings.business_hours} onChange={(event) => setSettings({ ...settings, business_hours: event.target.value })} className="mt-1 w-full rounded-xl border border-slate-300 p-2.5 text-xs font-normal" /></label>
+                <label className="text-xs font-bold text-slate-700 sm:col-span-2 lg:col-span-3">{tx('Business hours (Khmer)', 'áž˜áŸ‰áŸ„áž„áž’áŸ’ážœáž¾áž€áž¶ážš (ážáŸ’áž˜áŸ‚ážš)')}<input value={settings.business_hours_kh} onChange={(event) => setSettings({ ...settings, business_hours_kh: event.target.value })} className="mt-1 w-full rounded-xl border border-slate-300 p-2.5 text-xs font-normal" /></label>
+              </div>
+              <button type="submit" className="rounded-xl bg-amber-500 px-4 py-2.5 text-xs font-extrabold text-slate-950">{tx('Save Contact Information', 'ážšáž€áŸ’ážŸáž¶áž‘áž»áž€áž–áŸážáŸŒáž˜áž¶áž“áž‘áŸ†áž“áž¶áž€áŸ‹áž‘áŸ†áž“áž„')}</button>
+            </form>
+
+            <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm space-y-4 sm:p-6">
+              <div><h2 className="flex items-center gap-2 text-lg font-extrabold text-[#0B2545]"><Building2 className="h-5 w-5 shrink-0 text-amber-500" aria-hidden="true" />{tx('Edit About Page Header', 'áž€áŸ‚ážŸáž˜áŸ’ážšáž½áž›áž€áŸ’áž”áž¶áž›áž‘áŸ†áž–áŸážšáž¢áŸ†áž–áž¸áž™áž¾áž„')}</h2><p className="text-xs text-slate-500">{tx('Upload a banner image, choose its motion, and edit the About page heading and description in both languages.', 'áž”áž‰áŸ’áž…áž¼áž›ážšáž¼áž”áž—áž¶áž–áž”ážŠáž¶ áž€áŸ†ážŽážáŸ‹áž…áž›áž“áž¶ áž“áž·áž„áž€áŸ‚ážŸáž˜áŸ’ážšáž½áž›áž…áŸ†ážŽáž„áž‡áž¾áž„ áž–áŸ’ážšáž˜áž‘áž¶áŸ†áž„ážŸáŸáž…áž€áŸ’ážáž¸áž–áž·áž–ážŽáŸŒáž“áž¶áž‡áž¶áž—áž¶ážŸáž¶áž¢áž„áŸ‹áž‚áŸ’áž›áŸážŸ áž“áž·áž„ážáŸ’áž˜áŸ‚ážšáŸ”')}</p></div>
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                <label className="text-xs font-bold text-slate-700">{tx('Heading (English)', 'áž…áŸ†ážŽáž„áž‡áž¾áž„ (áž¢áž„áŸ‹áž‚áŸ’áž›áŸážŸ)')}<input value={settings.aboutTitle_en} onChange={(event) => setSettings({ ...settings, aboutTitle_en: event.target.value })} className="mt-1 w-full rounded-xl border border-slate-300 p-2.5 text-xs font-normal" /></label>
+                <label className="text-xs font-bold text-slate-700">{tx('Heading (Khmer)', 'áž…áŸ†ážŽáž„áž‡áž¾áž„ (ážáŸ’áž˜áŸ‚ážš)')}<input value={settings.aboutTitle_kh} onChange={(event) => setSettings({ ...settings, aboutTitle_kh: event.target.value })} className="mt-1 w-full rounded-xl border border-slate-300 p-2.5 text-xs font-normal" /></label>
+                <label className="text-xs font-bold text-slate-700">{tx('Description (English)', 'ážŸáŸáž…áž€áŸ’ážáž¸áž–áž·áž–ážŽáŸŒáž“áž¶ (áž¢áž„áŸ‹áž‚áŸ’áž›áŸážŸ)')}<textarea rows={3} value={settings.aboutDescription_en} onChange={(event) => setSettings({ ...settings, aboutDescription_en: event.target.value })} className="mt-1 w-full rounded-xl border border-slate-300 p-2.5 text-xs font-normal" /></label>
+                <label className="text-xs font-bold text-slate-700">{tx('Description (Khmer)', 'ážŸáŸáž…áž€áŸ’ážáž¸áž–áž·áž–ážŽáŸŒáž“áž¶ (ážáŸ’áž˜áŸ‚ážš)')}<textarea rows={3} value={settings.aboutDescription_kh} onChange={(event) => setSettings({ ...settings, aboutDescription_kh: event.target.value })} className="mt-1 w-full rounded-xl border border-slate-300 p-2.5 text-xs font-normal" /></label>
+                <ImageUpload label={tx('About page banner image', 'ážšáž¼áž”áž—áž¶áž–áž”ážŠáž¶áž‘áŸ†áž–áŸážšáž¢áŸ†áž–áž¸áž™áž¾áž„')} lang={lang} image={settings.aboutHeroImage} onChange={(aboutHeroImage) => setSettings({ ...settings, aboutHeroImage })} />
+                <ImageUpload label={tx('Distribution page banner image', 'ážšáž¼áž”áž—áž¶áž–áž”ážŠáž¶áž‘áŸ†áž–áŸážšáž…áŸ‚áž€áž…áž¶áž™')} lang={lang} image={settings.distributionHeroImage} onChange={(distributionHeroImage) => setSettings({ ...settings, distributionHeroImage })} />
+                <label className="flex items-center gap-3 rounded-xl border border-slate-200 p-3 text-xs font-bold text-slate-700 sm:col-span-2"><input type="checkbox" checked={settings.distributionHeroAnimated} onChange={(event) => setSettings({ ...settings, distributionHeroAnimated: event.target.checked })} className="h-4 w-4 accent-amber-500" />{tx('Animate the Distribution banner', 'áž”áž¾áž€áž…áž›áž“áž¶ážŸáž˜áŸ’ážšáž¶áž”áŸ‹áž”ážŠáž¶áž…áŸ‚áž€áž…áž¶áž™')}</label>
+                <label className="flex items-center gap-3 rounded-xl border border-slate-200 p-3 text-xs font-bold text-slate-700 sm:col-span-2"><input type="checkbox" checked={settings.aboutHeroAnimated} onChange={(event) => setSettings({ ...settings, aboutHeroAnimated: event.target.checked })} className="h-4 w-4 accent-amber-500" />{tx('Animate the banner image', 'áž”áž¾áž€áž…áž›áž“áž¶ážŸáž˜áŸ’ážšáž¶áž”áŸ‹ážšáž¼áž”áž—áž¶áž–áž”ážŠáž¶')}</label>
+              </div>
+            </section>
+            {/* Brand editor */}
+            <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm space-y-5">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <h2 className="flex items-center gap-2 text-lg font-extrabold text-[#0B2545]"><Tags className="h-5 w-5 shrink-0 text-amber-500" aria-hidden="true" />{tx('Manage Brands', 'áž‚áŸ’ážšáž”áŸ‹áž‚áŸ’ážšáž„áž˜áŸ‰áž¶áž€áž•áž›áž·ážáž•áž›')}</h2>
+                  <p className="text-xs text-slate-500">{tx('Edit brand text and upload a logo or brand image.', 'áž€áŸ‚ážŸáž˜áŸ’ážšáž½áž›áž–áŸážáŸŒáž˜áž¶áž“áž˜áŸ‰áž¶áž€ áž“áž·áž„áž”áž‰áŸ’áž…áž¼áž›ážšáž¼áž”ážŸáž‰áŸ’áž‰áž¶ áž¬ážšáž¼áž”áž—áž¶áž–áž˜áŸ‰áž¶áž€áŸ”')}</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setEditingBrand({ id: `b-${Date.now()}`, name: '', category: 'Personal Care', origin: 'Malaysia', description: '', description_kh: '', featured: false, logoText: '', image: '', flagImage: '' })}
+                  className="rounded-xl bg-[#0B2545] px-4 py-2 text-xs font-bold text-white"
+                >
+                  {tx('+ Add Brand', '+ áž”áž“áŸ’ážáŸ‚áž˜áž˜áŸ‰áž¶áž€áž•áž›áž·ážáž•áž›')}
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                {brands.map((brand) => (
+                  <div key={brand.id} className="flex min-w-0 items-center gap-3 rounded-xl border border-slate-200 p-3">
+                    {brand.image ? <img src={brand.image} alt="" className="h-11 w-11 rounded-lg object-cover" /> : <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-[#0B2545] text-xs font-black text-amber-400">{brand.logoText.slice(0, 3)}</div>}
+                    <span className="min-w-0 flex-1 truncate text-sm font-bold text-slate-800">{brand.name}</span>
+                    <button type="button" onClick={() => setEditingBrand({ ...brand })} className="rounded-lg bg-slate-100 px-3 py-2 text-xs font-bold text-slate-800 hover:bg-slate-200">{tx('Edit', 'áž€áŸ‚ážŸáž˜áŸ’ážšáž½áž›')}</button>
+                  </div>
+                ))}
+              </div>
+
+              {editingBrand && (
+                <form
+                  onSubmit={(event) => {
+                    event.preventDefault();
+                    const savedBrand = { ...editingBrand, logoText: editingBrand.logoText || editingBrand.name.toUpperCase() };
+                    const previousBrand = brands.find((brand) => brand.id === savedBrand.id);
+                    if (previousBrand && previousBrand.name !== savedBrand.name) {
+                      setProducts((current) => current.map((product) => product.brand === previousBrand.name ? { ...product, brand: savedBrand.name } : product));
+                    }
+                    setBrands((current) => current.some((brand) => brand.id === savedBrand.id)
+                      ? current.map((brand) => brand.id === savedBrand.id ? savedBrand : brand)
+                      : [savedBrand, ...current]);
+                    setEditingBrand(null);
+                  triggerToast(tx('Brand saved.', 'áž”áž¶áž“ážšáž€áŸ’ážŸáž¶áž‘áž»áž€áž˜áŸ‰áž¶áž€áž•áž›áž·ážáž•áž›áŸ”'));
+                  }}
+                  className="grid grid-cols-1 gap-3 rounded-2xl border border-amber-200 bg-amber-50/50 p-4 sm:grid-cols-2"
+                >
+                  <h3 className="text-sm font-extrabold text-[#0B2545] sm:col-span-2">{tx('Brand details', 'áž–áŸážáŸŒáž˜áž¶áž“áž›áž˜áŸ’áž¢áž·ážáž¢áŸ†áž–áž¸áž˜áŸ‰áž¶áž€')}</h3>
+                  <input required aria-label="Brand name" placeholder={tx('Brand name', 'ážˆáŸ’áž˜áŸ„áŸ‡áž˜áŸ‰áž¶áž€')} value={editingBrand.name} onChange={(event) => setEditingBrand({ ...editingBrand, name: event.target.value })} className="rounded-xl border border-slate-300 p-2.5 text-xs" />
+                  <input aria-label="Logo text" placeholder={tx('Logo text', 'áž¢áž€áŸ’ážŸážšáž›áž¾ážšáž¼áž”ážŸáž‰áŸ’áž‰áž¶')} value={editingBrand.logoText} onChange={(event) => setEditingBrand({ ...editingBrand, logoText: event.target.value })} className="rounded-xl border border-slate-300 p-2.5 text-xs" />
+                  <input aria-label="Category" placeholder={tx('Category', 'áž”áŸ’ážšáž—áŸáž‘')} value={editingBrand.category} onChange={(event) => setEditingBrand({ ...editingBrand, category: event.target.value })} className="rounded-xl border border-slate-300 p-2.5 text-xs" />
+                  <input aria-label="Country of origin" placeholder={tx('Country of origin', 'áž”áŸ’ážšáž‘áŸážŸážŠáž¾áž˜')} value={editingBrand.origin} onChange={(event) => setEditingBrand({ ...editingBrand, origin: event.target.value })} className="rounded-xl border border-slate-300 p-2.5 text-xs" />
+                  <textarea aria-label="Brand description" placeholder={tx('Brand description', 'áž€áž¶ážšáž–áž·áž–ážŽáŸŒáž“áž¶áž¢áŸ†áž–áž¸áž˜áŸ‰áž¶áž€')} rows={3} value={editingBrand.description} onChange={(event) => setEditingBrand({ ...editingBrand, description: event.target.value })} className="rounded-xl border border-slate-300 p-2.5 text-xs sm:col-span-2" />
+                  <textarea aria-label="Brand description in Khmer" placeholder={tx('Brand description (Khmer)', 'áž€áž¶ážšáž–áž·áž–ážŽáŸŒáž“áž¶áž¢áŸ†áž–áž¸áž˜áŸ‰áž¶áž€ (ážáŸ’áž˜áŸ‚ážš)')} rows={3} value={editingBrand.description_kh || ''} onChange={(event) => setEditingBrand({ ...editingBrand, description_kh: event.target.value })} className="rounded-xl border border-slate-300 p-2.5 text-xs sm:col-span-2" />
+                  <ImageUpload label={tx('Brand picture or logo', 'ážšáž¼áž”áž—áž¶áž–áž˜áŸ‰áž¶áž€ áž¬ážšáž¼áž”ážŸáž‰áŸ’áž‰áž¶')} lang={lang} image={editingBrand.image} onChange={(image) => setEditingBrand({ ...editingBrand, image })} />
+                  <ImageUpload label={tx('Country flag picture (optional)', 'ážšáž¼áž”áž‘áž„áŸ‹áž‡áž¶ážáž· (ážŸáŸ’ážšáŸáž…áž…áž·ážáŸ’áž)')} lang={lang} image={editingBrand.flagImage} onChange={(flagImage) => setEditingBrand({ ...editingBrand, flagImage })} />
+                  <div className="flex gap-2 sm:col-span-2">
+                    <button type="submit" className="rounded-xl bg-amber-500 px-4 py-2.5 text-xs font-extrabold text-slate-950">{tx('Save Brand', 'ážšáž€áŸ’ážŸáž¶áž‘áž»áž€áž˜áŸ‰áž¶áž€')}</button>
+                    <button type="button" onClick={() => setEditingBrand(null)} className="rounded-xl bg-slate-200 px-4 py-2.5 text-xs font-bold text-slate-700">{tx('Cancel', 'áž”áŸ„áŸ‡áž”áž„áŸ‹')}</button>
+                  </div>
+                </form>
+              )}
+            </div>
+
+            {/* News article editor */}
+            <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm space-y-5">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <h2 className="flex items-center gap-2 text-lg font-extrabold text-[#0B2545]"><Newspaper className="h-5 w-5 shrink-0 text-amber-500" aria-hidden="true" />{tx('Manage News', 'áž‚áŸ’ážšáž”áŸ‹áž‚áŸ’ážšáž„áž–áŸážáŸŒáž˜áž¶áž“')}</h2>
+                  <p className="text-xs text-slate-500">{tx('Add articles or edit the English and Khmer text, date, category, and cover image.', 'áž”áž“áŸ’ážáŸ‚áž˜ áž¬áž€áŸ‚ážŸáž˜áŸ’ážšáž½áž›áž¢ážáŸ’ážáž”áž‘áž‡áž¶áž—áž¶ážŸáž¶áž¢áž„áŸ‹áž‚áŸ’áž›áŸážŸ áž“áž·áž„ážáŸ’áž˜áŸ‚ážš áž€áž¶áž›áž”ážšáž·áž…áŸ’áž†áŸáž‘ áž”áŸ’ážšáž—áŸáž‘ áž“áž·áž„ážšáž¼áž”áž—áž¶áž–áž‚áž˜áŸ’ážšáž”áŸ”')}</p>
+                </div>
+                <button type="button" onClick={() => setEditingNews({ id: `n-${Date.now()}`, title_en: '', title_kh: '', date: new Date().toISOString().slice(0, 10), category: 'Company', excerpt_en: '', excerpt_kh: '', imageBg: 'bg-blue-800', image: '' })} className="rounded-xl bg-[#0B2545] px-4 py-2 text-xs font-bold text-white">{tx('+ Add Article', '+ áž”áž“áŸ’ážáŸ‚áž˜áž¢ážáŸ’ážáž”áž‘')}</button>
+              </div>
+
+              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                {news.map((article) => (
+                  <div key={article.id} className="flex min-w-0 items-center gap-3 rounded-xl border border-slate-200 p-3">
+                    {article.image ? <img src={article.image} alt="" className="h-12 w-12 rounded-lg object-cover" /> : <div className={`h-12 w-12 shrink-0 rounded-lg ${article.imageBg}`} />}
+                    <div className="min-w-0 flex-1"><p className="truncate text-xs font-bold text-slate-800">{localizedArticleTitle(article)}</p><p className="text-[10px] text-slate-500">{article.date} Â· {tx(article.category, article.category === 'Company' ? 'áž€áŸ’ážšáž»áž˜áž áŸŠáž»áž“' : article.category === 'Products' ? 'áž•áž›áž·ážáž•áž›' : article.category === 'Events' ? 'áž–áŸ’ážšáž¹ážáŸ’ážáž·áž€áž¶ážšážŽáŸ' : article.category)}</p></div>
+                    <button type="button" onClick={() => setEditingNews({ ...article })} className="rounded-lg bg-slate-100 px-3 py-2 text-xs font-bold text-slate-800 hover:bg-slate-200">{tx('Edit', 'áž€áŸ‚ážŸáž˜áŸ’ážšáž½áž›')}</button>
+                  </div>
+                ))}
+              </div>
+
+              {editingNews && (
+                <form onSubmit={(event) => {
+                  event.preventDefault();
+                  setNews((current) => current.some((article) => article.id === editingNews.id) ? current.map((article) => article.id === editingNews.id ? editingNews : article) : [editingNews, ...current]);
+                  setEditingNews(null);
+                  triggerToast(tx('News article saved.', 'áž”áž¶áž“ážšáž€áŸ’ážŸáž¶áž‘áž»áž€áž¢ážáŸ’ážáž”áž‘áž–áŸážáŸŒáž˜áž¶áž“áŸ”'));
+                }} className="grid grid-cols-1 gap-3 rounded-2xl border border-amber-200 bg-amber-50/50 p-4 sm:grid-cols-2">
+                  <h3 className="text-sm font-extrabold text-[#0B2545] sm:col-span-2">{tx('Article details', 'áž–áŸážáŸŒáž˜áž¶áž“áž›áž˜áŸ’áž¢áž·ážáž¢ážáŸ’ážáž”áž‘')}</h3>
+                  <input required aria-label="Article title in English" placeholder={tx('Title (English)', 'áž…áŸ†ážŽáž„áž‡áž¾áž„ (áž¢áž„áŸ‹áž‚áŸ’áž›áŸážŸ)')} value={editingNews.title_en} onChange={(event) => setEditingNews({ ...editingNews, title_en: event.target.value })} className="rounded-xl border border-slate-300 p-2.5 text-xs" />
+                  <input aria-label="Article title in Khmer" placeholder={tx('Title (Khmer)', 'áž…áŸ†ážŽáž„áž‡áž¾áž„ (ážáŸ’áž˜áŸ‚ážš)')} value={editingNews.title_kh} onChange={(event) => setEditingNews({ ...editingNews, title_kh: event.target.value })} className="rounded-xl border border-slate-300 p-2.5 text-xs" />
+                  <input required aria-label="Article date" type="date" value={editingNews.date} onChange={(event) => setEditingNews({ ...editingNews, date: event.target.value })} className="rounded-xl border border-slate-300 p-2.5 text-xs" />
+                  <input required aria-label="Article category" placeholder={tx('Category', 'áž”áŸ’ážšáž—áŸáž‘')} value={editingNews.category} onChange={(event) => setEditingNews({ ...editingNews, category: event.target.value })} className="rounded-xl border border-slate-300 p-2.5 text-xs" />
+                  <textarea required aria-label="Article summary in English" placeholder={tx('Summary (English)', 'ážŸáŸáž…áž€áŸ’ážáž¸ážŸáž„áŸ’ážáŸáž” (áž¢áž„áŸ‹áž‚áŸ’áž›áŸážŸ)')} rows={3} value={editingNews.excerpt_en} onChange={(event) => setEditingNews({ ...editingNews, excerpt_en: event.target.value })} className="rounded-xl border border-slate-300 p-2.5 text-xs" />
+                  <textarea aria-label="Article summary in Khmer" placeholder={tx('Summary (Khmer)', 'ážŸáŸáž…áž€áŸ’ážáž¸ážŸáž„áŸ’ážáŸáž” (ážáŸ’áž˜áŸ‚ážš)')} rows={3} value={editingNews.excerpt_kh} onChange={(event) => setEditingNews({ ...editingNews, excerpt_kh: event.target.value })} className="rounded-xl border border-slate-300 p-2.5 text-xs" />
+                  <ImageUpload label={tx('Article cover image', 'ážšáž¼áž”áž—áž¶áž–áž‚áž˜áŸ’ážšáž”áž¢ážáŸ’ážáž”áž‘')} lang={lang} image={editingNews.image} onChange={(image) => setEditingNews({ ...editingNews, image })} />
+                  <div className="flex gap-2 sm:col-span-2">
+                    <button type="submit" className="rounded-xl bg-amber-500 px-4 py-2.5 text-xs font-extrabold text-slate-950">{tx('Publish Article', 'áž”áŸ„áŸ‡áž–áž»áž˜áŸ’áž–áž¢ážáŸ’ážáž”áž‘')}</button>
+                    <button type="button" onClick={() => setEditingNews(null)} className="rounded-xl bg-slate-200 px-4 py-2.5 text-xs font-bold text-slate-700">{tx('Cancel', 'áž”áŸ„áŸ‡áž”áž„áŸ‹')}</button>
+                  </div>
+                </form>
+              )}
+            </div>
+
+            {/* Inquiries Inbox Console */}
+            <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
+              <div className="flex justify-between items-center pb-3 border-b border-slate-100">
+                <h2 className="flex items-center gap-2 text-lg font-extrabold text-[#0B2545]"><MessageCircle className="h-5 w-5 shrink-0 text-amber-500" aria-hidden="true" />{tx('Submitted Inquiries & Applications', 'ážŸáŸ†ážŽáž½ážš áž“áž·áž„áž–áž¶áž€áŸ’áž™ážŸáŸ’áž“áž¾ážŸáž»áŸ†ážŠáŸ‚áž›áž”áž¶áž“áž‘áž‘áž½áž›')}</h2>
+                <span className="text-xs font-bold bg-amber-100 text-amber-900 px-2.5 py-1 rounded-md">{tx('Live Inbox', 'áž”áŸ’ážšáž¢áž”áŸ‹ážŸáž¶ážšáž…áž¼áž›')}</span>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="bg-slate-50 text-[11px] font-black text-slate-500 uppercase border-b border-slate-200">
+                      <th className="p-3">{tx('Type', 'áž”áŸ’ážšáž—áŸáž‘')}</th>
+                      <th className="p-3">{tx('Contact / Business', 'áž¢áŸ’áž“áž€áž‘áŸ†áž“áž¶áž€áŸ‹áž‘áŸ†áž“áž„ / áž¢áž¶áž‡áž¸ážœáž€áž˜áŸ’áž˜')}</th>
+                      <th className="p-3">{tx('Phone & Telegram', 'áž‘áž¼ážšážŸáž–áŸ’áž‘ áž“áž·áž„ Telegram')}</th>
+                      <th className="p-3">{tx('Province', 'ážáŸážáŸ’áž')}</th>
+                      <th className="p-3">{tx('Status', 'ážŸáŸ’ážáž¶áž“áž—áž¶áž–')}</th>
+                      <th className="p-3">{tx('Action', 'ážŸáž€áž˜áŸ’áž˜áž—áž¶áž–')}</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 text-xs font-medium">
+                    {inquiries.map((inq) => (
+                      <tr key={inq.id} className="hover:bg-slate-50">
+                        <td className="p-3">
+                          <span className="font-bold bg-slate-100 px-2 py-0.5 rounded text-slate-800">{localizedInquiryType(inq.type)}</span>
+                        </td>
+                        <td className="p-3">
+                          <p className="font-bold text-slate-900">{inq.name}</p>
+                          <p className="text-slate-500">{inq.business}</p>
+                        </td>
+                        <td className="p-3">
+                          <p>{inq.phone}</p>
+                          <p className="text-sky-600">{inq.telegram}</p>
+                        </td>
+                        <td className="p-3">{localizedProvince(inq.province)}</td>
+                        <td className="p-3">
+                          <span className={`px-2 py-0.5 rounded font-bold ${inq.status === 'New' ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-emerald-800'}`}>
+                            {localizedInquiryStatus(inq.status)}
+                          </span>
+                        </td>
+                        <td className="p-3">
+                          <button
+                            onClick={() => {
+                              setInquiries((currentInquiries) => currentInquiries.map(i => i.id === inq.id ? { ...i, status: 'Contacted' } : i));
+                              triggerToast(tx('Inquiry status updated to Contacted.', 'áž”áž¶áž“áž€áŸ‚ážŸáŸ’ážáž¶áž“áž—áž¶áž–ážŸáŸ†ážŽáž½ážšáž‘áŸ…áž‡áž¶ áž”áž¶áž“áž‘áž¶áž€áŸ‹áž‘áž„áŸ”'));
+                            }}
+                            className="text-[11px] font-bold text-blue-900 hover:underline"
+                          >
+                            {tx('Mark Contacted', 'ážŸáž˜áŸ’áž‚áž¶áž›áŸ‹ážáž¶áž”áž¶áž“áž‘áž¶áž€áŸ‹áž‘áž„')}
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Quick Product Creator CMS */}
+            <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
+              <h2 className="flex items-center gap-2 text-lg font-extrabold text-[#0B2545]"><Package className="h-5 w-5 shrink-0 text-amber-500" aria-hidden="true" />{tx('Add New Product to Website Catalog', 'áž”áž“áŸ’ážáŸ‚áž˜áž•áž›áž·ážáž•áž›ážáŸ’áž˜áž¸áž‘áŸ…áž€áŸ’áž“áž»áž„áž€áž¶ážáž¶áž¡áž»áž€áž‚áŸáž áž‘áŸ†áž–áŸážš')}</h2>
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  const fd = new FormData(e.currentTarget);
+                  const newP = {
+                    id: `p-${Date.now()}`,
+                    name_en: String(fd.get('name_en') || ''),
+                    name_kh: String(fd.get('name_kh') || fd.get('name_en') || ''),
+                    brand: String(fd.get('brand') || ''),
+                    category: String(fd.get('category') || ''),
+                    origin: "Malaysia",
+                    sizes: '',
+                    specs: String(fd.get('specs') || ''),
+                    specs_kh: String(fd.get('specs_kh') || ''),
+                    featured: false,
+                    imageBg: "bg-blue-100",
+                    imageBadge: "New",
+                    image: newProductImage || undefined
+                  };
+                  setProducts((currentProducts) => [newP, ...currentProducts]);
+                  e.currentTarget.reset();
+                  setNewProductImage('');
+                  triggerToast(tx('New product added to public catalog!', 'áž”áž¶áž“áž”áž“áŸ’ážáŸ‚áž˜áž•áž›áž·ážáž•áž›ážáŸ’áž˜áž¸áž‘áŸ…áž€áŸ’áž“áž»áž„áž€áž¶ážáž¶áž¡áž»áž€ážŸáž¶áž’áž¶ážšážŽáŸˆ!'));
+                }}
+                className="grid grid-cols-1 sm:grid-cols-3 gap-4"
+              >
+                <input required name="name_en" placeholder={tx('Product Name (English)', 'ážˆáŸ’áž˜áŸ„áŸ‡áž•áž›áž·ážáž•áž› (áž¢áž„áŸ‹áž‚áŸ’áž›áŸážŸ)')} className="border border-slate-300 p-2.5 rounded-xl text-xs" />
+                <input name="name_kh" placeholder={tx('Product Name (Khmer)', 'ážˆáŸ’áž˜áŸ„áŸ‡áž•áž›áž·ážáž•áž› (ážáŸ’áž˜áŸ‚ážš)')} className="border border-slate-300 p-2.5 rounded-xl text-xs" />
+                <select name="brand" className="border border-slate-300 p-2.5 rounded-xl text-xs bg-white">
+                  {brands.map(b => <option key={b.id} value={b.name}>{b.name}</option>)}
+                </select>
+                <select name="category" className="border border-slate-300 p-2.5 rounded-xl text-xs bg-white">
+                  <option value="Personal Care">{localizedCategory('Personal Care')}</option>
+                  <option value="Baby Care">{localizedCategory('Baby Care')}</option>
+                  <option value="Beauty & Body Care">{localizedCategory('Beauty & Body Care')}</option>
+                  <option value="Household Care">{localizedCategory('Household Care')}</option>
+                  <option value="Food & Confectionery">{localizedCategory('Food & Confectionery')}</option>
+                </select>
+                <input required name="specs" placeholder={tx('Specifications / Description (English)', 'áž–áŸážáŸŒáž˜áž¶áž“áž›áž˜áŸ’áž¢áž·áž / áž€áž¶ážšáž–áž·áž–ážŽáŸŒáž“áž¶ (áž¢áž„áŸ‹áž‚áŸ’áž›áŸážŸ)')} className="border border-slate-300 p-2.5 rounded-xl text-xs" />
+                <input name="specs_kh" placeholder={tx('Specifications / Description (Khmer)', 'áž–áŸážáŸŒáž˜áž¶áž“áž›áž˜áŸ’áž¢áž·áž / áž€áž¶ážšáž–áž·áž–ážŽáŸŒáž“áž¶ (ážáŸ’áž˜áŸ‚ážš)')} className="border border-slate-300 p-2.5 rounded-xl text-xs" />
+                <ImageUpload label={tx('Product picture', 'ážšáž¼áž”áž—áž¶áž–áž•áž›áž·ážáž•áž›')} lang={lang} image={newProductImage} onChange={setNewProductImage} />
+                <button type="submit" className="bg-[#0B2545] text-white rounded-xl text-xs font-bold py-2.5 sm:col-span-3">
+                  {tx('+ Publish Product to Catalog', '+ áž”áŸ„áŸ‡áž–áž»áž˜áŸ’áž–áž•áž›áž·ážáž•áž›áž‘áŸ…áž€áž¶ážáž¶áž¡áž»áž€')}
+                </button>
+              </form>
+            </div>
+
+            {/* Edit existing products */}
+            <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm space-y-5">
+              <div>
+                <h2 className="flex items-center gap-2 text-lg font-extrabold text-[#0B2545]"><Package className="h-5 w-5 shrink-0 text-amber-500" aria-hidden="true" />{tx('Edit Products', 'áž€áŸ‚ážŸáž˜áŸ’ážšáž½áž›áž•áž›áž·ážáž•áž›')}</h2>
+                <p className="text-xs text-slate-500">{tx('Update product names, details, and pictures shown in the catalog.', 'áž€áŸ‚ážˆáŸ’áž˜áŸ„áŸ‡ áž–áŸážáŸŒáž˜áž¶áž“áž›áž˜áŸ’áž¢áž·áž áž“áž·áž„ážšáž¼áž”áž—áž¶áž–áž•áž›áž·ážáž•áž›ážŠáŸ‚áž›áž”áž„áŸ’áž áž¶áž‰áž€áŸ’áž“áž»áž„áž€áž¶ážáž¶áž¡áž»áž€áŸ”')}</p>
+              </div>
+              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                {products.map((product) => (
+                  <div key={product.id} className="flex min-w-0 items-center gap-3 rounded-xl border border-slate-200 p-3">
+                    {product.image ? <img src={product.image} alt="" className="h-12 w-12 rounded-lg object-cover" /> : <div className={`flex h-12 w-12 items-center justify-center rounded-lg ${product.imageBg} text-[9px] font-bold text-slate-600`}>{product.imageBadge}</div>}
+                    <span className="min-w-0 flex-1 truncate text-xs font-bold text-slate-800">{product.name_en}</span>
+                    <button type="button" onClick={() => setEditingProduct({ ...product })} className="rounded-lg bg-slate-100 px-3 py-2 text-xs font-bold text-slate-800 hover:bg-slate-200">{tx('Edit', 'áž€áŸ‚ážŸáž˜áŸ’ážšáž½áž›')}</button>
+                  </div>
+                ))}
+              </div>
+
+              {editingProduct && (
+                <form
+                  onSubmit={(event) => {
+                    event.preventDefault();
+                    setProducts((current) => current.map((product) => product.id === editingProduct.id ? editingProduct : product));
+                    setEditingProduct(null);
+                    triggerToast(tx('Product saved.', 'áž”áž¶áž“ážšáž€áŸ’ážŸáž¶áž‘áž»áž€áž•áž›áž·ážáž•áž›áŸ”'));
+                  }}
+                  className="grid grid-cols-1 gap-3 rounded-2xl border border-amber-200 bg-amber-50/50 p-4 sm:grid-cols-2"
+                >
+                  <h3 className="text-sm font-extrabold text-[#0B2545] sm:col-span-2">{tx('Product details', 'áž–áŸážáŸŒáž˜áž¶áž“áž›áž˜áŸ’áž¢áž·ážáž¢áŸ†áž–áž¸áž•áž›áž·ážáž•áž›')}</h3>
+                  <input required aria-label="Product name in English" placeholder={tx('Product name (English)', 'ážˆáŸ’áž˜áŸ„áŸ‡áž•áž›áž·ážáž•áž› (áž¢áž„áŸ‹áž‚áŸ’áž›áŸážŸ)')} value={editingProduct.name_en} onChange={(event) => setEditingProduct({ ...editingProduct, name_en: event.target.value })} className="rounded-xl border border-slate-300 p-2.5 text-xs" />
+                  <input aria-label="Product name in Khmer" placeholder={tx('Product name (Khmer)', 'ážˆáŸ’áž˜áŸ„áŸ‡áž•áž›áž·ážáž•áž› (ážáŸ’áž˜áŸ‚ážš)')} value={editingProduct.name_kh} onChange={(event) => setEditingProduct({ ...editingProduct, name_kh: event.target.value })} className="rounded-xl border border-slate-300 p-2.5 text-xs" />
+                  <select aria-label="Product brand" value={editingProduct.brand} onChange={(event) => setEditingProduct({ ...editingProduct, brand: event.target.value })} className="rounded-xl border border-slate-300 bg-white p-2.5 text-xs">
+                    {brands.map((brand) => <option key={brand.id} value={brand.name}>{brand.name}</option>)}
+                  </select>
+                  <select aria-label="Product category" value={editingProduct.category} onChange={(event) => setEditingProduct({ ...editingProduct, category: event.target.value })} className="rounded-xl border border-slate-300 bg-white p-2.5 text-xs">
+                    {productCategories.filter((category) => category !== 'All').map((category) => <option key={category} value={category}>{category}</option>)}
+                  </select>
+                  <input aria-label="Product origin" placeholder={tx('Country of origin', 'áž”áŸ’ážšáž‘áŸážŸážŠáž¾áž˜')} value={editingProduct.origin} onChange={(event) => setEditingProduct({ ...editingProduct, origin: event.target.value })} className="rounded-xl border border-slate-300 p-2.5 text-xs" />
+                  <input aria-label="Product sizes" placeholder={tx('Sizes / packaging', 'áž‘áŸ†áž áŸ† / áž€áž¶ážšážœáŸáž…ážáŸ’áž…áž”áŸ‹')} value={editingProduct.sizes} onChange={(event) => setEditingProduct({ ...editingProduct, sizes: event.target.value })} className="rounded-xl border border-slate-300 p-2.5 text-xs" />
+                  <textarea aria-label="Product description" placeholder={tx('Product description (English)', 'áž€áž¶ážšáž–áž·áž–ážŽáŸŒáž“áž¶áž¢áŸ†áž–áž¸áž•áž›áž·ážáž•áž› (áž¢áž„áŸ‹áž‚áŸ’áž›áŸážŸ)')} rows={3} value={editingProduct.specs} onChange={(event) => setEditingProduct({ ...editingProduct, specs: event.target.value })} className="rounded-xl border border-slate-300 p-2.5 text-xs sm:col-span-2" />
+                  <textarea aria-label="Product description in Khmer" placeholder={tx('Product description (Khmer)', 'áž€áž¶ážšáž–áž·áž–ážŽáŸŒáž“áž¶áž¢áŸ†áž–áž¸áž•áž›áž·ážáž•áž› (ážáŸ’áž˜áŸ‚ážš)')} rows={3} value={editingProduct.specs_kh || ''} onChange={(event) => setEditingProduct({ ...editingProduct, specs_kh: event.target.value })} className="rounded-xl border border-slate-300 p-2.5 text-xs sm:col-span-2" />
+                  <ImageUpload label={tx('Product picture', 'ážšáž¼áž”áž—áž¶áž–áž•áž›áž·ážáž•áž›')} lang={lang} image={editingProduct.image} onChange={(image) => setEditingProduct({ ...editingProduct, image })} />
+                  <div className="flex gap-2 sm:col-span-2">
+                    <button type="submit" className="rounded-xl bg-amber-500 px-4 py-2.5 text-xs font-extrabold text-slate-950">{tx('Save Product', 'ážšáž€áŸ’ážŸáž¶áž‘áž»áž€áž•áž›áž·ážáž•áž›')}</button>
+                    <button type="button" onClick={() => setEditingProduct(null)} className="rounded-xl bg-slate-200 px-4 py-2.5 text-xs font-bold text-slate-700">{tx('Cancel', 'áž”áŸ„áŸ‡áž”áž„áŸ‹')}</button>
+                  </div>
+                </form>
+              )}
+            </div>
+          </div>
+        )}
+      </main>
+
+      {}
+      {/* Product Detail Modal */}
+      {selectedProduct && (
+        <Modal label="Product details" onClose={() => setSelectedProduct(null)} className="relative animate-fadeIn space-y-4 sm:space-y-6">
+            <button
+              onClick={() => setSelectedProduct(null)}
+              className="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-800"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className={`h-48 ${selectedProduct.imageBg} rounded-2xl flex items-center justify-center text-2xl font-black text-slate-600/50 uppercase`}>
+              {selectedProduct.image ? <img src={selectedProduct.image} alt={lang === 'KH' ? localizedProductName(selectedProduct) : selectedProduct.name_en} className="h-full w-full rounded-2xl object-cover" /> : localizedProductBadge(selectedProduct)}
+            </div>
+
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <span title={selectedProduct.origin} className="flex h-8 min-w-12 items-center justify-center rounded-lg border border-slate-200 bg-white px-1 shadow-sm">
+                  <CountryFlag country={selectedProduct.origin} image={brands.find((brand) => brand.name === selectedProduct.brand)?.flagImage} />
+                </span>
+                <span className="text-xs font-extrabold text-amber-600 uppercase">{selectedProduct.brand} â€¢ {localizedCategory(selectedProduct.category)}</span>
+              </div>
+              <h3 className="text-xl font-bold text-slate-900">{localizedProductName(selectedProduct)}</h3>
+              <p className="text-xs text-slate-600">{localizedProductSpecs(selectedProduct)}</p>
+            </div>
+
+            <div className="bg-slate-50 p-4 rounded-xl text-xs space-y-1">
+              <p><span className="font-bold">{tx('Country of Origin:', 'áž”áŸ’ážšáž‘áŸážŸážŠáž¾áž˜áŸ–')}</span> {tx(selectedProduct.origin, selectedProduct.origin === 'Malaysia' ? 'áž˜áŸ‰áž¶áž¡áŸážŸáŸŠáž¸' : selectedProduct.origin)}</p>
+              <p><span className="font-bold">{tx('Sizes / Packaging:', 'áž‘áŸ†áž áŸ† / áž€áž¶ážšážœáŸáž…ážáŸ’áž…áž”áŸ‹áŸ–')}</span> {selectedProduct.sizes || tx('Standard packaging', 'áž€áž¶ážšážœáŸáž…ážáŸ’áž…áž”áŸ‹ážŸáŸ’ážáž„áŸ‹ážŠáž¶ážš')}</p>
+            </div>
+
+        </Modal>
+      )}
+
+      {/* Brand Detail Modal */}
+      {selectedBrand && (
+        <Modal label="Brand details" onClose={() => setSelectedBrand(null)} className="relative space-y-4 sm:space-y-6">
+            <button onClick={() => setSelectedBrand(null)} className="absolute top-4 right-4 p-2 text-slate-400">
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className="flex items-center space-x-4">
+              <div className="w-16 h-16 rounded-2xl bg-[#0B2545] text-amber-400 font-black text-xl flex items-center justify-center">
+                {selectedBrand.image ? <img src={selectedBrand.image} alt={`${selectedBrand.name} logo`} className="h-full w-full rounded-2xl bg-white p-2 object-contain" /> : selectedBrand.logoText.slice(0,3)}
+              </div>
+              <div>
+                <h3 className="text-2xl font-extrabold text-slate-900">{selectedBrand.name}</h3>
+                <p className="text-xs font-bold text-amber-600">{tx('Imported from', 'áž“áž¶áŸ†áž…áž¼áž›áž–áž¸')} {selectedBrand.origin === 'Malaysia' && lang === 'KH' ? 'áž˜áŸ‰áž¶áž¡áŸážŸáŸŠáž¸' : selectedBrand.origin}</p>
+              </div>
+            </div>
+
+            <p className="text-sm text-slate-600 leading-relaxed">{localizedBrandDescription(selectedBrand)}</p>
+
+            <div className="border-t border-slate-100 pt-4 flex gap-3">
+              <button
+                onClick={() => {
+                  setSelectedBrand(null);
+                  setCurrentView('products');
+                }}
+                className="w-full bg-[#0B2545] text-white font-bold py-3 rounded-xl text-xs"
+              >
+                {tx('View Brand Products', 'áž˜áž¾áž›áž•áž›áž·ážáž•áž›ážšáž”ážŸáŸ‹áž˜áŸ‰áž¶áž€áž“áŸáŸ‡')}
+              </button>
+            </div>
+        </Modal>
+      )}
+
+      {/* Inquiry Flow Modal */}
+      {inquiryModalOpen && (
+        <Modal label="Product inquiry form" onClose={() => setInquiryModalOpen(false)} className="relative space-y-4">
+            <button onClick={() => setInquiryModalOpen(false)} className="absolute top-4 right-4 p-2 text-slate-400">
+              <X className="w-5 h-5" />
+            </button>
+
+            <h3 className="text-xl font-bold text-[#0B2545]">{tx('Send Direct Product Inquiry', 'áž•áŸ’áž‰áž¾ážŸáŸ†ážŽáž½ážšáž¢áŸ†áž–áž¸áž•áž›áž·ážáž•áž›')}</h3>
+            {inquiryPrefill.product && (
+              <div className="bg-amber-50 border border-amber-200 p-3 rounded-xl text-xs text-amber-900 font-medium">
+                Inquiring about: <span className="font-bold">{inquiryPrefill.product}</span> ({inquiryPrefill.brand})
+              </div>
+            )}
+
+            <form onSubmit={handleInquirySubmit} className="space-y-3">
+              <input type="hidden" name="type" value={inquiryPrefill.type} />
+              <input required name="name" placeholder={tx('Your Name *', 'ážˆáŸ’áž˜áŸ„áŸ‡ážšáž”ážŸáŸ‹áž¢áŸ’áž“áž€ *')} className="w-full border p-2.5 rounded-xl text-xs" />
+              <input required name="phone" placeholder={tx('Phone Number *', 'áž›áŸážáž‘áž¼ážšážŸáž–áŸ’áž‘ *')} className="w-full border p-2.5 rounded-xl text-xs" />
+              <input name="telegram" placeholder={tx('Telegram Username (@handle)', 'ážˆáŸ’áž˜áŸ„áŸ‡áž¢áŸ’áž“áž€áž”áŸ’ážšáž¾ Telegram (@handle)')} className="w-full border p-2.5 rounded-xl text-xs" />
+              <textarea name="message" rows={3} placeholder={tx('Inquiry notes or quantity requirements...', 'áž€áŸ†ážŽážáŸ‹ážŸáž˜áŸ’áž‚áž¶áž›áŸ‹ áž¬áž…áŸ†áž“áž½áž“áž•áž›áž·ážáž•áž›ážŠáŸ‚áž›ážáŸ’ážšáž¼ážœáž€áž¶ážš...')} className="w-full border p-2.5 rounded-xl text-xs" />
+              <button type="submit" className="w-full bg-[#0B2545] text-white py-3 rounded-xl font-bold text-xs">
+                {tx('Submit Inquiry', 'áž•áŸ’áž‰áž¾ážŸáŸ†ážŽáž½ážš')}
+              </button>
+            </form>
+        </Modal>
+      )}
+
+      {/* Article Reader Modal */}
+      {selectedArticle && (
+        <Modal label="News article" onClose={() => setSelectedArticle(null)} size="xl" className="relative space-y-4">
+            <button onClick={() => setSelectedArticle(null)} className="absolute top-4 right-4 p-2 text-slate-400">
+              <X className="w-5 h-5" />
+            </button>
+            {selectedArticle.image && <img src={selectedArticle.image} alt="" className="h-56 w-full rounded-xl object-cover" />}
+            <span className="text-xs font-bold text-amber-600">{tx(selectedArticle.category, selectedArticle.category === 'Company' ? 'áž€áŸ’ážšáž»áž˜áž áŸŠáž»áž“' : selectedArticle.category === 'Products' ? 'áž•áž›áž·ážáž•áž›' : selectedArticle.category === 'Events' ? 'áž–áŸ’ážšáž¹ážáŸ’ážáž·áž€áž¶ážšážŽáŸ' : selectedArticle.category)} â€¢ {selectedArticle.date}</span>
+            <h2 className="text-xl font-bold text-slate-900">{localizedArticleTitle(selectedArticle)}</h2>
+            <p className="text-sm text-slate-600 leading-relaxed">{localizedArticleExcerpt(selectedArticle)}</p>
+        </Modal>
+      )}
+
+      {}
+      <div className="fixed bottom-6 left-6 z-40 flex flex-col space-y-2">
+        <a
+          href={`https://t.me/${settings.telegram.replace('@','')}`}
+          target="_blank"
+          rel="noreferrer"
+          className="bg-sky-500 hover:bg-sky-600 text-white p-3.5 rounded-full shadow-lg flex items-center justify-center transition-transform hover:scale-110"
+          title="Contact via Telegram"
+        >
+          <MessageCircle className="w-6 h-6" />
+        </a>
+        <a
+          href={settings.facebook}
+          target="_blank"
+          rel="noreferrer"
+          className="bg-blue-600 hover:bg-blue-700 text-white p-3.5 rounded-full shadow-lg flex items-center justify-center transition-transform hover:scale-110"
+          title="Visit VistaLab on Facebook"
+          aria-label="Visit VistaLab on Facebook"
+        >
+          <span aria-hidden="true" className="text-2xl font-black leading-none">f</span>
+        </a>
+      </div>
+
+      {}
+      <footer className="bg-[#0B2545] text-slate-300 text-xs border-t border-slate-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 py-7 sm:py-12 grid grid-cols-1 md:grid-cols-4 gap-4 sm:gap-8">
+          <div className="space-y-3">
+            <div className="flex items-center space-x-2 text-white font-extrabold text-lg">
+              <div className="w-8 h-8 rounded-lg bg-amber-500 text-slate-950 flex items-center justify-center font-black text-sm">VL</div>
+              <span>VISTALAB CAMBODIA</span>
+            </div>
+            <p className="text-slate-400 text-xs leading-relaxed">{t.footerDesc}</p>
+          </div>
+
+          <div>
+            <h4 className="text-white font-bold mb-3 uppercase tracking-wider text-[11px] text-amber-400">{t.quickLinks}</h4>
+            <ul className="space-y-2 text-slate-400 font-medium">
+              <li><button onClick={() => setCurrentView('about')} className="hover:text-white">{tx('About & Distribution', 'áž¢áŸ†áž–áž¸áž™áž¾áž„ áž“áž·áž„áž”ážŽáŸ’ážáž¶áž‰áž…áŸ‚áž€áž…áž¶áž™')}</button></li>
+              <li><button onClick={() => setCurrentView('brands')} className="hover:text-white">{t.navBrands}</button></li>
+              <li><button onClick={() => setCurrentView('products')} className="hover:text-white">{t.navProducts}</button></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="text-white font-bold mb-3 uppercase tracking-wider text-[11px] text-amber-400">{tx('Commercial', 'áž€áž·áž…áŸ’áž…áž€áž¶ážšáž–áž¶ážŽáž·áž‡áŸ’áž‡áž€áž˜áŸ’áž˜')}</h4>
+            <ul className="space-y-2 text-slate-400 font-medium">
+              <li><button onClick={() => setCurrentView('partner')} className="hover:text-white">{t.navPartner}</button></li>
+              <li><button onClick={() => setCurrentView('seller')} className="hover:text-white">{t.navSeller}</button></li>
+              <li><button onClick={() => setCurrentView('news')} className="hover:text-white">{t.navNews}</button></li>
+              <li><button onClick={() => setCurrentView('admin')} className="hover:text-white">{t.navAdmin}</button></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="text-white font-bold mb-3 uppercase tracking-wider text-[11px] text-amber-400">{t.contactInfo}</h4>
+            <p className="text-slate-400 leading-relaxed">{tx('Hotline:', 'áž‘áž¼ážšážŸáž–áŸ’áž‘áŸ–')} {settings.phone1}</p>
+            <p className="text-slate-400">{tx('Email:', 'áž¢áŸŠáž¸áž˜áŸ‚áž›áŸ–')} {settings.email}</p>
+            <p className="text-slate-400">Telegram: {settings.telegram}</p>
+            <p className="mt-1"><a href={settings.facebook} target="_blank" rel="noreferrer" className="text-slate-300 hover:text-white underline underline-offset-2">{tx('Facebook:', 'FacebookáŸ–')} vistalab</a></p>
+            <p className="text-slate-400 mt-2">{lang === 'KH' ? settings.address_kh : settings.address_en}</p>
+          </div>
+        </div>
+
+        <div className="bg-slate-950 py-4 px-4 sm:px-8 text-center text-slate-500 border-t border-slate-900">
+          <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
+            <p>Â© 2026 VistaLab Cambodia Co., Ltd. {t.rightsReserved}</p>
+            <div className="flex space-x-4 text-[11px]">
+              <span className="hover:text-slate-400 cursor-pointer">{tx('Privacy Policy', 'áž‚áŸ„áž›áž€áž¶ážšážŽáŸáž¯áž€áž‡áž“áž—áž¶áž–')}</span>
+              <span className="hover:text-slate-400 cursor-pointer">{tx('Terms of Distribution', 'áž›áž€áŸ’ážážážŽáŸ’ážŒáž“áŸƒáž€áž¶ážšáž…áŸ‚áž€áž…áž¶áž™')}</span>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+}
+
