@@ -276,7 +276,7 @@ export default function App() {
               <button
                 key={link.id}
                 onClick={() => setCurrentView(link.id)}
-                className={`px-3 py-2 rounded-lg transition-all ${currentView === link.id ? 'bg-green-50 text-[#202124] font-bold' : 'hover:bg-slate-100 text-slate-600'}`}
+                className={`px-3 py-2 rounded-lg transition-all ${currentView === link.id ? 'bg-[#267A3B] text-white font-bold' : 'hover:bg-slate-100 text-slate-600'}`}
               >
                 {link.label}
               </button>
@@ -294,7 +294,7 @@ export default function App() {
             </button>
             <button
               onClick={() => openInquiry('', '', 'General')}
-              className="bg-[#2E8B45] hover:bg-[#246F38] text-white px-4 py-2 rounded-xl font-semibold text-sm shadow-md hover:shadow-lg transition-all flex items-center space-x-1.5 border border-green-500/20"
+              className="bg-[#267A3B] hover:bg-[#246F38] text-white px-4 py-2 rounded-xl font-semibold text-sm shadow-md hover:shadow-lg transition-all flex items-center space-x-1.5 border border-green-500/20"
             >
               <span>{t.contactUs}</span>
               <ChevronRight className="w-4 h-4 text-green-400" />
@@ -343,9 +343,9 @@ export default function App() {
                 <button
                   key={link.id}
                   onClick={() => setCurrentView(link.id)}
-                  className={`flex min-h-11 min-w-0 items-center gap-2 text-left px-3 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-colors ${currentView === link.id ? 'bg-green-50 text-[#202124]' : 'text-slate-700 hover:bg-slate-50'}`}
+                  className={`flex min-h-11 min-w-0 items-center gap-2 text-left px-3 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-colors ${currentView === link.id ? 'bg-[#267A3B] text-white' : 'text-slate-700 hover:bg-slate-50'}`}
                 >
-                  <link.icon className={`h-4 w-4 shrink-0 ${currentView === link.id ? 'text-green-500' : 'text-slate-400'}`} aria-hidden="true" />
+                  <link.icon className={`h-4 w-4 shrink-0 ${currentView === link.id ? 'text-white' : 'text-slate-400'}`} aria-hidden="true" />
                   <span className="min-w-0 leading-snug">{link.label}</span>
                 </button>
               ))}
@@ -353,7 +353,7 @@ export default function App() {
             <div className="pt-2 flex flex-col space-y-2">
               <button
                 onClick={() => openInquiry('', '', 'General')}
-                className="w-full bg-[#2E8B45] text-white py-3 rounded-xl font-bold text-center text-sm shadow-md"
+                className="w-full bg-[#267A3B] text-white py-3 rounded-xl font-bold text-center text-sm shadow-md"
               >
                 {t.contactUs}
               </button>
@@ -389,13 +389,13 @@ export default function App() {
               <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
               <div className="absolute top-0 right-0 w-96 h-96 bg-green-500/10 rounded-full blur-3xl pointer-events-none" />
 
-              <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-12 items-center relative z-10">
-                <div className="lg:col-span-7 space-y-4 sm:space-y-6 text-center lg:text-left">
-                  <div className="inline-flex items-center space-x-2 bg-green-100 border border-green-200 text-green-900 px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-semibold">
+              <div className="w-full max-w-7xl min-w-0 mx-auto grid grid-cols-[minmax(0,1fr)] lg:grid-cols-12 gap-6 sm:gap-12 items-center relative z-10">
+                <div className="min-w-0 lg:col-span-7 space-y-4 sm:space-y-6 text-center lg:text-left">
+                  <div className="inline-flex max-w-full min-w-0 items-center space-x-2 bg-green-100 border border-green-200 text-green-900 px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-semibold">
                     <Sparkles className="w-4 h-4 text-green-400" />
-                    <span>{t.heroSub}</span>
+                      <span className="min-w-0 whitespace-normal">{t.heroSub}</span>
                   </div>
-                  <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight">
+                  <h1 className="break-words text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight">
                     {lang === 'EN' ? (
                       <>Connecting <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-700 via-green-600 to-green-800">International Brands</span> with the Cambodian Market</>
                     ) : (
@@ -423,7 +423,7 @@ export default function App() {
                   </div>
 
                   {/* Trust Highlights */}
-                  <div className="pt-8 border-t border-green-200 grid grid-cols-3 gap-4 text-center lg:text-left">
+                  <div className="min-w-0 pt-8 border-t border-green-200 grid grid-cols-3 gap-2 sm:gap-4 text-center lg:text-left">
                     <div>
                       <div className="text-2xl sm:text-3xl font-black text-green-400">12+</div>
                       <div className="text-xs text-slate-300 font-medium">{tx('Active Brands', 'ម៉ាកដែលកំពុងចែកចាយ')}</div>
@@ -440,8 +440,8 @@ export default function App() {
                 </div>
 
                 {/* Hero Showcase Collage Card */}
-                <div className="lg:col-span-5 relative">
-                  <div className="bg-white border border-green-100 p-6 sm:p-8 rounded-3xl shadow-xl space-y-4 sm:space-y-6">
+                <div className="min-w-0 lg:col-span-5 relative">
+                  <div className="min-w-0 bg-white border border-green-100 p-4 sm:p-8 rounded-3xl shadow-xl space-y-4 sm:space-y-6">
                     <div className="flex justify-between items-center pb-4 border-b border-green-100">
                       <span className="text-xs font-bold uppercase tracking-wider text-green-300">{tx('Featured Brands Showcase', 'ម៉ាកផលិតផលដែលបានជ្រើសរើស')}</span>
                       <span className="text-xs bg-green-500/20 text-green-300 px-2 py-0.5 rounded font-medium">{tx('Malaysia Sourced', 'នាំចូលពីម៉ាឡេស៊ី')}</span>
@@ -449,8 +449,8 @@ export default function App() {
 
                     <div className="grid grid-cols-2 gap-3">
                       {brands.slice(0, 4).map((b) => (
-                        <div key={b.id} className="group flex min-h-28 items-center gap-3 rounded-xl border border-white/15 bg-white/10 p-3 transition-all hover:border-green-300/60 hover:bg-white/15">
-                          <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-white p-2 shadow-sm">
+                        <div key={b.id} className="group flex min-w-0 min-h-28 items-center gap-2 sm:gap-3 rounded-xl border border-white/15 bg-white/10 p-2 sm:p-3 transition-all hover:border-green-300/60 hover:bg-white/15">
+                          <div className="flex h-10 w-10 sm:h-16 sm:w-16 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-white p-1.5 sm:p-2 shadow-sm">
                             {b.image ? <img src={b.image} alt={`${b.name} logo`} className="h-full w-full object-contain" /> : <span className="text-center text-sm font-black leading-tight text-[#202124]">{b.logoText || b.name}</span>}
                           </div>
                           <div className="min-w-0 text-left">
@@ -461,7 +461,7 @@ export default function App() {
                       ))}
                     </div>
 
-                    <div className="bg-slate-900/60 p-4 rounded-2xl border border-green-500/30 flex items-center space-x-3">
+                    <div className="min-w-0 bg-slate-900/60 p-4 rounded-2xl border border-green-500/30 flex items-center space-x-3">
                       <div className="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center text-green-400 flex-shrink-0">
                         <Truck className="w-5 h-5" />
                       </div>
@@ -523,7 +523,7 @@ export default function App() {
                     <button
                       key={cat}
                       onClick={() => setActiveCategory(cat)}
-                      className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${activeCategory === cat ? 'bg-[#2E8B45] text-white shadow-md' : 'bg-white text-slate-700 hover:bg-slate-200 border border-slate-200'}`}
+                      className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${activeCategory === cat ? 'bg-[#267A3B] text-white shadow-md' : 'bg-white text-slate-700 hover:bg-slate-200 border border-slate-200'}`}
                     >
                       {categoryLabels[cat]}
                     </button>
@@ -712,7 +712,7 @@ export default function App() {
 
             {/* PARTNER CTA & SOCIAL HUB */}
             <section className="max-w-7xl mx-auto px-4 sm:px-8">
-              <div className="bg-gradient-to-r from-[#2E8B45] to-[#246F38] rounded-3xl p-5 sm:p-8 sm:p-12 text-white shadow-xl grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-8 items-center border border-green-500/20">
+              <div className="site-green-panel bg-green-50 rounded-3xl p-5 sm:p-8 sm:p-12 text-slate-800 shadow-xl grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-8 items-center border border-green-200">
                 <div className="lg:col-span-8 space-y-4">
                   <h2 className="text-2xl sm:text-4xl font-black">{t.ctaTitle}</h2>
                   <p className="text-slate-300 text-sm sm:text-base">{t.ctaDesc}</p>
@@ -752,8 +752,8 @@ export default function App() {
               </div>
               <div className="relative min-h-[320px] overflow-hidden bg-slate-100 sm:min-h-[400px] md:min-h-full">
                 <img src={settings.aboutHeroImage || `${import.meta.env.BASE_URL}images/hero-warehouse-banner.jpg`} alt="VistaLab warehouse and distribution operations" className={`absolute inset-0 h-full w-full object-cover ${settings.aboutHeroAnimated ? 'hero-background-image' : ''}`} />
-                <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[#2E8B45]/30 via-transparent to-white/10" />
-                <div className="absolute inset-x-4 bottom-4 flex items-end justify-between gap-3 rounded-2xl border border-white/40 bg-[#2E8B45]/85 p-4 text-white shadow-lg backdrop-blur-sm sm:inset-x-6 sm:bottom-6"><div><span className="text-[10px] font-bold uppercase tracking-widest text-green-300">{tx('Our operations', 'ប្រតិបត្តិការរបស់យើង')}</span><p className="mt-1 text-sm font-extrabold sm:text-base">{tx('Import. Store. Deliver.', 'នាំចូល រក្សាទុក និងចែកចាយ')}</p></div><Truck className="h-7 w-7 shrink-0 text-green-400" aria-hidden="true" /></div>
+                <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[#267A3B]/30 via-transparent to-white/10" />
+                <div className="absolute inset-x-4 bottom-4 flex items-end justify-between gap-3 rounded-2xl border border-white/40 bg-[#267A3B]/85 p-4 text-white shadow-lg backdrop-blur-sm sm:inset-x-6 sm:bottom-6"><div><span className="text-[10px] font-bold uppercase tracking-widest text-green-300">{tx('Our operations', 'ប្រតិបត្តិការរបស់យើង')}</span><p className="mt-1 text-sm font-extrabold sm:text-base">{tx('Import. Store. Deliver.', 'នាំចូល រក្សាទុក និងចែកចាយ')}</p></div><Truck className="h-7 w-7 shrink-0 text-green-400" aria-hidden="true" /></div>
               </div>
             </section>
             {/* Corporate Timeline */}
@@ -770,7 +770,7 @@ export default function App() {
                   { year: "2026+", title: tx("Digital Transformation & B2B", "ការផ្លាស់ប្តូរឌីជីថល និងអាជីវកម្ម B2B"), desc: tx("Launching updated digital presence and streamlining commercial partner order workflows.", "កែលម្អវត្តមានឌីជីថល និងសម្រួលដំណើរការបញ្ជាទិញសម្រាប់ដៃគូអាជីវកម្ម។") }
                 ].map((step, idx) => (
                   <div key={idx} className="relative rounded-2xl border border-slate-200 border-t-4 border-t-green-400 bg-gradient-to-b from-green-50/60 to-white p-5 shadow-sm transition-transform duration-200 hover:-translate-y-1 hover:shadow-md sm:p-6">
-                    <span className="mb-4 flex h-9 w-9 items-center justify-center rounded-xl bg-[#2E8B45] text-sm font-black text-green-400">0{idx + 1}</span>
+                    <span className="mb-4 flex h-9 w-9 items-center justify-center rounded-xl bg-[#267A3B] text-sm font-black text-white">0{idx + 1}</span>
                     <span className="inline-flex rounded-full bg-green-100 px-3 py-1 text-xs font-black text-green-900">{step.year}</span>
                     <h3 className="text-base font-bold text-slate-900 pt-1">{step.title}</h3>
                     <p className="text-sm text-slate-700 leading-relaxed">{step.desc}</p>
@@ -781,7 +781,7 @@ export default function App() {
 
             {/* Vision & Mission Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-8">
-              <div className="bg-gradient-to-br from-[#2E8B45] to-[#246F38] text-white p-5 sm:p-8 rounded-3xl space-y-4 shadow-md">
+              <div className="site-green-panel bg-green-50 text-slate-800 p-5 sm:p-8 rounded-3xl space-y-4 shadow-md border border-green-200">
                 <div className="w-12 h-12 rounded-xl bg-green-500/20 text-green-400 flex items-center justify-center">
                   <Award className="w-6 h-6" />
                 </div>
@@ -878,7 +878,7 @@ export default function App() {
                 <button
                   key={cat}
                   onClick={() => setActiveCategory(cat)}
-                  className={`shrink-0 px-3 py-1.5 sm:px-3.5 rounded-xl text-[11px] sm:text-xs font-bold ${activeCategory === cat ? 'bg-[#2E8B45] text-white' : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100'}`}
+                  className={`shrink-0 px-3 py-1.5 sm:px-3.5 rounded-xl text-[11px] sm:text-xs font-bold ${activeCategory === cat ? 'bg-[#267A3B] text-white' : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100'}`}
                 >
                   {categoryLabels[cat]}
                 </button>
@@ -946,8 +946,8 @@ export default function App() {
               </div>
               <div className="relative min-h-[320px] overflow-hidden bg-slate-100 sm:min-h-[400px] md:min-h-full">
                 <img src={settings.distributionHeroImage || `${import.meta.env.BASE_URL}images/hero-warehouse-banner.jpg`} alt="VistaLab warehouse and distribution operations in Cambodia" className={`absolute inset-0 h-full w-full object-cover ${settings.distributionHeroAnimated ? 'hero-background-image' : ''}`} />
-                <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[#2E8B45]/30 via-transparent to-white/10" />
-                <div className="absolute inset-x-4 bottom-4 flex items-end justify-between gap-3 rounded-2xl border border-white/40 bg-[#2E8B45]/85 p-4 text-white shadow-lg backdrop-blur-sm sm:inset-x-6 sm:bottom-6"><div><span className="text-[10px] font-bold uppercase tracking-widest text-green-300">{tx('Nationwide reach', 'បណ្តាញទូទាំងប្រទេស')}</span><p className="mt-1 text-sm font-extrabold sm:text-base">{tx('From warehouse to retailer', 'ពីឃ្លាំងទៅកាន់អ្នកលក់រាយ')}</p></div><MapPin className="h-7 w-7 shrink-0 text-green-400" aria-hidden="true" /></div>
+                <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[#267A3B]/30 via-transparent to-white/10" />
+                <div className="absolute inset-x-4 bottom-4 flex items-end justify-between gap-3 rounded-2xl border border-white/40 bg-[#267A3B]/85 p-4 text-white shadow-lg backdrop-blur-sm sm:inset-x-6 sm:bottom-6"><div><span className="text-[10px] font-bold uppercase tracking-widest text-green-300">{tx('Nationwide reach', 'បណ្តាញទូទាំងប្រទេស')}</span><p className="mt-1 text-sm font-extrabold sm:text-base">{tx('From warehouse to retailer', 'ពីឃ្លាំងទៅកាន់អ្នកលក់រាយ')}</p></div><MapPin className="h-7 w-7 shrink-0 text-green-400" aria-hidden="true" /></div>
               </div>
             </section>
             {/* Supply Chain Flow Visualization */}
@@ -1044,7 +1044,7 @@ export default function App() {
 
               <button
                 type="submit"
-                className="w-full bg-[#2E8B45] hover:bg-[#246F38] text-white py-3.5 rounded-xl font-bold text-sm shadow-md transition-all"
+                className="w-full bg-[#267A3B] hover:bg-[#246F38] text-white py-3.5 rounded-xl font-bold text-sm shadow-md transition-all"
               >
                 {tx('Submit Partnership Inquiry', 'ផ្ញើសំណើសហការ')}
               </button>
@@ -1242,7 +1242,7 @@ export default function App() {
                     <label className="block text-xs font-bold text-slate-700 mb-1">{tx('Message / Inquiry *', 'សារ / សំណួរ *')}</label>
                     <textarea required name="message" rows={4} className="w-full border border-slate-300 rounded-xl p-4 text-sm focus:outline-none focus:ring-2 focus:ring-green-900" />
                   </div>
-                  <button type="submit" className="w-full bg-[#2E8B45] hover:bg-[#246F38] text-white py-3 rounded-xl font-bold text-sm shadow">
+                  <button type="submit" className="w-full bg-[#267A3B] hover:bg-[#246F38] text-white py-3 rounded-xl font-bold text-sm shadow">
                     {tx('Send Direct Message', 'ផ្ញើសារ')}
                   </button>
                 </form>
@@ -1254,9 +1254,9 @@ export default function App() {
         {}
         {currentView === 'admin' && (
           <div className="max-w-7xl mx-auto px-4 sm:px-8 py-10 space-y-5 sm:space-y-8">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#2E8B45] text-white p-6 rounded-3xl shadow-lg">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#267A3B] text-white p-6 rounded-3xl shadow-lg">
               <div>
-                <span className="text-xs text-green-400 font-extrabold uppercase tracking-widest">{tx('Internal Control Panel', 'ផ្ទាំងគ្រប់គ្រងផ្ទៃក្នុង')}</span>
+                <span className="text-xs text-white font-extrabold uppercase tracking-widest">{tx('Internal Control Panel', 'ផ្ទាំងគ្រប់គ្រងផ្ទៃក្នុង')}</span>
                 <h1 className="flex items-center gap-3 text-2xl font-black"><Settings className="h-5 w-5 shrink-0 text-green-500" aria-hidden="true" />{tx('VistaLab Website Content Manager (CMS)', 'ប្រព័ន្ធគ្រប់គ្រងមាតិកាគេហទំព័រ VistaLab')}</h1>
               </div>
               <div className="flex items-center space-x-2">
@@ -1334,7 +1334,7 @@ export default function App() {
                 <button
                   type="button"
                   onClick={() => setEditingBrand({ id: `b-${Date.now()}`, name: '', category: 'Personal Care', origin: 'Malaysia', description: '', description_kh: '', featured: false, logoText: '', image: '', flagImage: '' })}
-                  className="rounded-xl bg-[#2E8B45] px-4 py-2 text-xs font-bold text-white"
+                  className="rounded-xl bg-[#267A3B] px-4 py-2 text-xs font-bold text-white"
                 >
                   {tx('+ Add Brand', '+ បន្ថែមម៉ាកផលិតផល')}
                 </button>
@@ -1343,7 +1343,7 @@ export default function App() {
               <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
                 {brands.map((brand) => (
                   <div key={brand.id} className="flex min-w-0 items-center gap-3 rounded-xl border border-slate-200 p-3">
-                    {brand.image ? <img src={brand.image} alt="" className="h-11 w-11 rounded-lg object-cover" /> : <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-[#2E8B45] text-xs font-black text-green-400">{brand.logoText.slice(0, 3)}</div>}
+                    {brand.image ? <img src={brand.image} alt="" className="h-11 w-11 rounded-lg object-cover" /> : <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-[#267A3B] text-xs font-black text-white">{brand.logoText.slice(0, 3)}</div>}
                     <span className="min-w-0 flex-1 truncate text-sm font-bold text-slate-800">{brand.name}</span>
                     <button type="button" onClick={() => setEditingBrand({ ...brand })} className="rounded-lg bg-slate-100 px-3 py-2 text-xs font-bold text-slate-800 hover:bg-slate-200">{tx('Edit', 'កែសម្រួល')}</button>
                   </div>
@@ -1391,7 +1391,7 @@ export default function App() {
                   <h2 className="flex items-center gap-2 text-lg font-extrabold text-[#202124]"><Newspaper className="h-5 w-5 shrink-0 text-green-500" aria-hidden="true" />{tx('Manage News', 'គ្រប់គ្រងព័ត៌មាន')}</h2>
                   <p className="text-xs text-slate-500">{tx('Add articles or edit the English and Khmer text, date, category, and cover image.', 'បន្ថែម ឬកែសម្រួលអត្ថបទជាភាសាអង់គ្លេស និងខ្មែរ កាលបរិច្ឆេទ ប្រភេទ និងរូបភាពគម្រប។')}</p>
                 </div>
-                <button type="button" onClick={() => setEditingNews({ id: `n-${Date.now()}`, title_en: '', title_kh: '', date: new Date().toISOString().slice(0, 10), category: 'Company', excerpt_en: '', excerpt_kh: '', imageBg: 'bg-green-800', image: '' })} className="rounded-xl bg-[#2E8B45] px-4 py-2 text-xs font-bold text-white">{tx('+ Add Article', '+ បន្ថែមអត្ថបទ')}</button>
+                <button type="button" onClick={() => setEditingNews({ id: `n-${Date.now()}`, title_en: '', title_kh: '', date: new Date().toISOString().slice(0, 10), category: 'Company', excerpt_en: '', excerpt_kh: '', imageBg: 'bg-green-800', image: '' })} className="rounded-xl bg-[#267A3B] px-4 py-2 text-xs font-bold text-white">{tx('+ Add Article', '+ បន្ថែមអត្ថបទ')}</button>
               </div>
 
               <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
@@ -1528,7 +1528,7 @@ export default function App() {
                 <input required name="specs" placeholder={tx('Specifications / Description (English)', 'ព័ត៌មានលម្អិត / ការពិពណ៌នា (អង់គ្លេស)')} className="border border-slate-300 p-2.5 rounded-xl text-xs" />
                 <input name="specs_kh" placeholder={tx('Specifications / Description (Khmer)', 'ព័ត៌មានលម្អិត / ការពិពណ៌នា (ខ្មែរ)')} className="border border-slate-300 p-2.5 rounded-xl text-xs" />
                 <ImageUpload label={tx('Product picture', 'រូបភាពផលិតផល')} lang={lang} image={newProductImage} onChange={setNewProductImage} />
-                <button type="submit" className="bg-[#2E8B45] text-white rounded-xl text-xs font-bold py-2.5 sm:col-span-3">
+                <button type="submit" className="bg-[#267A3B] text-white rounded-xl text-xs font-bold py-2.5 sm:col-span-3">
                   {tx('+ Publish Product to Catalog', '+ បោះពុម្ពផលិតផលទៅកាតាឡុក')}
                 </button>
               </form>
@@ -1627,7 +1627,7 @@ export default function App() {
             </button>
 
             <div className="flex items-center space-x-4">
-              <div className="w-16 h-16 rounded-2xl bg-[#2E8B45] text-green-400 font-black text-xl flex items-center justify-center">
+              <div className="w-16 h-16 rounded-2xl bg-[#267A3B] text-white font-black text-xl flex items-center justify-center">
                 {selectedBrand.image ? <img src={selectedBrand.image} alt={`${selectedBrand.name} logo`} className="h-full w-full rounded-2xl bg-white p-2 object-contain" /> : selectedBrand.logoText.slice(0,3)}
               </div>
               <div>
@@ -1644,7 +1644,7 @@ export default function App() {
                   setSelectedBrand(null);
                   setCurrentView('products');
                 }}
-                className="w-full bg-[#2E8B45] text-white font-bold py-3 rounded-xl text-xs"
+                className="w-full bg-[#267A3B] text-white font-bold py-3 rounded-xl text-xs"
               >
                 {tx('View Brand Products', 'មើលផលិតផលរបស់ម៉ាកនេះ')}
               </button>
@@ -1672,7 +1672,7 @@ export default function App() {
               <input required name="phone" placeholder={tx('Phone Number *', 'លេខទូរសព្ទ *')} className="w-full border p-2.5 rounded-xl text-xs" />
               <input name="telegram" placeholder={tx('Telegram Username (@handle)', 'ឈ្មោះអ្នកប្រើ Telegram (@handle)')} className="w-full border p-2.5 rounded-xl text-xs" />
               <textarea name="message" rows={3} placeholder={tx('Inquiry notes or quantity requirements...', 'កំណត់សម្គាល់ ឬចំនួនផលិតផលដែលត្រូវការ...')} className="w-full border p-2.5 rounded-xl text-xs" />
-              <button type="submit" className="w-full bg-[#2E8B45] text-white py-3 rounded-xl font-bold text-xs">
+              <button type="submit" className="w-full bg-[#267A3B] text-white py-3 rounded-xl font-bold text-xs">
                 {tx('Submit Inquiry', 'ផ្ញើសំណួរ')}
               </button>
             </form>

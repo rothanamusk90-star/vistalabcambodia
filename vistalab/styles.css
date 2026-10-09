@@ -18,7 +18,7 @@ body {
   --site-cream: #ffffff;
   --site-sage: #f0f7f0;
   --site-aqua: #dceedd;
-  --site-green: #2e8b45;
+  --site-green: #267a3b;
   --site-ink: #202124;
   --site-coral: #f47b53;
 }
@@ -27,6 +27,16 @@ body,
 .min-h-screen {
   background-color: var(--site-cream);
   color: var(--site-ink);
+}
+
+.min-h-screen [class~="text-green-500"],
+.min-h-screen [class~="text-green-600"] {
+  color: var(--site-green);
+}
+
+.min-h-screen [class*="bg-[#267A3B]"] [class~="text-green-400"],
+.min-h-screen [class*="bg-[#267A3B]"] [class~="text-green-300"] {
+  color: #ffffff;
 }
 
 .site-topbar-friendly {
@@ -42,6 +52,10 @@ body,
 
 .site-topbar-friendly [class~="text-slate-400"] {
   color: #4b5563;
+}
+
+.site-topbar-friendly [class*="hover:text-white"]:hover {
+  color: var(--site-green);
 }
 
 .site-hero-friendly {
@@ -88,6 +102,27 @@ body,
   color: #ffffff;
 }
 
+.site-green-panel .text-white,
+.site-green-panel [class~="text-slate-300"] {
+  color: var(--site-ink);
+}
+
+.site-green-panel [class~="text-green-400"] {
+  color: var(--site-green);
+}
+
+.site-green-panel [class~="bg-white/10"] {
+  background-color: #ffffff;
+}
+
+.site-green-panel [class~="border-white/20"] {
+  border-color: var(--site-aqua);
+}
+
+.site-green-panel [class~="hover:bg-white/20"]:hover {
+  background-color: var(--site-sage);
+}
+
 .site-map-friendly {
   background-color: var(--site-cream);
 }
@@ -107,8 +142,13 @@ body,
   background-color: #ffffff;
 }
 
-.site-map-friendly [class~="text-green-300"] {
+.site-map-friendly [class~="text-green-300"],
+.site-map-friendly [class~="text-green-400"] {
   color: var(--site-green);
+}
+
+.site-map-friendly [class~="hover:bg-slate-700"]:hover {
+  background-color: var(--site-sage);
 }
 
 .site-contact-friendly {
@@ -147,6 +187,12 @@ body,
 
 .site-footer-friendly [class*="hover:text-white"]:hover {
   color: var(--site-green);
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 3px solid var(--site-green);
+  outline-offset: 2px;
 }
 
 /* Keep body copy comfortable to read across every page and language. */
