@@ -60,6 +60,14 @@ export default function App() {
       phone1: "+855 10 957 858", phone2: "+855 12 957 858", phone3: "+855 93 957 858",
       email: "vistalab.cambodia@gmail.com", telegram: "@VISTALAB_Cambodia",
       facebook: "https://www.facebook.com/vistalab/", address_en: "Phnom Penh, Kingdom of Cambodia",
+      heroImage: '',
+      heroTitle_en: 'Connecting International Brands with the Cambodian Market',
+      heroTitle_kh: 'នាំយកម៉ាកផលិតផលអន្តរជាតិមកកាន់ទីផ្សារកម្ពុជា',
+      heroSubtitle_en: 'Importer & Distributor of FMCG Products in Cambodia',
+      heroSubtitle_kh: 'ក្រុមហ៊ុននាំចូល និងចែកចាយផលិតផលប្រើប្រាស់ប្រចាំថ្ងៃ (FMCG) នៅកម្ពុជា',
+      heroDescription_en: 'VistaLab Cambodia imports, distributes, and develops consumer products for the Cambodian market, connecting international suppliers and brands with retailers, sellers, and consumers.',
+      heroDescription_kh: 'ក្រុមហ៊ុន VistaLab Cambodia នាំចូល ចែកចាយ និងអភិវឌ្ឍន៍ផលិតផលសម្រាប់ទីផ្សារកម្ពុជា។',
+      heroTrustedBrands: '12+',
       address_kh: "រាជធានីភ្នំពេញ ព្រះរាជាណាចក្រកម្ពុជា",
       business_hours: "Monday – Saturday (8:00 AM – 5:00 PM)",
       business_hours_kh: "ចន្ទ–សៅរ៍ (៨:០០ ព្រឹក–៥:០០ ល្ងាច)",
@@ -381,7 +389,7 @@ export default function App() {
             <section className="site-hero-friendly overflow-hidden px-4 py-4 sm:px-8 sm:py-8">
               <div className="relative mx-auto min-h-[540px] max-w-7xl overflow-hidden rounded-[2rem] bg-sky-50 shadow-xl sm:min-h-[460px]">
                 <img
-                  src={`${import.meta.env.BASE_URL}images/hero-warehouse-banner.jpg`}
+                  src={settings.heroImage || `${import.meta.env.BASE_URL}images/hero-warehouse-banner.jpg`}
                   alt="VistaLab Cambodia distribution warehouse"
                   className="absolute inset-x-0 top-0 h-[260px] w-full object-cover sm:inset-y-0 sm:left-auto sm:right-0 sm:h-full sm:w-[62%]"
                 />
@@ -389,10 +397,10 @@ export default function App() {
                 <div className="relative z-10 flex min-h-[540px] max-w-2xl flex-col justify-end px-5 pb-7 pt-[275px] sm:min-h-[460px] sm:justify-center sm:px-10 sm:py-12 lg:px-14">
                   <div className="mb-3 inline-flex w-fit items-center gap-2 rounded-full border border-sky-200 bg-white/90 px-3 py-1.5 text-xs font-bold text-sky-800 shadow-sm sm:text-sm">
                     <Sparkles className="h-4 w-4 text-sky-600" />
-                    {t.heroSub}
+                    {lang === 'KH' ? settings.heroSubtitle_kh : settings.heroSubtitle_en}
                   </div>
-                  <h1 className="max-w-xl text-3xl font-black leading-tight tracking-tight text-slate-950 sm:text-5xl lg:text-6xl">{t.heroTitle}</h1>
-                  <p className="mt-3 max-w-lg text-sm leading-relaxed text-slate-700 sm:text-base">{t.heroDesc}</p>
+                  <h1 className="max-w-xl text-3xl font-black leading-tight tracking-tight text-slate-950 sm:text-5xl lg:text-6xl">{lang === 'KH' ? settings.heroTitle_kh : settings.heroTitle_en}</h1>
+                  <p className="mt-3 max-w-lg text-sm leading-relaxed text-slate-700 sm:text-base">{lang === 'KH' ? settings.heroDescription_kh : settings.heroDescription_en}</p>
                   <div className="mt-5 flex flex-wrap gap-3">
                     <button onClick={() => setCurrentView('brands')} className="inline-flex items-center justify-center gap-2 rounded-xl bg-sky-700 px-5 py-3 font-bold text-white shadow-md transition hover:bg-sky-800">
                       {t.exploreBrands}<ArrowRight className="h-5 w-5" />
@@ -406,7 +414,7 @@ export default function App() {
                   </div>
                 </div>
                 <div className="absolute right-5 top-[190px] rounded-2xl border border-white/70 bg-white/90 px-4 py-3 text-center shadow-lg sm:right-8 sm:top-8">
-                  <div className="text-2xl font-black leading-none text-sky-800">12+</div>
+                  <div className="text-2xl font-black leading-none text-sky-800">{settings.heroTrustedBrands}</div>
                   <div className="mt-1 text-[10px] font-bold uppercase tracking-wide text-slate-600">{tx('Trusted Brands', 'ម៉ាកដែលទុកចិត្ត')}</div>
                 </div>
               </div>
@@ -1246,6 +1254,23 @@ export default function App() {
               <button type="submit" className="rounded-xl bg-green-500 px-4 py-2.5 text-xs font-extrabold text-slate-950">{tx('Save Contact Information', 'រក្សាទុកព័ត៌មានទំនាក់ទំនង')}</button>
             </form>
 
+            <section className="rounded-3xl border border-sky-200 bg-white p-5 shadow-sm space-y-4 sm:p-6">
+              <div>
+                <h2 className="flex items-center gap-2 text-lg font-extrabold text-slate-900"><Edit className="h-5 w-5 shrink-0 text-sky-700" aria-hidden="true" />{tx('Edit Homepage Poster', 'កែសម្រួលផ្ទាំងរូបភាពទំព័រដើម')}</h2>
+                <p className="text-xs text-slate-600">{tx('Change the poster image, headline, subtitle, and description shown on the first screen.', 'កែប្រែរូបភាព ចំណងជើង ចំណងជើងរង និងសេចក្តីពិពណ៌នានៅលើទំព័រដើម។')}</p>
+              </div>
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                <label className="text-xs font-bold text-slate-700">{tx('Poster headline (English)', 'ចំណងជើងផ្ទាំងរូបភាព (អង់គ្លេស)')}<input value={settings.heroTitle_en} onChange={(event) => setSettings({ ...settings, heroTitle_en: event.target.value })} className="mt-1 w-full rounded-xl border border-slate-300 p-2.5 text-sm font-normal" /></label>
+                <label className="text-xs font-bold text-slate-700">{tx('Poster headline (Khmer)', 'ចំណងជើងផ្ទាំងរូបភាព (ខ្មែរ)')}<input value={settings.heroTitle_kh} onChange={(event) => setSettings({ ...settings, heroTitle_kh: event.target.value })} className="mt-1 w-full rounded-xl border border-slate-300 p-2.5 text-sm font-normal" /></label>
+                <label className="text-xs font-bold text-slate-700">{tx('Poster subtitle (English)', 'ចំណងជើងរង (អង់គ្លេស)')}<input value={settings.heroSubtitle_en} onChange={(event) => setSettings({ ...settings, heroSubtitle_en: event.target.value })} className="mt-1 w-full rounded-xl border border-slate-300 p-2.5 text-sm font-normal" /></label>
+                <label className="text-xs font-bold text-slate-700">{tx('Poster subtitle (Khmer)', 'ចំណងជើងរង (ខ្មែរ)')}<input value={settings.heroSubtitle_kh} onChange={(event) => setSettings({ ...settings, heroSubtitle_kh: event.target.value })} className="mt-1 w-full rounded-xl border border-slate-300 p-2.5 text-sm font-normal" /></label>
+                <label className="text-xs font-bold text-slate-700">{tx('Poster description (English)', 'សេចក្តីពិពណ៌នាផ្ទាំងរូបភាព (អង់គ្លេស)')}<textarea rows={3} value={settings.heroDescription_en} onChange={(event) => setSettings({ ...settings, heroDescription_en: event.target.value })} className="mt-1 w-full rounded-xl border border-slate-300 p-2.5 text-sm font-normal" /></label>
+                <label className="text-xs font-bold text-slate-700">{tx('Poster description (Khmer)', 'សេចក្តីពិពណ៌នាផ្ទាំងរូបភាព (ខ្មែរ)')}<textarea rows={3} value={settings.heroDescription_kh} onChange={(event) => setSettings({ ...settings, heroDescription_kh: event.target.value })} className="mt-1 w-full rounded-xl border border-slate-300 p-2.5 text-sm font-normal" /></label>
+                <label className="text-xs font-bold text-slate-700">{tx('Trusted brands badge', 'ចំនួនម៉ាកដែលទុកចិត្ត')}<input value={settings.heroTrustedBrands} onChange={(event) => setSettings({ ...settings, heroTrustedBrands: event.target.value })} className="mt-1 w-full rounded-xl border border-slate-300 p-2.5 text-sm font-normal" /></label>
+                <ImageUpload label={tx('Homepage poster image', 'រូបភាពផ្ទាំងទំព័រដើម')} lang={lang} image={settings.heroImage} onChange={(heroImage) => setSettings({ ...settings, heroImage })} />
+              </div>
+              <p className="text-xs text-slate-500">{tx('Changes save in this browser automatically.', 'ការកែប្រែត្រូវបានរក្សាទុកក្នុងកម្មវិធីរុករកនេះដោយស្វ័យប្រវត្តិ។')}</p>
+            </section>
             <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm space-y-4 sm:p-6">
               <div><h2 className="flex items-center gap-2 text-lg font-extrabold text-[#202124]"><Building2 className="h-5 w-5 shrink-0 text-green-500" aria-hidden="true" />{tx('Edit About Page Header', 'កែសម្រួលក្បាលទំព័រអំពីយើង')}</h2><p className="text-xs text-slate-500">{tx('Upload a banner image, choose its motion, and edit the About page heading and description in both languages.', 'បញ្ចូលរូបភាពបដា កំណត់ចលនា និងកែសម្រួលចំណងជើង ព្រមទាំងសេចក្តីពិពណ៌នាជាភាសាអង់គ្លេស និងខ្មែរ។')}</p></div>
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
