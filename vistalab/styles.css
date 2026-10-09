@@ -13,12 +13,12 @@ body {
   color: #1e3a5f;
 }
 
-/* Shared white and blue interface with restrained coral brand highlights. */
+/* Shared white and green interface with restrained coral brand highlights. */
 :root {
   --site-cream: #ffffff;
-  --site-sage: #f0f9ff;
-  --site-aqua: #bae6fd;
-  --site-primary: #0369a1;
+  --site-sage: #f0f7f0;
+  --site-aqua: #dceedd;
+  --site-primary: #267a3b;
   --site-ink: #202124;
   --site-coral: #f47b53;
 }
@@ -39,29 +39,29 @@ body,
   color: var(--site-primary);
 }
 
-/* Normalize older green and indigo utility classes to the shared blue palette. */
+/* Normalize older utility classes to the shared green palette. */
 .min-h-screen [class~="bg-green-50"],
 .min-h-screen [class~="bg-green-50/50"],
 .min-h-screen [class~="bg-green-100"],
 .min-h-screen [class~="bg-green-100/70"],
 .min-h-screen [class~="bg-indigo-50"] {
-  background-color: #f0f9ff;
+  background-color: #f0f7f0;
 }
 
 .min-h-screen [class~="bg-green-500/20"] {
-  background-color: #e0f2fe;
+  background-color: #e8f4e9;
 }
 
 .min-h-screen [class~="bg-green-500"],
 .min-h-screen [class~="bg-green-600"],
 .min-h-screen [class~="bg-green-800"],
 .min-h-screen [class~="bg-green-900"],
-.min-h-screen [class*="bg-[#0369A1]"] {
-  background-color: #0369a1;
+.min-h-screen [class*="bg-[#267A3B]"] {
+  background-color: #267a3b;
 }
 
-.min-h-screen [class*="bg-[#075985]"]:hover {
-  background-color: #075985;
+.min-h-screen [class*="bg-[#246F38]"]:hover {
+  background-color: #246f38;
 }
 
 .min-h-screen [class~="bg-green-500"][class~="text-slate-950"],
@@ -73,11 +73,11 @@ body,
 .min-h-screen [class~="text-green-400"],
 .min-h-screen [class~="text-green-800"],
 .min-h-screen [class~="text-indigo-600"] {
-  color: #0369a1;
+  color: #267a3b;
 }
 
 .min-h-screen [class~="text-green-900"] {
-  color: #075985;
+  color: #246f38;
 }
 
 .min-h-screen [class~="border-green-100"],
@@ -85,44 +85,44 @@ body,
 .min-h-screen [class~="border-green-300"],
 .min-h-screen [class~="border-green-400"],
 .min-h-screen [class~="border-green-500/20"] {
-  border-color: #bae6fd;
+  border-color: #dceedd;
 }
 
 .min-h-screen [class~="hover:bg-green-600"]:hover,
 .min-h-screen [class~="hover:bg-green-700"]:hover {
-  background-color: #075985;
+  background-color: #246f38;
 }
 
 .min-h-screen [class~="hover:text-green-600"]:hover,
 .min-h-screen [class~="hover:text-green-900"]:hover {
-  color: #075985;
+  color: #246f38;
 }
 
 .min-h-screen [class~="hover:border-green-200"]:hover,
 .min-h-screen [class~="hover:border-green-300"]:hover,
 .min-h-screen [class~="hover:border-green-400"]:hover {
-  border-color: #7dd3fc;
+  border-color: #b7d9bd;
 }
 
 .min-h-screen [class~="group"]:hover [class~="group-hover:border-green-200"],
 .min-h-screen [class~="group"]:hover [class~="group-hover:border-green-300"] {
-  border-color: #7dd3fc;
+  border-color: #b7d9bd;
 }
 
 .min-h-screen [class~="group"]:hover [class~="group-hover:text-green-900"] {
-  color: #075985;
+  color: #246f38;
 }
 
 .min-h-screen [class~="focus:ring-green-900"]:focus {
-  --tw-ring-color: #0369a1;
+  --tw-ring-color: #267a3b;
 }
 
 .min-h-screen [class~="accent-green-500"] {
-  accent-color: #0369a1;
+  accent-color: #267a3b;
 }
 
-.min-h-screen [class*="bg-[#0369A1]"] [class~="text-green-400"],
-.min-h-screen [class*="bg-[#0369A1]"] [class~="text-green-300"] {
+.min-h-screen [class*="bg-[#267A3B]"] [class~="text-green-400"],
+.min-h-screen [class*="bg-[#267A3B]"] [class~="text-green-300"] {
   color: #ffffff;
 }
 
@@ -247,8 +247,8 @@ body,
 }
 
 .site-map-friendly .site-map-hub-selected {
-  background-color: #0369a1;
-  border-color: #0369a1;
+  background-color: #267a3b;
+  border-color: #267a3b;
   color: #ffffff;
 }
 

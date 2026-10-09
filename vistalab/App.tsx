@@ -231,7 +231,7 @@ export default function App() {
                 {lang === 'EN' ? "Connecting Brands to Cambodia" : "ភ្ជាប់ទំនាក់ទំនងម៉ាកផលិតផលមកកាន់កម្ពុជា"}
               </span>
               {/* Language Switcher */}
-              <div className="flex items-center bg-sky-50 rounded-lg p-0.5 border border-sky-200">
+              <div className="flex items-center bg-green-50 rounded-lg p-0.5 border border-green-200">
                 <button
                   onClick={() => setLang('KH')}
                   className={`px-2 py-0.5 text-xs rounded font-bold transition-colors ${lang === 'KH' ? 'bg-green-500 text-slate-950' : 'text-slate-400 hover:text-white'}`}
@@ -284,7 +284,7 @@ export default function App() {
               <button
                 key={link.id}
                 onClick={() => setCurrentView(link.id)}
-                className={`px-3 py-2 rounded-lg transition-all ${currentView === link.id ? 'bg-[#0369A1] text-white font-bold' : 'hover:bg-slate-100 text-slate-600'}`}
+                className={`px-3 py-2 rounded-lg transition-all ${currentView === link.id ? 'bg-[#267A3B] text-white font-bold' : 'hover:bg-slate-100 text-slate-600'}`}
               >
                 {link.label}
               </button>
@@ -302,7 +302,7 @@ export default function App() {
             </button>
             <button
               onClick={() => openInquiry('', '', 'General')}
-              className="bg-[#0369A1] hover:bg-[#075985] text-white px-4 py-2 rounded-xl font-semibold text-sm shadow-md hover:shadow-lg transition-all flex items-center space-x-1.5 border border-green-500/20"
+              className="bg-[#267A3B] hover:bg-[#246F38] text-white px-4 py-2 rounded-xl font-semibold text-sm shadow-md hover:shadow-lg transition-all flex items-center space-x-1.5 border border-green-500/20"
             >
               <span>{t.contactUs}</span>
               <ChevronRight className="w-4 h-4 text-green-400" />
@@ -351,7 +351,7 @@ export default function App() {
                 <button
                   key={link.id}
                   onClick={() => setCurrentView(link.id)}
-                  className={`flex min-h-11 min-w-0 items-center gap-2 text-left px-3 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-colors ${currentView === link.id ? 'bg-[#0369A1] text-white' : 'text-slate-700 hover:bg-slate-50'}`}
+                  className={`flex min-h-11 min-w-0 items-center gap-2 text-left px-3 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-colors ${currentView === link.id ? 'bg-[#267A3B] text-white' : 'text-slate-700 hover:bg-slate-50'}`}
                 >
                   <link.icon className={`h-4 w-4 shrink-0 ${currentView === link.id ? 'text-white' : 'text-slate-400'}`} aria-hidden="true" />
                   <span className="min-w-0 leading-snug">{link.label}</span>
@@ -361,7 +361,7 @@ export default function App() {
             <div className="pt-2 flex flex-col space-y-2">
               <button
                 onClick={() => openInquiry('', '', 'General')}
-                className="w-full bg-[#0369A1] text-white py-3 rounded-xl font-bold text-center text-sm shadow-md"
+                className="w-full bg-[#267A3B] text-white py-3 rounded-xl font-bold text-center text-sm shadow-md"
               >
                 {t.contactUs}
               </button>
@@ -370,7 +370,7 @@ export default function App() {
                   <Phone className="w-4 h-4 text-green-500" />
                   <span>{tx('Call Us', 'ហៅទូរសព្ទមកយើង')}</span>
                 </a>
-                <a href={`https://t.me/${settings.telegram.replace('@','')}`} target="_blank" rel="noreferrer" className="flex items-center space-x-1 text-sky-600">
+                <a href={`https://t.me/${settings.telegram.replace('@','')}`} target="_blank" rel="noreferrer" className="flex items-center space-x-1 text-green-600">
                   <MessageCircle className="w-4 h-4" />
                   <span>Telegram</span>
                 </a>
@@ -387,25 +387,25 @@ export default function App() {
           <div className="space-y-10 sm:space-y-16 sm:space-y-24 pb-16">
             {/* HERO POSTER */}
             <section className="site-hero-friendly overflow-hidden px-4 py-4 sm:px-8 sm:py-8">
-              <div className="relative mx-auto min-h-[540px] max-w-7xl overflow-hidden rounded-[2rem] bg-sky-50 shadow-xl sm:min-h-[460px]">
+              <div className="relative mx-auto min-h-[540px] max-w-7xl overflow-hidden rounded-[2rem] bg-green-50 shadow-xl sm:min-h-[460px]">
                 <img
                   src={settings.heroImage || `${import.meta.env.BASE_URL}images/hero-warehouse-banner.jpg`}
                   alt="VistaLab Cambodia distribution warehouse"
                   className="absolute inset-x-0 top-0 h-[260px] w-full object-cover sm:inset-y-0 sm:left-auto sm:right-0 sm:h-full sm:w-[62%]"
                 />
-                <div aria-hidden="true" className="absolute inset-x-0 top-[150px] h-[130px] bg-gradient-to-b from-transparent to-sky-50 sm:inset-y-0 sm:left-1/3 sm:right-0 sm:top-0 sm:h-auto sm:bg-gradient-to-r sm:from-sky-50 sm:via-sky-50/80 sm:to-transparent" />
+                <div aria-hidden="true" className="absolute inset-x-0 top-[150px] h-[130px] bg-gradient-to-b from-transparent to-green-50 sm:inset-y-0 sm:left-1/3 sm:right-0 sm:top-0 sm:h-auto sm:bg-gradient-to-r sm:from-green-50 sm:via-green-50/80 sm:to-transparent" />
                 <div className="relative z-10 flex min-h-[540px] max-w-2xl flex-col justify-end px-5 pb-7 pt-[275px] sm:min-h-[460px] sm:justify-center sm:px-10 sm:py-12 lg:px-14">
-                  <div className="mb-3 inline-flex w-fit items-center gap-2 rounded-full border border-sky-200 bg-white/90 px-3 py-1.5 text-xs font-bold text-sky-800 shadow-sm sm:text-sm">
-                    <Sparkles className="h-4 w-4 text-sky-600" />
+                  <div className="mb-3 inline-flex w-fit items-center gap-2 rounded-full border border-green-200 bg-white/90 px-3 py-1.5 text-xs font-bold text-green-800 shadow-sm sm:text-sm">
+                    <Sparkles className="h-4 w-4 text-green-600" />
                     {lang === 'KH' ? settings.heroSubtitle_kh : settings.heroSubtitle_en}
                   </div>
                   <h1 className="max-w-xl text-3xl font-black leading-tight tracking-tight text-slate-950 sm:text-5xl lg:text-6xl">{lang === 'KH' ? settings.heroTitle_kh : settings.heroTitle_en}</h1>
                   <p className="mt-3 max-w-lg text-sm leading-relaxed text-slate-700 sm:text-base">{lang === 'KH' ? settings.heroDescription_kh : settings.heroDescription_en}</p>
                   <div className="mt-5 flex flex-wrap gap-3">
-                    <button onClick={() => setCurrentView('brands')} className="inline-flex items-center justify-center gap-2 rounded-xl bg-sky-700 px-5 py-3 font-bold text-white shadow-md transition hover:bg-sky-800">
+                    <button onClick={() => setCurrentView('brands')} className="inline-flex items-center justify-center gap-2 rounded-xl bg-green-700 px-5 py-3 font-bold text-white shadow-md transition hover:bg-green-800">
                       {t.exploreBrands}<ArrowRight className="h-5 w-5" />
                     </button>
-                    <button onClick={() => setCurrentView('partner')} className="rounded-xl border border-sky-200 bg-white px-5 py-3 font-bold text-slate-800 transition hover:bg-sky-50">{t.partnerWithUs}</button>
+                    <button onClick={() => setCurrentView('partner')} className="rounded-xl border border-green-200 bg-white px-5 py-3 font-bold text-slate-800 transition hover:bg-green-50">{t.partnerWithUs}</button>
                   </div>
                   <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-xs font-semibold text-slate-700 sm:text-sm">
                     <span>✓ {tx('12+ Active Brands', 'ម៉ាកផលិតផលជាង ១២')}</span>
@@ -414,7 +414,7 @@ export default function App() {
                   </div>
                 </div>
                 <div className="absolute right-5 top-[190px] rounded-2xl border border-white/70 bg-white/90 px-4 py-3 text-center shadow-lg sm:right-8 sm:top-8">
-                  <div className="text-2xl font-black leading-none text-sky-800">{settings.heroTrustedBrands}</div>
+                  <div className="text-2xl font-black leading-none text-green-800">{settings.heroTrustedBrands}</div>
                   <div className="mt-1 text-[10px] font-bold uppercase tracking-wide text-slate-600">{tx('Trusted Brands', 'ម៉ាកដែលទុកចិត្ត')}</div>
                 </div>
               </div>
@@ -431,7 +431,7 @@ export default function App() {
                   { icon: ShieldCheck, title: t.importTitle, desc: t.importDesc, color: "text-green-600 bg-green-50" },
                   { icon: Truck, title: t.distribTitle, desc: t.distribDesc, color: "text-green-600 bg-green-50" },
                   { icon: Award, title: t.brandDevTitle, desc: t.brandDevDesc, color: "text-green-600 bg-green-50" },
-                  { icon: Users, title: t.partnershipTitle, desc: t.partnershipDesc, color: "text-sky-700 bg-sky-50" }
+                  { icon: Users, title: t.partnershipTitle, desc: t.partnershipDesc, color: "text-green-700 bg-green-50" }
                 ].map((item, idx) => (
                   <div key={idx} className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow space-y-4">
                     <div className={`w-12 h-12 rounded-xl ${item.color} flex items-center justify-center`}>
@@ -466,7 +466,7 @@ export default function App() {
                     <button
                       key={cat}
                       onClick={() => setActiveCategory(cat)}
-                      className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${activeCategory === cat ? 'bg-[#0369A1] text-white shadow-md' : 'bg-white text-slate-700 hover:bg-slate-200 border border-slate-200'}`}
+                      className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${activeCategory === cat ? 'bg-[#267A3B] text-white shadow-md' : 'bg-white text-slate-700 hover:bg-slate-200 border border-slate-200'}`}
                     >
                       {categoryLabels[cat]}
                     </button>
@@ -530,7 +530,7 @@ export default function App() {
                     onClick={() => { setSelectedBrand(b); }}
                     className="min-h-44 bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-green-400 cursor-pointer transition-all text-center flex flex-col items-center justify-center space-y-3 group"
                   >
-                    <div className="flex h-24 w-full items-center justify-center overflow-hidden rounded-xl border border-slate-100 bg-gradient-to-br from-slate-50 to-sky-50 text-[#202124] font-black text-2xl group-hover:border-green-200 sm:h-28">
+                    <div className="flex h-24 w-full items-center justify-center overflow-hidden rounded-xl border border-slate-100 bg-gradient-to-br from-slate-50 to-green-50 text-[#202124] font-black text-2xl group-hover:border-green-200 sm:h-28">
                       {b.image ? <img src={b.image} alt={`${b.name} logo`} className="h-full w-full p-2 object-contain" /> : <span className="max-w-full truncate px-2">{b.logoText || b.name}</span>}
                     </div>
                     <span className="font-extrabold text-slate-900 text-sm leading-tight group-hover:text-green-900">{b.name}</span>
@@ -553,25 +553,25 @@ export default function App() {
             <section className="site-map-friendly bg-white text-slate-800 py-10 sm:py-16 px-4 sm:px-8 relative overflow-hidden">
               <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-12 items-center">
                 <div className="lg:col-span-5 space-y-4 sm:space-y-6">
-                  <span className="text-xs font-bold text-sky-700 uppercase tracking-widest">{tx('LOGISTICS & NETWORK', 'ភស្តុភារ និងបណ្តាញចែកចាយ')}</span>
+                  <span className="text-xs font-bold text-green-700 uppercase tracking-widest">{tx('LOGISTICS & NETWORK', 'ភស្តុភារ និងបណ្តាញចែកចាយ')}</span>
                   <h2 className="text-2xl sm:text-4xl font-black">{t.distribNetworkTitle}</h2>
                   <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
                     {t.distribNetworkSub}
                   </p>
 
                   <div className="space-y-3 pt-2">
-                    <div className="flex items-center gap-3 rounded-2xl border border-sky-100 bg-white p-4 shadow-sm">
-                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-sky-50 text-sky-700"><Building2 className="h-5 w-5" aria-hidden="true" /></span>
+                    <div className="flex items-center gap-3 rounded-2xl border border-green-100 bg-white p-4 shadow-sm">
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-green-50 text-green-700"><Building2 className="h-5 w-5" aria-hidden="true" /></span>
                       <span><span className="block text-sm font-bold text-slate-900">{tx('Central Warehousing', 'ឃ្លាំងកណ្តាល')}</span><span className="mt-0.5 block text-xs text-slate-500">{tx('Phnom Penh, Cambodia', 'រាជធានីភ្នំពេញ')}</span></span>
                     </div>
-                    <div className="flex items-center gap-3 rounded-2xl border border-sky-100 bg-white p-4 shadow-sm">
-                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-sky-50 text-sky-700"><MapPin className="h-5 w-5" aria-hidden="true" /></span>
+                    <div className="flex items-center gap-3 rounded-2xl border border-green-100 bg-white p-4 shadow-sm">
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-green-50 text-green-700"><MapPin className="h-5 w-5" aria-hidden="true" /></span>
                       <span><span className="block text-sm font-bold text-slate-900">{tx('Provincial Hubs', 'មជ្ឈមណ្ឌលតាមខេត្ត')}</span><span className="mt-0.5 block text-xs text-slate-500">{tx('Siem Reap, Battambang & Kampot', 'សៀមរាប បាត់ដំបង និងកំពត')}</span></span>
                     </div>
                   </div>
                   <button
                     onClick={() => setCurrentView('about')}
-                    className="mt-4 bg-sky-700 hover:bg-sky-800 text-white font-extrabold px-6 py-3 rounded-xl text-sm shadow-md transition-all flex items-center space-x-2"
+                    className="mt-4 bg-green-700 hover:bg-green-800 text-white font-extrabold px-6 py-3 rounded-xl text-sm shadow-md transition-all flex items-center space-x-2"
                   >
                     <span>{tx('Explore Supply Chain Channel', 'ស្វែងយល់អំពីបណ្តាញផ្គត់ផ្គង់')}</span>
                     <ChevronRight className="w-4 h-4" />
@@ -579,13 +579,13 @@ export default function App() {
                 </div>
 
                 {/* Google Maps hub locations */}
-                <div className="lg:col-span-7 bg-white p-6 sm:p-8 rounded-3xl border border-sky-200 shadow-lg shadow-slate-200/70 relative min-h-[380px] flex flex-col justify-between">
-                  <div className="flex justify-between items-center text-xs text-slate-600 border-b border-sky-100 pb-3">
-                    <span className="font-bold text-sky-800">{tx('Google Maps - Cambodia Hub Locations', 'ទីតាំងមជ្ឈមណ្ឌលចែកចាយនៅកម្ពុជា')}</span>
+                <div className="lg:col-span-7 bg-white p-6 sm:p-8 rounded-3xl border border-green-200 shadow-lg shadow-slate-200/70 relative min-h-[380px] flex flex-col justify-between">
+                  <div className="flex justify-between items-center text-xs text-slate-600 border-b border-green-100 pb-3">
+                    <span className="font-bold text-green-800">{tx('Google Maps - Cambodia Hub Locations', 'ទីតាំងមជ្ឈមណ្ឌលចែកចាយនៅកម្ពុជា')}</span>
                     <span>{tx('Select a hub below', 'ជ្រើសរើសមជ្ឈមណ្ឌលខាងក្រោម')}</span>
                   </div>
 
-                  <div className="relative w-full h-64 sm:h-80 rounded-2xl overflow-hidden border border-sky-200 my-4 bg-slate-100">
+                  <div className="relative w-full h-64 sm:h-80 rounded-2xl overflow-hidden border border-green-200 my-4 bg-slate-100">
                     <iframe
                       title={`Google Map showing ${selectedHub.locationQuery}`}
                       src={`https://maps.google.com/maps?q=${encodeURIComponent(selectedHub.locationQuery)}&z=8&output=embed`}
@@ -603,7 +603,7 @@ export default function App() {
                         type="button"
                         onClick={() => setSelectedHubId(hub.id)}
                         aria-pressed={selectedHub.id === hub.id}
-                        className={`flex min-w-0 items-center gap-1.5 rounded-lg border p-2 text-left transition-colors ${selectedHub.id === hub.id ? 'site-map-hub-selected border-sky-700 bg-sky-700 text-white' : 'border-slate-200 bg-white text-slate-700 hover:bg-sky-50 hover:border-sky-200'}`}
+                        className={`flex min-w-0 items-center gap-1.5 rounded-lg border p-2 text-left transition-colors ${selectedHub.id === hub.id ? 'site-map-hub-selected border-green-700 bg-green-700 text-white' : 'border-slate-200 bg-white text-slate-700 hover:bg-green-50 hover:border-green-200'}`}
                       >
                         <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
                         <span className="truncate">{lang === 'KH' ? ({ h1: 'ការិយាល័យកណ្តាលភ្នំពេញ', h2: 'មជ្ឈមណ្ឌលតំបន់សៀមរាប', h3: 'មជ្ឈមណ្ឌលភាគខាងលិចបាត់ដំបង', h4: 'មជ្ឈមណ្ឌលកំពត និងព្រះសីហនុ', h5: 'មជ្ឈមណ្ឌលត្បូងឃ្មុំ និងកំពង់ចាម' }[hub.id] ?? hub.name) : hub.name}</span>
@@ -616,7 +616,7 @@ export default function App() {
                       href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(selectedHub.locationQuery)}`}
                       target="_blank"
                       rel="noreferrer"
-                      className="font-semibold text-sky-700 underline underline-offset-2 hover:text-sky-900"
+                      className="font-semibold text-green-700 underline underline-offset-2 hover:text-green-900"
                     >
                       {tx('Open in Google Maps', 'បើកក្នុង Google Maps')}
                     </a>
@@ -694,8 +694,8 @@ export default function App() {
               </div>
               <div className="relative min-h-[320px] overflow-hidden bg-slate-100 sm:min-h-[400px] md:min-h-full">
                 <img src={settings.aboutHeroImage || `${import.meta.env.BASE_URL}images/hero-warehouse-banner.jpg`} alt="VistaLab warehouse and distribution operations" className={`absolute inset-0 h-full w-full object-cover ${settings.aboutHeroAnimated ? 'hero-background-image' : ''}`} />
-                <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[#0369A1]/30 via-transparent to-white/10" />
-                <div className="absolute inset-x-4 bottom-4 flex items-end justify-between gap-3 rounded-2xl border border-white/40 bg-[#0369A1]/85 p-4 text-white shadow-lg backdrop-blur-sm sm:inset-x-6 sm:bottom-6"><div><span className="text-[10px] font-bold uppercase tracking-widest text-green-300">{tx('Our operations', 'ប្រតិបត្តិការរបស់យើង')}</span><p className="mt-1 text-sm font-extrabold sm:text-base">{tx('Import. Store. Deliver.', 'នាំចូល រក្សាទុក និងចែកចាយ')}</p></div><Truck className="h-7 w-7 shrink-0 text-green-400" aria-hidden="true" /></div>
+                <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[#267A3B]/30 via-transparent to-white/10" />
+                <div className="absolute inset-x-4 bottom-4 flex items-end justify-between gap-3 rounded-2xl border border-white/40 bg-[#267A3B]/85 p-4 text-white shadow-lg backdrop-blur-sm sm:inset-x-6 sm:bottom-6"><div><span className="text-[10px] font-bold uppercase tracking-widest text-green-300">{tx('Our operations', 'ប្រតិបត្តិការរបស់យើង')}</span><p className="mt-1 text-sm font-extrabold sm:text-base">{tx('Import. Store. Deliver.', 'នាំចូល រក្សាទុក និងចែកចាយ')}</p></div><Truck className="h-7 w-7 shrink-0 text-green-400" aria-hidden="true" /></div>
               </div>
             </section>
             {/* Corporate Timeline */}
@@ -711,8 +711,8 @@ export default function App() {
                   { year: "2022-2024", title: tx("Provincial Distribution Growth", "ការពង្រីកការចែកចាយតាមខេត្ត"), desc: tx("Expanded sales channels outside Phnom Penh into major regional provinces.", "ពង្រីកបណ្តាញលក់ពីរាជធានីភ្នំពេញទៅកាន់ខេត្តសំខាន់ៗ។") },
                   { year: "2026+", title: tx("Digital Transformation & B2B", "ការផ្លាស់ប្តូរឌីជីថល និងអាជីវកម្ម B2B"), desc: tx("Launching updated digital presence and streamlining commercial partner order workflows.", "កែលម្អវត្តមានឌីជីថល និងសម្រួលដំណើរការបញ្ជាទិញសម្រាប់ដៃគូអាជីវកម្ម។") }
                 ].map((step, idx) => (
-                  <div key={idx} className="relative rounded-2xl border border-slate-200 border-t-4 border-t-green-400 bg-gradient-to-b from-sky-50/60 to-white p-5 shadow-sm transition-transform duration-200 hover:-translate-y-1 hover:shadow-md sm:p-6">
-                    <span className="mb-4 flex h-9 w-9 items-center justify-center rounded-xl bg-[#0369A1] text-sm font-black text-white">0{idx + 1}</span>
+                  <div key={idx} className="relative rounded-2xl border border-slate-200 border-t-4 border-t-green-400 bg-gradient-to-b from-green-50/60 to-white p-5 shadow-sm transition-transform duration-200 hover:-translate-y-1 hover:shadow-md sm:p-6">
+                    <span className="mb-4 flex h-9 w-9 items-center justify-center rounded-xl bg-[#267A3B] text-sm font-black text-white">0{idx + 1}</span>
                     <span className="inline-flex rounded-full bg-green-100 px-3 py-1 text-xs font-black text-green-900">{step.year}</span>
                     <h3 className="text-base font-bold text-slate-900 pt-1">{step.title}</h3>
                     <p className="text-sm text-slate-700 leading-relaxed">{step.desc}</p>
@@ -760,7 +760,7 @@ export default function App() {
               {brands.map((b) => (
                 <div key={b.id} className="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg flex flex-col justify-between">
                   <div className="space-y-5 p-5 sm:p-6">
-                    <div className="relative flex h-36 items-center justify-center overflow-hidden rounded-xl border border-slate-100 bg-gradient-to-br from-slate-50 via-white to-sky-50 p-5 sm:h-40">
+                    <div className="relative flex h-36 items-center justify-center overflow-hidden rounded-xl border border-slate-100 bg-gradient-to-br from-slate-50 via-white to-green-50 p-5 sm:h-40">
                       {b.image ? (
                         <img src={b.image} alt={`${b.name} logo`} className="h-full w-full object-contain" />
                       ) : (
@@ -820,7 +820,7 @@ export default function App() {
                 <button
                   key={cat}
                   onClick={() => setActiveCategory(cat)}
-                  className={`shrink-0 px-3 py-1.5 sm:px-3.5 rounded-xl text-[11px] sm:text-xs font-bold ${activeCategory === cat ? 'bg-[#0369A1] text-white' : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100'}`}
+                  className={`shrink-0 px-3 py-1.5 sm:px-3.5 rounded-xl text-[11px] sm:text-xs font-bold ${activeCategory === cat ? 'bg-[#267A3B] text-white' : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100'}`}
                 >
                   {categoryLabels[cat]}
                 </button>
@@ -888,8 +888,8 @@ export default function App() {
               </div>
               <div className="relative min-h-[320px] overflow-hidden bg-slate-100 sm:min-h-[400px] md:min-h-full">
                 <img src={settings.distributionHeroImage || `${import.meta.env.BASE_URL}images/hero-warehouse-banner.jpg`} alt="VistaLab warehouse and distribution operations in Cambodia" className={`absolute inset-0 h-full w-full object-cover ${settings.distributionHeroAnimated ? 'hero-background-image' : ''}`} />
-                <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[#0369A1]/30 via-transparent to-white/10" />
-                <div className="absolute inset-x-4 bottom-4 flex items-end justify-between gap-3 rounded-2xl border border-white/40 bg-[#0369A1]/85 p-4 text-white shadow-lg backdrop-blur-sm sm:inset-x-6 sm:bottom-6"><div><span className="text-[10px] font-bold uppercase tracking-widest text-green-300">{tx('Nationwide reach', 'បណ្តាញទូទាំងប្រទេស')}</span><p className="mt-1 text-sm font-extrabold sm:text-base">{tx('From warehouse to retailer', 'ពីឃ្លាំងទៅកាន់អ្នកលក់រាយ')}</p></div><MapPin className="h-7 w-7 shrink-0 text-green-400" aria-hidden="true" /></div>
+                <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[#267A3B]/30 via-transparent to-white/10" />
+                <div className="absolute inset-x-4 bottom-4 flex items-end justify-between gap-3 rounded-2xl border border-white/40 bg-[#267A3B]/85 p-4 text-white shadow-lg backdrop-blur-sm sm:inset-x-6 sm:bottom-6"><div><span className="text-[10px] font-bold uppercase tracking-widest text-green-300">{tx('Nationwide reach', 'បណ្តាញទូទាំងប្រទេស')}</span><p className="mt-1 text-sm font-extrabold sm:text-base">{tx('From warehouse to retailer', 'ពីឃ្លាំងទៅកាន់អ្នកលក់រាយ')}</p></div><MapPin className="h-7 w-7 shrink-0 text-green-400" aria-hidden="true" /></div>
               </div>
             </section>
             {/* Supply Chain Flow Visualization */}
@@ -986,7 +986,7 @@ export default function App() {
 
               <button
                 type="submit"
-                className="w-full bg-[#0369A1] hover:bg-[#075985] text-white py-3.5 rounded-xl font-bold text-sm shadow-md transition-all"
+                className="w-full bg-[#267A3B] hover:bg-[#246F38] text-white py-3.5 rounded-xl font-bold text-sm shadow-md transition-all"
               >
                 {tx('Submit Partnership Inquiry', 'ផ្ញើសំណើសហការ')}
               </button>
@@ -1184,7 +1184,7 @@ export default function App() {
                     <label className="block text-xs font-bold text-slate-700 mb-1">{tx('Message / Inquiry *', 'សារ / សំណួរ *')}</label>
                     <textarea required name="message" rows={4} className="w-full border border-slate-300 rounded-xl p-4 text-sm focus:outline-none focus:ring-2 focus:ring-green-900" />
                   </div>
-                  <button type="submit" className="w-full bg-[#0369A1] hover:bg-[#075985] text-white py-3 rounded-xl font-bold text-sm shadow">
+                  <button type="submit" className="w-full bg-[#267A3B] hover:bg-[#246F38] text-white py-3 rounded-xl font-bold text-sm shadow">
                     {tx('Send Direct Message', 'ផ្ញើសារ')}
                   </button>
                 </form>
@@ -1196,7 +1196,7 @@ export default function App() {
         {}
         {currentView === 'admin' && (
           <div className="max-w-7xl mx-auto px-4 sm:px-8 py-10 space-y-5 sm:space-y-8">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#0369A1] text-white p-6 rounded-3xl shadow-lg">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#267A3B] text-white p-6 rounded-3xl shadow-lg">
               <div>
                 <span className="text-xs text-white font-extrabold uppercase tracking-widest">{tx('Internal Control Panel', 'ផ្ទាំងគ្រប់គ្រងផ្ទៃក្នុង')}</span>
                 <h1 className="flex items-center gap-3 text-2xl font-black"><Settings className="h-5 w-5 shrink-0 text-green-500" aria-hidden="true" />{tx('VistaLab Website Content Manager (CMS)', 'ប្រព័ន្ធគ្រប់គ្រងមាតិកាគេហទំព័រ VistaLab')}</h1>
@@ -1253,9 +1253,9 @@ export default function App() {
               <button type="submit" className="rounded-xl bg-green-500 px-4 py-2.5 text-xs font-extrabold text-slate-950">{tx('Save Contact Information', 'រក្សាទុកព័ត៌មានទំនាក់ទំនង')}</button>
             </form>
 
-            <section className="rounded-3xl border border-sky-200 bg-white p-5 shadow-sm space-y-4 sm:p-6">
+            <section className="rounded-3xl border border-green-200 bg-white p-5 shadow-sm space-y-4 sm:p-6">
               <div>
-                <h2 className="flex items-center gap-2 text-lg font-extrabold text-slate-900"><Edit className="h-5 w-5 shrink-0 text-sky-700" aria-hidden="true" />{tx('Edit Homepage Poster', 'កែសម្រួលផ្ទាំងរូបភាពទំព័រដើម')}</h2>
+                <h2 className="flex items-center gap-2 text-lg font-extrabold text-slate-900"><Edit className="h-5 w-5 shrink-0 text-green-700" aria-hidden="true" />{tx('Edit Homepage Poster', 'កែសម្រួលផ្ទាំងរូបភាពទំព័រដើម')}</h2>
                 <p className="text-xs text-slate-600">{tx('Change the poster image, headline, subtitle, and description shown on the first screen.', 'កែប្រែរូបភាព ចំណងជើង ចំណងជើងរង និងសេចក្តីពិពណ៌នានៅលើទំព័រដើម។')}</p>
               </div>
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -1293,7 +1293,7 @@ export default function App() {
                 <button
                   type="button"
                   onClick={() => setEditingBrand({ id: `b-${Date.now()}`, name: '', category: 'Personal Care', origin: 'Malaysia', description: '', description_kh: '', featured: false, logoText: '', image: '', flagImage: '' })}
-                  className="rounded-xl bg-[#0369A1] px-4 py-2 text-xs font-bold text-white"
+                  className="rounded-xl bg-[#267A3B] px-4 py-2 text-xs font-bold text-white"
                 >
                   {tx('+ Add Brand', '+ បន្ថែមម៉ាកផលិតផល')}
                 </button>
@@ -1302,7 +1302,7 @@ export default function App() {
               <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
                 {brands.map((brand) => (
                   <div key={brand.id} className="flex min-w-0 items-center gap-3 rounded-xl border border-slate-200 p-3">
-                    {brand.image ? <img src={brand.image} alt="" className="h-11 w-11 rounded-lg object-cover" /> : <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-[#0369A1] text-xs font-black text-white">{brand.logoText.slice(0, 3)}</div>}
+                    {brand.image ? <img src={brand.image} alt="" className="h-11 w-11 rounded-lg object-cover" /> : <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-[#267A3B] text-xs font-black text-white">{brand.logoText.slice(0, 3)}</div>}
                     <span className="min-w-0 flex-1 truncate text-sm font-bold text-slate-800">{brand.name}</span>
                     <button type="button" onClick={() => setEditingBrand({ ...brand })} className="rounded-lg bg-slate-100 px-3 py-2 text-xs font-bold text-slate-800 hover:bg-slate-200">{tx('Edit', 'កែសម្រួល')}</button>
                   </div>
@@ -1350,7 +1350,7 @@ export default function App() {
                   <h2 className="flex items-center gap-2 text-lg font-extrabold text-[#202124]"><Newspaper className="h-5 w-5 shrink-0 text-green-500" aria-hidden="true" />{tx('Manage News', 'គ្រប់គ្រងព័ត៌មាន')}</h2>
                   <p className="text-xs text-slate-500">{tx('Add articles or edit the English and Khmer text, date, category, and cover image.', 'បន្ថែម ឬកែសម្រួលអត្ថបទជាភាសាអង់គ្លេស និងខ្មែរ កាលបរិច្ឆេទ ប្រភេទ និងរូបភាពគម្រប។')}</p>
                 </div>
-                <button type="button" onClick={() => setEditingNews({ id: `n-${Date.now()}`, title_en: '', title_kh: '', date: new Date().toISOString().slice(0, 10), category: 'Company', excerpt_en: '', excerpt_kh: '', imageBg: 'bg-green-800', image: '' })} className="rounded-xl bg-[#0369A1] px-4 py-2 text-xs font-bold text-white">{tx('+ Add Article', '+ បន្ថែមអត្ថបទ')}</button>
+                <button type="button" onClick={() => setEditingNews({ id: `n-${Date.now()}`, title_en: '', title_kh: '', date: new Date().toISOString().slice(0, 10), category: 'Company', excerpt_en: '', excerpt_kh: '', imageBg: 'bg-green-800', image: '' })} className="rounded-xl bg-[#267A3B] px-4 py-2 text-xs font-bold text-white">{tx('+ Add Article', '+ បន្ថែមអត្ថបទ')}</button>
               </div>
 
               <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
@@ -1417,7 +1417,7 @@ export default function App() {
                         </td>
                         <td className="p-3">
                           <p>{inq.phone}</p>
-                          <p className="text-sky-600">{inq.telegram}</p>
+                          <p className="text-green-600">{inq.telegram}</p>
                         </td>
                         <td className="p-3">{localizedProvince(inq.province)}</td>
                         <td className="p-3">
@@ -1487,7 +1487,7 @@ export default function App() {
                 <input required name="specs" placeholder={tx('Specifications / Description (English)', 'ព័ត៌មានលម្អិត / ការពិពណ៌នា (អង់គ្លេស)')} className="border border-slate-300 p-2.5 rounded-xl text-xs" />
                 <input name="specs_kh" placeholder={tx('Specifications / Description (Khmer)', 'ព័ត៌មានលម្អិត / ការពិពណ៌នា (ខ្មែរ)')} className="border border-slate-300 p-2.5 rounded-xl text-xs" />
                 <ImageUpload label={tx('Product picture', 'រូបភាពផលិតផល')} lang={lang} image={newProductImage} onChange={setNewProductImage} />
-                <button type="submit" className="bg-[#0369A1] text-white rounded-xl text-xs font-bold py-2.5 sm:col-span-3">
+                <button type="submit" className="bg-[#267A3B] text-white rounded-xl text-xs font-bold py-2.5 sm:col-span-3">
                   {tx('+ Publish Product to Catalog', '+ បោះពុម្ពផលិតផលទៅកាតាឡុក')}
                 </button>
               </form>
@@ -1586,7 +1586,7 @@ export default function App() {
             </button>
 
             <div className="flex items-center space-x-4">
-              <div className="w-16 h-16 rounded-2xl bg-[#0369A1] text-white font-black text-xl flex items-center justify-center">
+              <div className="w-16 h-16 rounded-2xl bg-[#267A3B] text-white font-black text-xl flex items-center justify-center">
                 {selectedBrand.image ? <img src={selectedBrand.image} alt={`${selectedBrand.name} logo`} className="h-full w-full rounded-2xl bg-white p-2 object-contain" /> : selectedBrand.logoText.slice(0,3)}
               </div>
               <div>
@@ -1603,7 +1603,7 @@ export default function App() {
                   setSelectedBrand(null);
                   setCurrentView('products');
                 }}
-                className="w-full bg-[#0369A1] text-white font-bold py-3 rounded-xl text-xs"
+                className="w-full bg-[#267A3B] text-white font-bold py-3 rounded-xl text-xs"
               >
                 {tx('View Brand Products', 'មើលផលិតផលរបស់ម៉ាកនេះ')}
               </button>
@@ -1631,7 +1631,7 @@ export default function App() {
               <input required name="phone" placeholder={tx('Phone Number *', 'លេខទូរសព្ទ *')} className="w-full border p-2.5 rounded-xl text-xs" />
               <input name="telegram" placeholder={tx('Telegram Username (@handle)', 'ឈ្មោះអ្នកប្រើ Telegram (@handle)')} className="w-full border p-2.5 rounded-xl text-xs" />
               <textarea name="message" rows={3} placeholder={tx('Inquiry notes or quantity requirements...', 'កំណត់សម្គាល់ ឬចំនួនផលិតផលដែលត្រូវការ...')} className="w-full border p-2.5 rounded-xl text-xs" />
-              <button type="submit" className="w-full bg-[#0369A1] text-white py-3 rounded-xl font-bold text-xs">
+              <button type="submit" className="w-full bg-[#267A3B] text-white py-3 rounded-xl font-bold text-xs">
                 {tx('Submit Inquiry', 'ផ្ញើសំណួរ')}
               </button>
             </form>
@@ -1657,7 +1657,7 @@ export default function App() {
           href={`https://t.me/${settings.telegram.replace('@','')}`}
           target="_blank"
           rel="noreferrer"
-          className="bg-sky-500 hover:bg-sky-600 text-white p-3.5 rounded-full shadow-lg flex items-center justify-center transition-transform hover:scale-110"
+          className="bg-green-500 hover:bg-green-600 text-white p-3.5 rounded-full shadow-lg flex items-center justify-center transition-transform hover:scale-110"
           title="Contact via Telegram"
         >
           <MessageCircle className="w-6 h-6" />
