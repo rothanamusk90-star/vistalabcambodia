@@ -13,12 +13,12 @@ body {
   color: #1e3a5f;
 }
 
-/* White and leaf-green interface with restrained coral highlights. */
+/* Shared white and blue interface with restrained coral brand highlights. */
 :root {
   --site-cream: #ffffff;
-  --site-sage: #f0f7f0;
-  --site-aqua: #dceedd;
-  --site-green: #267a3b;
+  --site-sage: #f0f9ff;
+  --site-aqua: #bae6fd;
+  --site-primary: #0369a1;
   --site-ink: #202124;
   --site-coral: #f47b53;
 }
@@ -29,13 +29,100 @@ body,
   color: var(--site-ink);
 }
 
-.min-h-screen [class~="text-green-500"],
-.min-h-screen [class~="text-green-600"] {
-  color: var(--site-green);
+::selection {
+  background-color: var(--site-primary);
+  color: #ffffff;
 }
 
-.min-h-screen [class*="bg-[#267A3B]"] [class~="text-green-400"],
-.min-h-screen [class*="bg-[#267A3B]"] [class~="text-green-300"] {
+.min-h-screen [class~="text-green-500"],
+.min-h-screen [class~="text-green-600"] {
+  color: var(--site-primary);
+}
+
+/* Normalize older green and indigo utility classes to the shared blue palette. */
+.min-h-screen [class~="bg-green-50"],
+.min-h-screen [class~="bg-green-50/50"],
+.min-h-screen [class~="bg-green-100"],
+.min-h-screen [class~="bg-green-100/70"],
+.min-h-screen [class~="bg-indigo-50"] {
+  background-color: #f0f9ff;
+}
+
+.min-h-screen [class~="bg-green-500/20"] {
+  background-color: #e0f2fe;
+}
+
+.min-h-screen [class~="bg-green-500"],
+.min-h-screen [class~="bg-green-600"],
+.min-h-screen [class~="bg-green-800"],
+.min-h-screen [class~="bg-green-900"],
+.min-h-screen [class*="bg-[#0369A1]"] {
+  background-color: #0369a1;
+}
+
+.min-h-screen [class*="bg-[#075985]"]:hover {
+  background-color: #075985;
+}
+
+.min-h-screen [class~="bg-green-500"][class~="text-slate-950"],
+.min-h-screen [class~="bg-green-600"][class~="text-slate-950"] {
+  color: #ffffff;
+}
+
+.min-h-screen [class~="text-green-300"],
+.min-h-screen [class~="text-green-400"],
+.min-h-screen [class~="text-green-800"],
+.min-h-screen [class~="text-indigo-600"] {
+  color: #0369a1;
+}
+
+.min-h-screen [class~="text-green-900"] {
+  color: #075985;
+}
+
+.min-h-screen [class~="border-green-100"],
+.min-h-screen [class~="border-green-200"],
+.min-h-screen [class~="border-green-300"],
+.min-h-screen [class~="border-green-400"],
+.min-h-screen [class~="border-green-500/20"] {
+  border-color: #bae6fd;
+}
+
+.min-h-screen [class~="hover:bg-green-600"]:hover,
+.min-h-screen [class~="hover:bg-green-700"]:hover {
+  background-color: #075985;
+}
+
+.min-h-screen [class~="hover:text-green-600"]:hover,
+.min-h-screen [class~="hover:text-green-900"]:hover {
+  color: #075985;
+}
+
+.min-h-screen [class~="hover:border-green-200"]:hover,
+.min-h-screen [class~="hover:border-green-300"]:hover,
+.min-h-screen [class~="hover:border-green-400"]:hover {
+  border-color: #7dd3fc;
+}
+
+.min-h-screen [class~="group"]:hover [class~="group-hover:border-green-200"],
+.min-h-screen [class~="group"]:hover [class~="group-hover:border-green-300"] {
+  border-color: #7dd3fc;
+}
+
+.min-h-screen [class~="group"]:hover [class~="group-hover:text-green-900"] {
+  color: #075985;
+}
+
+.min-h-screen [class~="focus:ring-green-900"]:focus {
+  --tw-ring-color: #0369a1;
+}
+
+.min-h-screen [class~="accent-green-500"] {
+  accent-color: #0369a1;
+}
+
+.min-h-screen [class*="bg-[#0369A1]"] [class~="text-green-400"],
+.min-h-screen [class*="bg-[#0369A1]"] [class~="text-green-300"] {
   color: #ffffff;
 }
 
@@ -47,7 +134,7 @@ body,
 
 .site-topbar-friendly [class~="text-green-300"],
 .site-topbar-friendly [class~="text-green-400"] {
-  color: var(--site-green);
+  color: var(--site-primary);
 }
 
 .site-topbar-friendly [class~="text-slate-400"] {
@@ -55,7 +142,7 @@ body,
 }
 
 .site-topbar-friendly [class*="hover:text-white"]:hover {
-  color: var(--site-green);
+  color: var(--site-primary);
 }
 
 .site-hero-friendly {
@@ -97,12 +184,12 @@ body,
 .site-hero-friendly [class~="text-green-400"],
 .site-hero-friendly [class~="text-green-700"],
 .site-hero-friendly [class~="text-green-800"] {
-  color: var(--site-green);
+  color: var(--site-primary);
 }
 
 .site-hero-friendly [class*="from-green-500"][class*="to-green-600"] {
   background-image: none;
-  background-color: var(--site-green);
+  background-color: var(--site-primary);
   color: #ffffff;
 }
 
@@ -112,7 +199,7 @@ body,
 }
 
 .site-green-panel [class~="text-green-400"] {
-  color: var(--site-green);
+  color: var(--site-primary);
 }
 
 .site-green-panel [class~="bg-white/10"] {
@@ -128,7 +215,7 @@ body,
 }
 
 .site-map-friendly {
-  background-color: #f0f9ff;
+  background-color: var(--site-cream);
 }
 
 .site-map-friendly .text-white,
@@ -152,7 +239,7 @@ body,
 
 .site-map-friendly [class~="text-green-300"],
 .site-map-friendly [class~="text-green-400"] {
-  color: var(--site-green);
+  color: var(--site-primary);
 }
 
 .site-map-friendly [class~="hover:bg-slate-700"]:hover {
@@ -175,8 +262,12 @@ body,
   color: #374151;
 }
 
+.site-contact-friendly button.text-white {
+  color: #ffffff;
+}
+
 .site-contact-friendly [class~="text-green-400"] {
-  color: var(--site-green);
+  color: var(--site-primary);
 }
 
 .site-footer-friendly {
@@ -191,7 +282,7 @@ body,
 }
 
 .site-footer-friendly [class~="text-green-400"] {
-  color: var(--site-green);
+  color: var(--site-primary);
 }
 
 .site-footer-friendly > div:last-child {
@@ -200,12 +291,12 @@ body,
 }
 
 .site-footer-friendly [class*="hover:text-white"]:hover {
-  color: var(--site-green);
+  color: var(--site-primary);
 }
 
 button:focus-visible,
 a:focus-visible {
-  outline: 3px solid var(--site-green);
+  outline: 3px solid var(--site-primary);
   outline-offset: 2px;
 }
 
