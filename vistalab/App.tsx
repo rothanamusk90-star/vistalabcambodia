@@ -442,12 +442,12 @@ export default function App() {
                 {/* Hero Showcase Collage Card */}
                 <div className="min-w-0 lg:col-span-5 relative">
                   <div className="min-w-0 bg-white border border-green-100 p-4 sm:p-8 rounded-3xl shadow-xl space-y-4 sm:space-y-6">
-                    <div className="flex justify-between items-center pb-4 border-b border-green-100">
-                      <span className="text-xs font-bold uppercase tracking-wider text-green-300">{tx('Featured Brands Showcase', 'ម៉ាកផលិតផលដែលបានជ្រើសរើស')}</span>
+                    <div className="flex flex-wrap justify-between items-center gap-2 pb-4 border-b border-green-100">
+                      <span className="min-w-0 text-xs font-bold uppercase tracking-wider text-green-300">{tx('Featured Brands Showcase', 'ម៉ាកផលិតផលដែលបានជ្រើសរើស')}</span>
                       <span className="text-xs bg-green-500/20 text-green-300 px-2 py-0.5 rounded font-medium">{tx('Malaysia Sourced', 'នាំចូលពីម៉ាឡេស៊ី')}</span>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-2 sm:gap-3">
                       {brands.slice(0, 4).map((b) => (
                         <div key={b.id} className="group flex min-w-0 min-h-28 items-center gap-2 sm:gap-3 rounded-xl border border-white/15 bg-white/10 p-2 sm:p-3 transition-all hover:border-green-300/60 hover:bg-white/15">
                           <div className="flex h-10 w-10 sm:h-16 sm:w-16 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-white p-1.5 sm:p-2 shadow-sm">
