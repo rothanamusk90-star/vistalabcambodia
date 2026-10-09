@@ -377,105 +377,40 @@ export default function App() {
         {/* VIEW: HOMEPAGE */}
         {currentView === 'home' && (
           <div className="space-y-10 sm:space-y-16 sm:space-y-24 pb-16">
-            {/* HERO SECTION */}
-            <section className="site-hero-friendly relative bg-green-50 text-slate-900 overflow-hidden py-12 sm:py-20 px-4 sm:px-8">
-              <div
-                aria-hidden="true"
-                className="hero-background-image absolute inset-0 bg-cover bg-center bg-no-repeat"
-                style={{ backgroundImage: `url("${import.meta.env.BASE_URL}images/hero-warehouse-banner.jpg")` }}
-              />
-              <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-r from-white/95 via-white/90 to-green-50/85" />
-              {/* Background graphic elements */}
-              <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
-              <div className="absolute top-0 right-0 w-96 h-96 bg-green-500/10 rounded-full blur-3xl pointer-events-none" />
-
-              <div className="w-full max-w-7xl min-w-0 mx-auto grid grid-cols-[minmax(0,1fr)] lg:grid-cols-12 gap-6 sm:gap-12 items-center relative z-10">
-                <div className="min-w-0 lg:col-span-7 space-y-4 sm:space-y-6 text-center lg:text-left">
-                  <div className="inline-flex max-w-full min-w-0 items-center space-x-2 bg-green-100 border border-green-200 text-green-900 px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-semibold">
-                    <Sparkles className="w-4 h-4 text-green-400" />
-                      <span className="min-w-0 whitespace-normal">{t.heroSub}</span>
+            {/* HERO POSTER */}
+            <section className="site-hero-friendly overflow-hidden px-4 py-4 sm:px-8 sm:py-8">
+              <div className="relative mx-auto min-h-[540px] max-w-7xl overflow-hidden rounded-[2rem] bg-sky-50 shadow-xl sm:min-h-[460px]">
+                <img
+                  src={`${import.meta.env.BASE_URL}images/hero-warehouse-banner.jpg`}
+                  alt="VistaLab Cambodia distribution warehouse"
+                  className="absolute inset-x-0 top-0 h-[260px] w-full object-cover sm:inset-y-0 sm:left-auto sm:right-0 sm:h-full sm:w-[62%]"
+                />
+                <div aria-hidden="true" className="absolute inset-x-0 top-[150px] h-[130px] bg-gradient-to-b from-transparent to-sky-50 sm:inset-y-0 sm:left-1/3 sm:right-0 sm:top-0 sm:h-auto sm:bg-gradient-to-r sm:from-sky-50 sm:via-sky-50/80 sm:to-transparent" />
+                <div className="relative z-10 flex min-h-[540px] max-w-2xl flex-col justify-end px-5 pb-7 pt-[275px] sm:min-h-[460px] sm:justify-center sm:px-10 sm:py-12 lg:px-14">
+                  <div className="mb-3 inline-flex w-fit items-center gap-2 rounded-full border border-sky-200 bg-white/90 px-3 py-1.5 text-xs font-bold text-sky-800 shadow-sm sm:text-sm">
+                    <Sparkles className="h-4 w-4 text-sky-600" />
+                    {t.heroSub}
                   </div>
-                  <h1 className="break-words text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight">
-                    {lang === 'EN' ? (
-                      <>Connecting <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-700 via-green-600 to-green-800">International Brands</span> with the Cambodian Market</>
-                    ) : (
-                      t.heroTitle
-                    )}
-                  </h1>
-                  <p className="text-slate-700 text-base sm:text-lg max-w-2xl mx-auto lg:mx-0 leading-relaxed">
-                    {t.heroDesc}
-                  </p>
-                  
-                  <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start space-y-3 sm:space-y-0 sm:space-x-4 pt-4">
-                    <button
-                      onClick={() => setCurrentView('brands')}
-                      className="w-full sm:w-auto bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-slate-950 font-extrabold px-7 py-3.5 rounded-xl shadow-lg hover:shadow-green-500/20 transition-all flex items-center justify-center space-x-2"
-                    >
-                      <span>{t.exploreBrands}</span>
-                      <ArrowRight className="w-5 h-5" />
+                  <h1 className="max-w-xl text-3xl font-black leading-tight tracking-tight text-slate-950 sm:text-5xl lg:text-6xl">{t.heroTitle}</h1>
+                  <p className="mt-3 max-w-lg text-sm leading-relaxed text-slate-700 sm:text-base">{t.heroDesc}</p>
+                  <div className="mt-5 flex flex-wrap gap-3">
+                    <button onClick={() => setCurrentView('brands')} className="inline-flex items-center justify-center gap-2 rounded-xl bg-sky-700 px-5 py-3 font-bold text-white shadow-md transition hover:bg-sky-800">
+                      {t.exploreBrands}<ArrowRight className="h-5 w-5" />
                     </button>
-                    <button
-                      onClick={() => setCurrentView('partner')}
-                      className="w-full sm:w-auto bg-white hover:bg-green-50 text-[#202124] font-bold px-7 py-3.5 rounded-xl border border-green-200 transition-all"
-                    >
-                      {t.partnerWithUs}
-                    </button>
+                    <button onClick={() => setCurrentView('partner')} className="rounded-xl border border-sky-200 bg-white px-5 py-3 font-bold text-slate-800 transition hover:bg-sky-50">{t.partnerWithUs}</button>
                   </div>
-
-                  {/* Trust Highlights */}
-                  <div className="min-w-0 pt-8 border-t border-green-200 grid grid-cols-3 gap-2 sm:gap-4 text-center lg:text-left">
-                    <div>
-                      <div className="text-2xl sm:text-3xl font-black text-green-400">12+</div>
-                      <div className="text-xs text-slate-300 font-medium">{tx('Active Brands', 'ម៉ាកដែលកំពុងចែកចាយ')}</div>
-                    </div>
-                    <div>
-                      <div className="text-2xl sm:text-3xl font-black text-green-400">100%</div>
-                      <div className="text-xs text-slate-300 font-medium">{tx('Quality Imported', 'ផលិតផលនាំចូលមានគុណភាព')}</div>
-                    </div>
-                    <div>
-                      <div className="text-2xl sm:text-3xl font-black text-green-400">{tx('Nationwide', 'ទូទាំងប្រទេស')}</div>
-                      <div className="text-xs text-slate-300 font-medium">{tx('Distribution Network', 'បណ្តាញចែកចាយ')}</div>
-                    </div>
+                  <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-xs font-semibold text-slate-700 sm:text-sm">
+                    <span>✓ {tx('12+ Active Brands', 'ម៉ាកផលិតផលជាង ១២')}</span>
+                    <span>✓ {tx('Quality Imports', 'ផលិតផលនាំចូលមានគុណភាព')}</span>
+                    <span>✓ {tx('Nationwide Distribution', 'ចែកចាយទូទាំងប្រទេស')}</span>
                   </div>
                 </div>
-
-                {/* Hero Showcase Collage Card */}
-                <div className="min-w-0 lg:col-span-5 relative">
-                  <div className="min-w-0 bg-white border border-green-100 p-4 sm:p-8 rounded-3xl shadow-xl space-y-4 sm:space-y-6">
-                    <div className="flex flex-wrap justify-between items-center gap-2 pb-4 border-b border-green-100">
-                      <span className="min-w-0 text-xs font-bold uppercase tracking-wider text-green-300">{tx('Featured Brands Showcase', 'ម៉ាកផលិតផលដែលបានជ្រើសរើស')}</span>
-                      <span className="text-xs bg-green-500/20 text-green-300 px-2 py-0.5 rounded font-medium">{tx('Malaysia Sourced', 'នាំចូលពីម៉ាឡេស៊ី')}</span>
-                    </div>
-
-                    <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-2 sm:gap-3">
-                      {brands.slice(0, 4).map((b) => (
-                        <div key={b.id} className="group flex min-w-0 min-h-28 items-center gap-2 sm:gap-3 rounded-xl border border-white/15 bg-white/10 p-2 sm:p-3 transition-all hover:border-green-300/60 hover:bg-white/15">
-                          <div className="flex h-10 w-10 sm:h-16 sm:w-16 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-white p-1.5 sm:p-2 shadow-sm">
-                            {b.image ? <img src={b.image} alt={`${b.name} logo`} className="h-full w-full object-contain" /> : <span className="text-center text-sm font-black leading-tight text-[#202124]">{b.logoText || b.name}</span>}
-                          </div>
-                          <div className="min-w-0 text-left">
-                            <p className="line-clamp-2 text-sm font-extrabold leading-tight text-white">{b.name}</p>
-                            <p className="mt-1 text-[11px] leading-snug text-slate-300">{localizedCategory(b.category)}</p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-
-                    <div className="min-w-0 bg-slate-900/60 p-4 rounded-2xl border border-green-500/30 flex items-center space-x-3">
-                      <div className="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center text-green-400 flex-shrink-0">
-                        <Truck className="w-5 h-5" />
-                      </div>
-                      <div className="text-xs">
-                        <p className="font-bold text-white">{tx('Direct Supply Chain Connection', 'ខ្សែសង្វាក់ផ្គត់ផ្គង់ដោយផ្ទាល់')}</p>
-                        <p className="text-slate-400">{tx('Malaysia Warehouses → Phnom Penh Central → Retailers', 'ឃ្លាំងនៅម៉ាឡេស៊ី → មជ្ឈមណ្ឌលភ្នំពេញ → អ្នកលក់រាយ')}</p>
-                      </div>
-                    </div>
-
-                  </div>
+                <div className="absolute right-5 top-[190px] rounded-2xl border border-white/70 bg-white/90 px-4 py-3 text-center shadow-lg sm:right-8 sm:top-8">
+                  <div className="text-2xl font-black leading-none text-sky-800">12+</div>
+                  <div className="mt-1 text-[10px] font-bold uppercase tracking-wide text-slate-600">{tx('Trusted Brands', 'ម៉ាកដែលទុកចិត្ត')}</div>
                 </div>
               </div>
             </section>
-
             {/* TRUST / COMPANY INTRO CARDS */}
             <section className="max-w-7xl mx-auto px-4 sm:px-8 space-y-12">
               <div className="text-center max-w-3xl mx-auto space-y-3">
