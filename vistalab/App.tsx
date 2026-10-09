@@ -205,7 +205,7 @@ export default function App() {
       {}
       <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm transition-all duration-200">
         {/* Top utility bar */}
-        <div className="bg-[#0B2545] text-slate-300 text-xs py-1.5 px-4 sm:px-8">
+        <div className="site-topbar-friendly bg-blue-50 text-slate-700 text-xs py-1.5 px-4 sm:px-8 border-b border-blue-100">
           <div className="max-w-7xl mx-auto flex justify-between items-center">
             <div className="flex items-center space-x-4">
               <span className="flex items-center space-x-1.5">
@@ -378,31 +378,31 @@ export default function App() {
         {currentView === 'home' && (
           <div className="space-y-10 sm:space-y-16 sm:space-y-24 pb-16">
             {/* HERO SECTION */}
-            <section className="relative bg-[#0B2545] text-white overflow-hidden py-10 sm:py-16 sm:py-24 px-4 sm:px-8">
+            <section className="site-hero-friendly relative bg-blue-50 text-slate-900 overflow-hidden py-12 sm:py-20 px-4 sm:px-8">
               <div
                 aria-hidden="true"
                 className="hero-background-image absolute inset-0 bg-cover bg-center bg-no-repeat"
-                style={{ backgroundImage: "url(`${import.meta.env.BASE_URL}images/hero-warehouse-banner.jpg`)" }}
+                style={{ backgroundImage: `url("${import.meta.env.BASE_URL}images/hero-warehouse-banner.jpg")` }}
               />
-              <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-r from-[#0B2545]/95 via-[#0B2545]/85 to-[#001529]/75" />
+              <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-r from-white/95 via-white/90 to-blue-50/85" />
               {/* Background graphic elements */}
               <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
               <div className="absolute top-0 right-0 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
 
               <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-12 items-center relative z-10">
                 <div className="lg:col-span-7 space-y-4 sm:space-y-6 text-center lg:text-left">
-                  <div className="inline-flex items-center space-x-2 bg-amber-500/10 border border-amber-500/30 text-amber-300 px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-semibold backdrop-blur-sm">
+                  <div className="inline-flex items-center space-x-2 bg-amber-100 border border-amber-200 text-amber-900 px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-semibold">
                     <Sparkles className="w-4 h-4 text-amber-400" />
                     <span>{t.heroSub}</span>
                   </div>
                   <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight">
                     {lang === 'EN' ? (
-                      <>Connecting <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-amber-100">International Brands</span> with the Cambodian Market</>
+                      <>Connecting <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-700 via-amber-600 to-amber-800">International Brands</span> with the Cambodian Market</>
                     ) : (
                       t.heroTitle
                     )}
                   </h1>
-                  <p className="text-slate-300 text-base sm:text-lg max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+                  <p className="text-slate-700 text-base sm:text-lg max-w-2xl mx-auto lg:mx-0 leading-relaxed">
                     {t.heroDesc}
                   </p>
                   
@@ -416,14 +416,14 @@ export default function App() {
                     </button>
                     <button
                       onClick={() => setCurrentView('partner')}
-                      className="w-full sm:w-auto bg-white/10 hover:bg-white/20 text-white font-bold px-7 py-3.5 rounded-xl border border-white/20 backdrop-blur-sm transition-all"
+                      className="w-full sm:w-auto bg-white hover:bg-blue-50 text-[#0B2545] font-bold px-7 py-3.5 rounded-xl border border-blue-200 transition-all"
                     >
                       {t.partnerWithUs}
                     </button>
                   </div>
 
                   {/* Trust Highlights */}
-                  <div className="pt-8 border-t border-white/10 grid grid-cols-3 gap-4 text-center lg:text-left">
+                  <div className="pt-8 border-t border-blue-200 grid grid-cols-3 gap-4 text-center lg:text-left">
                     <div>
                       <div className="text-2xl sm:text-3xl font-black text-amber-400">12+</div>
                       <div className="text-xs text-slate-300 font-medium">{tx('Active Brands', 'ម៉ាកដែលកំពុងចែកចាយ')}</div>
@@ -441,8 +441,8 @@ export default function App() {
 
                 {/* Hero Showcase Collage Card */}
                 <div className="lg:col-span-5 relative">
-                  <div className="bg-gradient-to-br from-white/10 to-white/5 border border-white/20 p-6 sm:p-8 rounded-3xl backdrop-blur-md shadow-2xl space-y-4 sm:space-y-6">
-                    <div className="flex justify-between items-center pb-4 border-b border-white/10">
+                  <div className="bg-white border border-blue-100 p-6 sm:p-8 rounded-3xl shadow-xl space-y-4 sm:space-y-6">
+                    <div className="flex justify-between items-center pb-4 border-b border-blue-100">
                       <span className="text-xs font-bold uppercase tracking-wider text-amber-300">{tx('Featured Brands Showcase', 'ម៉ាកផលិតផលដែលបានជ្រើសរើស')}</span>
                       <span className="text-xs bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded font-medium">{tx('Malaysia Sourced', 'នាំចូលពីម៉ាឡេស៊ី')}</span>
                     </div>
@@ -607,7 +607,7 @@ export default function App() {
             </section>
 
             {/* INTERACTIVE CAMBODIA DISTRIBUTION NETWORK MAP */}
-            <section className="bg-[#0B2545] text-white py-10 sm:py-16 px-4 sm:px-8 relative overflow-hidden">
+            <section className="site-map-friendly bg-blue-50 text-slate-800 py-10 sm:py-16 px-4 sm:px-8 relative overflow-hidden">
               <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-12 items-center">
                 <div className="lg:col-span-5 space-y-4 sm:space-y-6">
                   <span className="text-xs font-bold text-amber-400 uppercase tracking-widest">{tx('LOGISTICS & NETWORK', 'ភស្តុភារ និងបណ្តាញចែកចាយ')}</span>
@@ -1166,7 +1166,7 @@ export default function App() {
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-8">
               {/* Contact Information Panel */}
-              <div className="lg:col-span-5 bg-[#0B2545] text-white p-5 sm:p-8 rounded-3xl space-y-4 sm:space-y-6 shadow-xl">
+              <div className="site-contact-friendly lg:col-span-5 bg-blue-50 text-slate-800 p-5 sm:p-8 rounded-3xl space-y-4 sm:space-y-6 shadow-xl border border-blue-100">
                 <h3 className="text-xl font-bold text-amber-400">{tx('Official Contact Details', 'ព័ត៌មានទំនាក់ទំនងផ្លូវការ')}</h3>
                 
                 <div className="space-y-4 text-sm">
@@ -1716,7 +1716,7 @@ export default function App() {
       </div>
 
       {}
-      <footer className="bg-[#0B2545] text-slate-300 text-xs border-t border-slate-800">
+      <footer className="site-footer-friendly bg-blue-50 text-slate-700 text-xs border-t border-blue-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-8 py-7 sm:py-12 grid grid-cols-1 md:grid-cols-4 gap-4 sm:gap-8">
           <div className="space-y-3">
             <div className="flex items-center space-x-2 text-white font-extrabold text-lg">
@@ -1755,7 +1755,7 @@ export default function App() {
           </div>
         </div>
 
-        <div className="bg-slate-950 py-4 px-4 sm:px-8 text-center text-slate-500 border-t border-slate-900">
+        <div className="bg-blue-100/70 py-4 px-4 sm:px-8 text-center text-slate-600 border-t border-blue-100">
           <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
             <p>© 2026 VistaLab Cambodia Co., Ltd. {t.rightsReserved}</p>
             <div className="flex space-x-4 text-[11px]">

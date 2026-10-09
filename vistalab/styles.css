@@ -9,6 +9,81 @@ html {
 body {
   margin: 0;
   min-width: 320px;
+  background: #f8fafc;
+  color: #1e293b;
+}
+
+/* A brighter blue and warm amber palette keeps the site calm and easy to scan. */
+.site-topbar-friendly [class~="text-amber-300"],
+.site-topbar-friendly [class~="text-amber-400"] {
+  color: #92400e;
+}
+
+.site-hero-friendly .text-white,
+.site-hero-friendly [class~="text-slate-300"],
+.site-hero-friendly [class~="text-slate-400"] {
+  color: #334155;
+}
+
+.site-hero-friendly [class~="text-amber-300"],
+.site-hero-friendly [class~="text-amber-400"] {
+  color: #92400e;
+}
+
+.site-hero-friendly [class~="bg-white/10"],
+.site-hero-friendly [class~="bg-white/15"],
+.site-hero-friendly [class~="bg-slate-900/60"] {
+  background-color: #eff6ff;
+}
+
+.site-hero-friendly [class~="border-white/10"],
+.site-hero-friendly [class~="border-white/15"],
+.site-hero-friendly [class~="border-white/20"] {
+  border-color: #dbeafe;
+}
+
+.site-map-friendly .text-white,
+.site-map-friendly [class~="text-slate-300"],
+.site-map-friendly [class~="text-slate-400"] {
+  color: #334155;
+}
+
+.site-map-friendly [class~="text-amber-300"] {
+  color: #92400e;
+}
+
+.site-map-friendly [class~="bg-slate-900/80"],
+.site-map-friendly [class~="bg-slate-800"],
+.site-map-friendly [class~="bg-slate-800/70"] {
+  background-color: #ffffff;
+}
+
+.site-map-friendly [class~="border-slate-800"],
+.site-map-friendly [class~="border-slate-700"] {
+  border-color: #dbeafe;
+}
+
+.site-contact-friendly .text-white,
+.site-contact-friendly [class~="text-slate-300"] {
+  color: #334155;
+}
+
+.site-contact-friendly [class~="text-amber-400"] {
+  color: #92400e;
+}
+
+.site-footer-friendly .text-white,
+.site-footer-friendly [class~="text-slate-300"],
+.site-footer-friendly [class~="text-slate-400"] {
+  color: #334155;
+}
+
+.site-footer-friendly [class~="text-amber-400"] {
+  color: #92400e;
+}
+
+.site-footer-friendly [class*="hover:text-white"]:hover {
+  color: #b45309;
 }
 
 /* Keep body copy comfortable to read across every page and language. */
