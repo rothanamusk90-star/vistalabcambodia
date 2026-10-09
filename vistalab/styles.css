@@ -429,6 +429,38 @@ main [class~="text-[11px]"] {
   animation: fadeIn 180ms ease-out;
 }
 
+/* Replay a quick page entrance whenever the active view changes. */
+.page-transition {
+  position: relative;
+  animation: page-enter 320ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.page-transition::before {
+  content: "";
+  position: absolute;
+  z-index: 30;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, #217a3a, #68bd78);
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: page-progress 520ms ease-out both;
+  pointer-events: none;
+}
+
+@keyframes page-enter {
+  from { opacity: 0; transform: translateY(7px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes page-progress {
+  0% { opacity: 1; transform: scaleX(0); }
+  75% { opacity: 1; transform: scaleX(1); }
+  100% { opacity: 0; transform: scaleX(1); }
+}
+
 /* A small entrance animation gives the homepage poster some life on load. */
 .poster-image {
   animation: poster-image-enter 900ms cubic-bezier(0.2, 0.7, 0.2, 1) both;

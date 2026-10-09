@@ -381,7 +381,7 @@ export default function App() {
       </header>
 
       {}
-      <main className="flex-grow">
+      <main key={currentView} className="page-transition min-w-0 flex-grow">
         {/* VIEW: HOMEPAGE */}
         {currentView === 'home' && (
           <div className="space-y-10 sm:space-y-16 sm:space-y-24 pb-16">
