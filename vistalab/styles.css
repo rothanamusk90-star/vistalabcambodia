@@ -352,6 +352,59 @@ main [class~="text-[11px]"] {
   animation: fadeIn 180ms ease-out;
 }
 
+/* A small entrance animation gives the homepage poster some life on load. */
+.poster-image {
+  animation: poster-image-enter 900ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.poster-copy > * {
+  animation: poster-copy-rise 560ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.poster-copy > :nth-child(1) { animation-delay: 100ms; }
+.poster-copy > :nth-child(2) { animation-delay: 190ms; }
+.poster-copy > :nth-child(3) { animation-delay: 280ms; }
+.poster-copy > :nth-child(4) { animation-delay: 370ms; }
+.poster-copy > :nth-child(5) { animation-delay: 460ms; }
+
+.poster-trust-badge {
+  animation: poster-badge-enter 700ms 350ms ease-out both,
+    poster-badge-float 5s 1.2s ease-in-out infinite;
+}
+
+@keyframes poster-image-enter {
+  from { opacity: 0.65; transform: scale(1.045); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes poster-copy-rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes poster-badge-enter {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes poster-badge-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+.min-h-screen main button:not(:disabled) {
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.min-h-screen main button:not(:disabled):hover {
+  transform: translateY(-1px);
+}
+
+.min-h-screen main [class*="shadow-sm"][class*="rounded-"]:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgb(15 23 42 / 10%);
+}
+
 .hero-background-image {
   transform: scale(1.08);
   animation: hero-background-drift 36s ease-in-out infinite alternate;
@@ -364,6 +417,15 @@ main [class~="text-[11px]"] {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+
   .hero-background-image {
     animation: none;
     transform: scale(1.08);

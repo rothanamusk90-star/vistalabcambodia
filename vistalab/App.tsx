@@ -391,10 +391,10 @@ export default function App() {
                 <img
                   src={settings.heroImage || `${import.meta.env.BASE_URL}images/hero-warehouse-banner.jpg`}
                   alt="VistaLab Cambodia distribution warehouse"
-                  className="absolute inset-x-0 top-0 h-[260px] w-full object-cover sm:inset-y-0 sm:left-auto sm:right-0 sm:h-full sm:w-[62%]"
+                  className="poster-image absolute inset-x-0 top-0 h-[260px] w-full object-cover sm:inset-y-0 sm:left-auto sm:right-0 sm:h-full sm:w-[62%]"
                 />
                 <div aria-hidden="true" className="absolute inset-x-0 top-[150px] h-[130px] bg-gradient-to-b from-transparent to-green-50 sm:inset-y-0 sm:left-1/3 sm:right-0 sm:top-0 sm:h-auto sm:bg-gradient-to-r sm:from-green-50 sm:via-green-50/80 sm:to-transparent" />
-                <div className="relative z-10 flex min-h-[540px] max-w-2xl flex-col justify-end px-5 pb-7 pt-[275px] sm:min-h-[460px] sm:justify-center sm:px-10 sm:py-12 lg:px-14">
+                <div className="poster-copy relative z-10 flex min-h-[540px] max-w-2xl flex-col justify-end px-5 pb-7 pt-[275px] sm:min-h-[460px] sm:justify-center sm:px-10 sm:py-12 lg:px-14">
                   <div className="mb-3 inline-flex w-fit items-center gap-2 rounded-full border border-green-200 bg-white/90 px-3 py-1.5 text-xs font-bold text-green-800 shadow-sm sm:text-sm">
                     <Sparkles className="h-4 w-4 text-green-600" />
                     {lang === 'KH' ? settings.heroSubtitle_kh : settings.heroSubtitle_en}
@@ -413,7 +413,7 @@ export default function App() {
                     <span>✓ {tx('Nationwide Distribution', 'ចែកចាយទូទាំងប្រទេស')}</span>
                   </div>
                 </div>
-                <div className="absolute right-5 top-[190px] rounded-2xl border border-white/70 bg-white/90 px-4 py-3 text-center shadow-lg sm:right-8 sm:top-8">
+                <div className="poster-trust-badge absolute right-5 top-[190px] rounded-2xl border border-white/70 bg-white/90 px-4 py-3 text-center shadow-lg sm:right-8 sm:top-8">
                   <div className="text-2xl font-black leading-none text-green-800">{settings.heroTrustedBrands}</div>
                   <div className="mt-1 text-[10px] font-bold uppercase tracking-wide text-slate-600">{tx('Trusted Brands', 'ម៉ាកដែលទុកចិត្ត')}</div>
                 </div>
