@@ -261,7 +261,7 @@ export default function App() {
             </div>
             <div className="min-w-0">
               <div className="flex items-center truncate text-base font-extrabold tracking-tight text-[#202124] sm:text-xl">
-                VISTALAB <img src="./cambodia-flag.svg" alt={tx('Cambodia flag', 'ទង់ជាតិកម្ពុជា')} className="ml-1.5 inline-block h-[13px] w-[20px] rounded-[2px] align-[1px] object-cover shadow-sm ring-1 ring-black/10" />
+                VISTALAB <img src="./cambodia-flag.svg" alt={tx('Cambodia flag', 'ទង់ជាតិកម្ពុជា')} className="ml-1.5 inline-block h-[18px] w-[28px] rounded-[2px] align-[-3px] object-cover shadow-sm ring-1 ring-black/10" />
               </div>
               <div className="text-[10px] sm:text-xs text-slate-500 font-medium tracking-wide max-[360px]:hidden">
                 {tx('FMCG IMPORTER & DISTRIBUTOR', 'អ្នកនាំចូល និងចែកចាយផលិតផល FMCG')}
