@@ -550,7 +550,7 @@ export default function App() {
             </section>
 
             {/* INTERACTIVE CAMBODIA DISTRIBUTION NETWORK MAP */}
-            <section className="site-map-friendly bg-sky-50 text-slate-800 py-10 sm:py-16 px-4 sm:px-8 relative overflow-hidden">
+            <section className="site-map-friendly bg-white text-slate-800 py-10 sm:py-16 px-4 sm:px-8 relative overflow-hidden">
               <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-12 items-center">
                 <div className="lg:col-span-5 space-y-4 sm:space-y-6">
                   <span className="text-xs font-bold text-sky-700 uppercase tracking-widest">{tx('LOGISTICS & NETWORK', 'ភស្តុភារ និងបណ្តាញចែកចាយ')}</span>
@@ -560,21 +560,20 @@ export default function App() {
                   </p>
 
                   <div className="space-y-3 pt-2">
-                    <div className="bg-white p-3.5 rounded-xl border border-sky-100 flex items-center justify-between shadow-sm">
-                      <span className="text-sm font-semibold">{tx('Central Warehousing', 'ឃ្លាំងកណ្តាល')}</span>
-                      <span className="text-xs bg-sky-100 text-sky-800 font-bold px-2 py-0.5 rounded">ភ្នំពេញ</span>
+                    <div className="flex items-center gap-3 rounded-2xl border border-sky-100 bg-white p-4 shadow-sm">
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-sky-50 text-sky-700"><Building2 className="h-5 w-5" aria-hidden="true" /></span>
+                      <span><span className="block text-sm font-bold text-slate-900">{tx('Central Warehousing', 'ឃ្លាំងកណ្តាល')}</span><span className="mt-0.5 block text-xs text-slate-500">{tx('Phnom Penh, Cambodia', 'រាជធានីភ្នំពេញ')}</span></span>
                     </div>
-                    <div className="bg-white p-3.5 rounded-xl border border-sky-100 flex items-center justify-between shadow-sm">
-                      <span className="text-sm font-semibold">{tx('Provincial Hubs', 'មជ្ឈមណ្ឌលតាមខេត្ត')}</span>
-                      <span className="text-xs bg-sky-100 text-sky-800 font-bold px-2 py-0.5 rounded">សៀមរាប បាត់ដំបង និងកំពត</span>
+                    <div className="flex items-center gap-3 rounded-2xl border border-sky-100 bg-white p-4 shadow-sm">
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-sky-50 text-sky-700"><MapPin className="h-5 w-5" aria-hidden="true" /></span>
+                      <span><span className="block text-sm font-bold text-slate-900">{tx('Provincial Hubs', 'មជ្ឈមណ្ឌលតាមខេត្ត')}</span><span className="mt-0.5 block text-xs text-slate-500">{tx('Siem Reap, Battambang & Kampot', 'សៀមរាប បាត់ដំបង និងកំពត')}</span></span>
                     </div>
                   </div>
-
                   <button
                     onClick={() => setCurrentView('about')}
                     className="mt-4 bg-sky-700 hover:bg-sky-800 text-white font-extrabold px-6 py-3 rounded-xl text-sm shadow-md transition-all flex items-center space-x-2"
                   >
-                    <span>{tx('Explore Supply Chain Channel', 'ស្វែងយល់អំពីខ្សែសង្វាក់ផ្គត់ផ្គង់')}</span>
+                    <span>{tx('Explore Supply Chain Channel', 'ស្វែងយល់អំពីបណ្តាញផ្គត់ផ្គង់')}</span>
                     <ChevronRight className="w-4 h-4" />
                   </button>
                 </div>
@@ -582,7 +581,7 @@ export default function App() {
                 {/* Google Maps hub locations */}
                 <div className="lg:col-span-7 bg-white p-6 sm:p-8 rounded-3xl border border-sky-200 shadow-lg shadow-slate-200/70 relative min-h-[380px] flex flex-col justify-between">
                   <div className="flex justify-between items-center text-xs text-slate-600 border-b border-sky-100 pb-3">
-                    <span className="font-bold text-sky-800">{tx('Google Maps - Cambodia Hub Locations', 'ផែនទី Google - ទីតាំងមជ្ឈមណ្ឌលនៅកម្ពុជា')}</span>
+                    <span className="font-bold text-sky-800">{tx('Google Maps - Cambodia Hub Locations', 'ទីតាំងមជ្ឈមណ្ឌលចែកចាយនៅកម្ពុជា')}</span>
                     <span>{tx('Select a hub below', 'ជ្រើសរើសមជ្ឈមណ្ឌលខាងក្រោម')}</span>
                   </div>
 

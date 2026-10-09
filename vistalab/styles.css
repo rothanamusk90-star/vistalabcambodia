@@ -137,6 +137,10 @@ body,
   color: #374151;
 }
 
+.site-map-friendly button.text-white {
+  color: #ffffff;
+}
+
 .site-map-friendly [class~="bg-slate-900/80"] {
   background-color: var(--site-sage);
 }
