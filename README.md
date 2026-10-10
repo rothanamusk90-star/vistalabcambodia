@@ -57,3 +57,14 @@ public/images/               Static image assets
 ```
 
 The demo CMS stores edits in the current browser's local storage. Changes do not automatically sync to other browsers or devices.
+
+## Configure admin sign-in
+
+The admin page is hidden from the public navigation. Open it directly at `https://rothanamusk90-star.github.io/vistalabcambodia/?admin=1` after completing these steps:
+
+1. Create a Supabase project and add an email/password user in **Authentication → Users**.
+2. Run [`supabase/admin_auth_setup.sql`](supabase/admin_auth_setup.sql) in the Supabase SQL Editor, then uncomment its final insert and replace `YOUR_ADMIN_EMAIL` with that user's email. Run the insert to grant admin access.
+3. In GitHub, open **Settings → Secrets and variables → Actions → Variables** and add `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` using the Supabase project URL and publishable/anon key. Never use the service role key in the website.
+4. Redeploy the `Deploy to GitHub Pages` workflow. The login screen will be enabled after deployment.
+
+The CMS currently stores its edits only in the signed-in browser. Supabase protects access to the admin screen; it does not yet sync CMS content between visitors or devices.

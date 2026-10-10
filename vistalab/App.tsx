@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, type FormEvent } from 'react';
 import { 
   Building2, Globe, Truck, Package, ShieldCheck, Phone, Mail, Send, Home, Info, Tags, Store, Newspaper, Handshake,
   MapPin, Search, Menu, X, ChevronRight, ChevronDown, CheckCircle, 
@@ -24,6 +24,7 @@ import { ImageUpload } from './components/ImageUpload';
 import { CountryFlag } from './components/CountryFlag';
 import { loadStoredArray } from './utils/storage';
 import { translations, brandDescriptionsKh, productSpecsKh, productBadgesKh } from './data/translations';
+import { isAdminUser, supabaseClient } from './utils/supabase';
 
 const windows1252SpecialCharacters = [
   '\u20ac', '\u0081', '\u201a', '\u0192', '\u201e', '\u2026', '\u2020', '\u2021',
@@ -62,12 +63,85 @@ function repairKhmerMojibake(value: string): string {
 
 export default function App() {
   const [lang, setLang] = useState<'EN' | 'KH'>('EN');
-  const [currentView, setCurrentView] = useState('home'); // home, about, brands, products, distribution, partner, seller, news, contact, admin
+  const [currentView, setCurrentView] = useState(() => new URLSearchParams(window.location.search).get('admin') === '1' ? 'admin' : 'home'); // home, about, brands, products, distribution, partner, seller, news, contact, admin
+  const [adminAuthenticated, setAdminAuthenticated] = useState(false);
+  const [adminAuthReady, setAdminAuthReady] = useState(false);
+  const [adminEmail, setAdminEmail] = useState('');
+  const [adminPassword, setAdminPassword] = useState('');
+  const [adminLoginError, setAdminLoginError] = useState('');
+  const [adminLoginBusy, setAdminLoginBusy] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedHubId, setSelectedHubId] = useState(distributionHubs[0].id);
   const selectedHub = distributionHubs.find((hub) => hub.id === selectedHubId) ?? distributionHubs[0];
+
+  useEffect(() => {
+    if (!supabaseClient) {
+      setAdminAuthReady(true);
+      return;
+    }
+
+    let cancelled = false;
+    const checkSession = async () => {
+      const { data } = await supabaseClient.auth.getSession();
+      const user = data.session?.user;
+      const allowed = user ? await isAdminUser(user.id) : false;
+      if (cancelled) return;
+      if (user && !allowed) await supabaseClient.auth.signOut();
+      setAdminAuthenticated(allowed);
+      setAdminEmail(allowed ? user?.email ?? '' : '');
+      setAdminAuthReady(true);
+    };
+
+    void checkSession();
+    const { data: { subscription } } = supabaseClient.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_OUT' || !session) {
+        setAdminAuthenticated(false);
+        setAdminEmail('');
+      }
+    });
+
+    return () => {
+      cancelled = true;
+      subscription.unsubscribe();
+    };
+  }, []);
+
+  const handleAdminLogin = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!supabaseClient) return;
+    setAdminLoginBusy(true);
+    setAdminLoginError('');
+
+    const { data, error } = await supabaseClient.auth.signInWithPassword({ email: adminEmail, password: adminPassword });
+    if (error || !data.user) {
+      setAdminLoginError('Email or password is incorrect.');
+      setAdminLoginBusy(false);
+      return;
+    }
+
+    const allowed = await isAdminUser(data.user.id);
+    if (!allowed) {
+      await supabaseClient.auth.signOut();
+      setAdminLoginError('This account does not have admin access.');
+      setAdminLoginBusy(false);
+      return;
+    }
+
+    setAdminAuthenticated(true);
+    setAdminPassword('');
+    setAdminLoginBusy(false);
+  };
+
+  const handleAdminLogout = async () => {
+    if (supabaseClient) await supabaseClient.auth.signOut();
+    setAdminAuthenticated(false);
+    setAdminEmail('');
+    setAdminPassword('');
+    setCurrentView('home');
+    window.history.replaceState(null, '', window.location.pathname);
+  };
   
   // Data States
   const [brands, setBrands] = useState<Brand[]>(() => loadStoredArray('vistalab.brands', initialBrands));
@@ -236,6 +310,40 @@ export default function App() {
     const timeoutId = window.setTimeout(() => setToastMessage(''), 4000);
     return () => window.clearTimeout(timeoutId);
   }, [toastMessage]);
+
+  if (currentView === 'admin' && !adminAuthenticated) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-10">
+        <section className="w-full max-w-md rounded-3xl border border-slate-200 bg-white p-6 shadow-xl shadow-slate-200/70 sm:p-8">
+          <div className="mb-6 flex items-center gap-3">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-green-100 text-green-800"><Settings className="h-6 w-6" aria-hidden="true" /></div>
+            <div><p className="text-xs font-bold uppercase tracking-wider text-green-700">VistaLab Cambodia</p><h1 className="text-2xl font-black text-slate-900">Admin sign in</h1></div>
+          </div>
+          {!adminAuthReady ? (
+            <p className="rounded-xl bg-slate-50 p-4 text-sm text-slate-600">Checking admin session…</p>
+          ) : !supabaseClient ? (
+            <div className="space-y-3 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm leading-relaxed text-amber-950">
+              <p className="font-bold">Admin sign-in is not configured yet.</p>
+              <p>Add the Supabase project URL and publishable anon key as GitHub Actions variables named <code>VITE_SUPABASE_URL</code> and <code>VITE_SUPABASE_ANON_KEY</code>, then redeploy.</p>
+              <p>Run <code>supabase/admin_auth_setup.sql</code> in the Supabase SQL Editor and grant admin access to your account.</p>
+            </div>
+          ) : (
+            <form onSubmit={handleAdminLogin} className="space-y-4">
+              <label className="block text-sm font-semibold text-slate-700">Email
+                <input type="email" autoComplete="username" required value={adminEmail} onChange={(event) => setAdminEmail(event.target.value)} className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2.5 outline-none focus:border-green-600 focus:ring-2 focus:ring-green-100" />
+              </label>
+              <label className="block text-sm font-semibold text-slate-700">Password
+                <input type="password" autoComplete="current-password" required value={adminPassword} onChange={(event) => setAdminPassword(event.target.value)} className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2.5 outline-none focus:border-green-600 focus:ring-2 focus:ring-green-100" />
+              </label>
+              {adminLoginError && <p role="alert" className="rounded-xl bg-red-50 px-3 py-2 text-sm text-red-700">{adminLoginError}</p>}
+              <button type="submit" disabled={adminLoginBusy} className="w-full rounded-xl bg-[#267A3B] px-4 py-3 font-bold text-white transition hover:bg-[#206d34] disabled:cursor-wait disabled:opacity-60">{adminLoginBusy ? 'Signing in…' : 'Sign in'}</button>
+            </form>
+          )}
+          <button onClick={() => { setCurrentView('home'); window.history.replaceState(null, '', window.location.pathname); }} className="mt-5 w-full rounded-xl px-4 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-100">Back to website</button>
+        </section>
+      </main>
+    );
+  }
 
   return (
     <div
@@ -1229,6 +1337,7 @@ export default function App() {
                 <h1 className="flex items-center gap-3 text-2xl font-black"><Settings className="h-5 w-5 shrink-0 text-green-500" aria-hidden="true" />{tx('VistaLab Website Content Manager (CMS)', 'ប្រព័ន្ធគ្រប់គ្រងមាតិកាគេហទំព័រ VistaLab')}</h1>
               </div>
               <div className="flex items-center space-x-2">
+                <button onClick={() => void handleAdminLogout()} className="rounded-xl border border-white/30 px-4 py-2 text-xs font-bold text-white transition hover:bg-white/10">Sign out</button>
                 <button
                   onClick={() => triggerToast(tx('Contact information and site content are saved in this browser.', 'ព័ត៌មានទំនាក់ទំនង និងមាតិកាគេហទំព័រត្រូវបានរក្សាទុកក្នុងកម្មវិធីរុករកនេះ។'))}
                   className="bg-green-500 text-slate-950 hover:bg-green-600 px-4 py-2 rounded-xl text-xs font-extrabold shadow"
@@ -1259,7 +1368,7 @@ export default function App() {
             </div>
 
             <p className="rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-xs text-green-900">
-              {tx('Demo CMS: products and inquiries are stored only in this browser. This page has no sign-in or server-side storage, so do not use it for private customer data.', 'CMS សាកល្បង៖ ផលិតផល និងសំណួររក្សាទុកតែក្នុងកម្មវិធីរុករកនេះប៉ុណ្ណោះ។ ប្រព័ន្ធនេះមិនមានការចូលគណនី ឬការរក្សាទុកលើម៉ាស៊ីនមេទេ។')}
+              {tx('Admin sign-in is verified by Supabase. CMS edits are still saved only in this browser and do not update the live site for other visitors.', 'ការចូលគណនីអ្នកគ្រប់គ្រងត្រូវបានផ្ទៀងផ្ទាត់ដោយ Supabase។ ការកែប្រែមាតិកានៅតែរក្សាទុកតែក្នុងកម្មវិធីរុករកនេះ ហើយមិនធ្វើបច្ចុប្បន្នភាពគេហទំព័រសម្រាប់អ្នកទស្សនាផ្សេងទៀតទេ។')}
             </p>
 
             <form onSubmit={(event) => { event.preventDefault(); triggerToast(tx('Contact details saved.', 'បានរក្សាទុកព័ត៌មានទំនាក់ទំនង។')); }} className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm space-y-4">
