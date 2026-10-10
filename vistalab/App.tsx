@@ -335,13 +335,6 @@ export default function App() {
           {/* Action CTAs */}
           <div className="hidden lg:flex items-center space-x-3">
             <button
-              onClick={() => setCurrentView('admin')}
-              className={`p-2 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors ${currentView === 'admin' ? 'bg-green-100 text-green-900 font-bold' : ''}`}
-              title={t.navAdmin}
-            >
-              <Settings className="w-5 h-5" />
-            </button>
-            <button
               onClick={() => openInquiry('', '', 'General')}
               className="bg-[#267A3B] hover:bg-[#246F38] text-white px-4 py-2 rounded-xl font-semibold text-sm shadow-md hover:shadow-lg transition-all flex items-center space-x-1.5 border border-green-500/20"
             >
@@ -352,13 +345,6 @@ export default function App() {
 
           {/* Mobile menu trigger */}
           <div className="ml-2 flex shrink-0 items-center space-x-1 lg:hidden sm:space-x-2">
-            <button
-              onClick={() => setCurrentView('admin')}
-              className="p-2 text-slate-700 hover:bg-slate-100 rounded-lg"
-              title={t.navAdmin}
-            >
-              <Settings className="w-5 h-5" />
-            </button>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="p-2 text-slate-700 hover:bg-slate-100 rounded-lg focus:outline-none"
@@ -386,8 +372,7 @@ export default function App() {
                 { id: 'partner', label: t.navPartner, icon: Handshake },
                 { id: 'seller', label: t.navSeller, icon: Store },
                 { id: 'news', label: t.navNews, icon: Newspaper },
-                { id: 'contact', label: t.navContact, icon: Phone },
-                { id: 'admin', label: t.navAdmin, icon: Settings }
+                { id: 'contact', label: t.navContact, icon: Phone }
               ].map((link) => (
                 <button
                   key={link.id}
@@ -1742,7 +1727,6 @@ export default function App() {
               <li><button onClick={() => setCurrentView('partner')} className="hover:text-white">{t.navPartner}</button></li>
               <li><button onClick={() => setCurrentView('seller')} className="hover:text-white">{t.navSeller}</button></li>
               <li><button onClick={() => setCurrentView('news')} className="hover:text-white">{t.navNews}</button></li>
-              <li><button onClick={() => setCurrentView('admin')} className="hover:text-white">{t.navAdmin}</button></li>
             </ul>
           </div>
 
