@@ -938,15 +938,16 @@ export default function App() {
               <h2 className="text-xl font-bold text-slate-900">{tx('End-to-End FMCG Supply Chain Flow', 'ដំណើរការខ្សែសង្វាក់ផ្គត់ផ្គង់ផលិតផល FMCG')}</h2>
               <div className="relative grid grid-cols-2 gap-3 text-center md:grid-cols-3 lg:grid-cols-6">
                 {[
-                  { step: tx("1. SUPPLIER", "១. អ្នកផ្គត់ផ្គង់"), detail: tx("Malaysia / Global Brands", "ម៉ាឡេស៊ី និងម៉ាកអន្តរជាតិ") },
-                  { step: tx("2. IMPORT", "២. ការនាំចូល"), detail: tx("Customs & Compliance", "គយ និងការអនុលោមតាមបទប្បញ្ញត្តិ") },
-                  { step: tx("3. WAREHOUSE", "៣. ឃ្លាំង"), detail: tx("Phnom Penh Central Hub", "មជ្ឈមណ្ឌលកណ្តាលនៅភ្នំពេញ") },
-                  { step: tx("4. SALES TEAM", "៤. ក្រុមលក់"), detail: tx("Field & Telegram Communication", "ក្រុមការងារលក់ និងទំនាក់ទំនងតាម Telegram") },
-                  { step: tx("5. CHANNELS", "៥. បណ្តាញលក់"), detail: tx("Supermarkets & Wholesalers", "ផ្សារទំនើប និងអ្នកលក់ដុំ") },
-                  { step: tx("6. CONSUMER", "៦. អ្នកប្រើប្រាស់"), detail: tx("Cambodian Households", "គ្រួសារនៅកម្ពុជា") }
+                  { icon: Globe, step: tx("1. SUPPLIER", "១. អ្នកផ្គត់ផ្គង់"), detail: tx("Malaysia / Global Brands", "ម៉ាឡេស៊ី និងម៉ាកអន្តរជាតិ") },
+                  { icon: ShieldCheck, step: tx("2. IMPORT", "២. ការនាំចូល"), detail: tx("Customs & Compliance", "គយ និងការអនុលោមតាមបទប្បញ្ញត្តិ") },
+                  { icon: Building2, step: tx("3. WAREHOUSE", "៣. ឃ្លាំង"), detail: tx("Phnom Penh Central Hub", "មជ្ឈមណ្ឌលកណ្តាលនៅភ្នំពេញ") },
+                  { icon: Users, step: tx("4. SALES TEAM", "៤. ក្រុមលក់"), detail: tx("Field & Telegram Communication", "ក្រុមការងារលក់ និងទំនាក់ទំនងតាម Telegram") },
+                  { icon: Layers, step: tx("5. CHANNELS", "៥. បណ្តាញលក់"), detail: tx("Supermarkets & Wholesalers", "ផ្សារទំនើប និងអ្នកលក់ដុំ") },
+                  { icon: Home, step: tx("6. CONSUMER", "៦. អ្នកប្រើប្រាស់"), detail: tx("Cambodian Households", "គ្រួសារនៅកម្ពុជា") }
                 ].map((s, idx) => (
-                  <div key={idx} className="group rounded-2xl border border-slate-200 bg-gradient-to-b from-white to-slate-50 p-4 shadow-sm transition-all hover:-translate-y-1 hover:border-green-300 hover:shadow-md flex flex-col justify-center space-y-2">
+                  <div key={idx} className="group rounded-2xl border border-slate-200 bg-gradient-to-b from-white to-slate-50 p-4 shadow-sm transition-all hover:-translate-y-1 hover:border-green-300 hover:shadow-md flex flex-col items-center justify-center space-y-2">
                     <span className="mx-auto flex h-8 min-w-8 items-center justify-center rounded-full bg-green-100 px-2 text-xs font-black text-green-900">{idx + 1}</span>
+                    <s.icon className="h-6 w-6 text-green-700 transition-transform duration-200 group-hover:scale-110" strokeWidth={1.8} aria-hidden="true" />
                     <span className="text-xs font-black text-[#202124]">{s.step}</span>
                     <span className="text-sm font-semibold leading-snug text-slate-800">{s.detail}</span>
                   </div>
