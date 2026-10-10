@@ -25,6 +25,41 @@ import { CountryFlag } from './components/CountryFlag';
 import { loadStoredArray } from './utils/storage';
 import { translations, brandDescriptionsKh, productSpecsKh, productBadgesKh } from './data/translations';
 
+const windows1252SpecialCharacters = [
+  '\u20ac', '\u0081', '\u201a', '\u0192', '\u201e', '\u2026', '\u2020', '\u2021',
+  '\u02c6', '\u2030', '\u0160', '\u2039', '\u0152', '\u008d', '\u017d', '\u008f',
+  '\u0090', '\u2018', '\u2019', '\u201c', '\u201d', '\u2022', '\u2013', '\u2014',
+  '\u02dc', '\u2122', '\u0161', '\u203a', '\u0153', '\u009d', '\u017e', '\u0178'
+];
+
+const windows1252ByteByCharacter = new Map(
+  windows1252SpecialCharacters.map((character, index) => [character, 0x80 + index])
+);
+
+function repairKhmerMojibake(value: string): string {
+  if (!/(?:Ã|Â|áº|áž|áŸ|â€)/u.test(value)) return value;
+
+  const bytes: number[] = [];
+  for (const character of value) {
+    const codePoint = character.codePointAt(0)!;
+    if (codePoint <= 0x7f || (codePoint >= 0xa0 && codePoint <= 0xff)) {
+      bytes.push(codePoint);
+      continue;
+    }
+    const byte = windows1252ByteByCharacter.get(character);
+    if (byte === undefined) return value;
+    bytes.push(byte);
+  }
+
+  try {
+    const decoded = new TextDecoder('utf-8', { fatal: true }).decode(new Uint8Array(bytes));
+    const khmerCount = (text: string) => (text.match(/[\u1780-\u17ff]/g) ?? []).length;
+    return khmerCount(decoded) > khmerCount(value) ? decoded : value;
+  } catch {
+    return value;
+  }
+}
+
 export default function App() {
   const [lang, setLang] = useState<'EN' | 'KH'>('EN');
   const [currentView, setCurrentView] = useState('home'); // home, about, brands, products, distribution, partner, seller, news, contact, admin
@@ -82,7 +117,13 @@ export default function App() {
     try {
       const stored = window.localStorage.getItem('vistalab.settings');
       if (!stored) return defaults;
-      const saved = JSON.parse(stored);
+      const parsed = JSON.parse(stored);
+      const saved = Object.fromEntries(
+        Object.entries(parsed).map(([key, value]) => [
+          key,
+          typeof value === 'string' ? repairKhmerMojibake(value) : value
+        ])
+      );
       return {
         ...defaults,
         ...saved,
